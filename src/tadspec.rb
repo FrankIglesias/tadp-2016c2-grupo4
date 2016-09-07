@@ -1,23 +1,27 @@
+  class TADsPec
+    attr_accessor :test_instance
 
-class TADsPec
-  attr_accessor :test_instance
-
-  def self.search_instance
-    @test_instance = instance_methods.grep(/testear_que_/)
-  end
-
-  def Ser < Tipo
-
-  end
-
-    ############# zona peligrosa
-  class Class
-    def deberia(self.tipo,bloque)
-      tipo.ejecutar(bloque)
+    def self.search_instance
+      @test_instance = instance_methods.grep(/testear_que_/)
     end
 
-    ser = Tipo.new
+  end
 
+
+    ############# zona peligrosa
+  class Object
+    def deberia(bloque)
+      self.instance_eval(&bloque)
+    end
+
+  end
+
+  class Object
+    def ser(algo)
+      proc do
+        eql? algo
+      end
+    end
   end
 
 
