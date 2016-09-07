@@ -1,8 +1,16 @@
 
 class TADsPec
+  attr_accessor :test_instance
 
-  def method_missing(symbol, *args)
-    "symbol -> #{symbol}\nargs -> #{args}"
+  def self.search_instance
+    instance_methods.grep(/testear_que_/)
   end
 
+module Deberia
+  
 end
+
+
+
+
+
