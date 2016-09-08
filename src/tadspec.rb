@@ -17,14 +17,32 @@
   end
 
   class Object
-    def ser(algo)
+
+    def mayor_a(algo)
       proc do
-        eql? algo
+        self > algo
       end
     end
+
+    def menor_a(algo)
+      proc do
+        self < algo
+      end
+    end
+
+    def ser(bloque, algo)
+      proc do
+        self.instance_eval(&bloque)
+      end
+    end
+
+    def ser(algo)
+      proc do
+        self.eql? algo
+      end
+    end
+
   end
-
-
-
+  
 
 
