@@ -45,7 +45,9 @@
       end
     end
     def entender (algo)
-      self.class.methods
+     proc  do
+       self.class.instance_methods.include? algo
+     end
     end
   end
 
@@ -70,3 +72,5 @@ else
         end
 end
 
+
+  
