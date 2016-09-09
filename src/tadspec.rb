@@ -37,17 +37,21 @@
     end
 
     def ser(algo)
-      if block_given?
-        yield
+      proc do
+      if algo.is_a? Proc
+        self.instance_exec(&algo)
       else
-        proc{ self.eql? algo }
+        self.eql? algo
+      end
       end
     end
   end
 
 
     def mayor_a algo
-      proc{self > algo}
+      proc do
+        self > algo
+      end
     end
 
     def menor_a algo
