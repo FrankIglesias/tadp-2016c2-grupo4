@@ -70,11 +70,3 @@ else
         end
 end
 
-  class Guerrero
-    def hola
-       1
-    end
-      end
-  jorge = Guerrero.new
-
-puts (1.deberia ser uno_de_estos [1,2,3])
