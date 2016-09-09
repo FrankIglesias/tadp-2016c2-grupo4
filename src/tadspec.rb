@@ -44,6 +44,9 @@
       end
       end
     end
+    def entender (algo)
+      self.class.methods
+    end
   end
 
 
@@ -55,3 +58,23 @@
       proc{self < algo}
     end
 
+ def uno_de_estos (algo, *parametros)
+if(algo.is_a? Array)
+   proc {algo.include? self}
+else
+  proc {if(algo.eql? self)
+          true
+        else
+          parametros.include? self
+          end}
+        end
+end
+
+  class Guerrero
+    def hola
+       1
+    end
+      end
+  jorge = Guerrero.new
+
+puts (1.deberia ser uno_de_estos [1,2,3])
