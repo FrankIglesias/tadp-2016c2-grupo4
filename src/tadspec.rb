@@ -35,11 +35,10 @@
     def deberia(bloque)
       self.instance_exec(&bloque)
     end
-
     def ser(algo)
       proc do
       if algo.is_a? Proc
-        self.instance_exec(&algo)
+        self.instance_eval(&algo)
       else
         self.eql? algo
       end
@@ -49,9 +48,7 @@
 
 
     def mayor_a algo
-      proc do
-        self > algo
-      end
+      proc {self > algo}
     end
 
     def menor_a algo
