@@ -43,7 +43,7 @@
 
       meta = symbol.to_s.partition('_')[2]
       head = symbol.to_s.partition('_')[0]
-      super unless self.methods(false).include? (meta + '?').to_sym or self.instance_variables.include? ('@' + meta.to_sym)
+      super(symbol,*args) unless self.methods(false).include? (meta + '?').to_sym or self.instance_variables.include? ('@' + meta.to_sym)
       MissingMethodManager.new(head,meta,self,args[0])
 
     end
