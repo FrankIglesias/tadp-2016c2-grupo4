@@ -62,29 +62,33 @@
       algo.call
       rescue @tipo_error
         true
-        end
+      end
     end
   end
 
   module TestSuite
+
     def mayor_a algo
       proc do
          |x| x>algo
       end
     end
+
     def menor_a algo
       proc do
       |x| x<algo
       end
     end
+
     def uno_de_estos (primero,*algo)
       proc do |x|
         if primero.is_a? Array
           primero.include? x
         else
           (primero.eql? x) || (algo.include? x) end
+      end
     end
-    end
+
     def entender symbol
       TADPBlock.new (
       proc do
@@ -101,29 +105,29 @@
     end
 
     def explotar_con algo
-    TADPErrorBloc.new algo
+      TADPErrorBloc.new algo
     end
 
     def method_missing(symbol,*args)
       if symbol.to_s.start_with? "ser_"
         TADPBlock.new (proc {|x|
-         @string = symbol.to_s
-         @string[0..3]= ''
-          x.send(@string.to_sym) })
+        @string = symbol.to_s
+        @string[0..3]= ''
+        x.send(@string.to_sym) })
       else if symbol.to_s.start_with? "tener_"
              TADPBlock.new (proc {|x|
-                 @string=symbol.to_s
-                 @string[0..5]=''
-               @var =  x.send(@string.to_sym)
-               1.deberia ser args
-             }
-                           )
-      else
+             @string = symbol.to_s
+             @string[0..5]=''
+             @string= ('@' + @string)
+             x.instance_variable_get(@string.to_s).eql? args[0]})
+           else
               super(symbol, *args)
+           end
       end
     end
-    end
-end
+
+  end
+
     ############# zona peligrosa
   class Object
     include TestSuite
@@ -131,6 +135,7 @@ end
     algo.run(self)
     end
   end
+
   class Proc
     include TestSuite
     def deberia algo
@@ -138,75 +143,25 @@ end
     end
   end
 
-  module ModuloPrincipalTesting
+  ############ fin de zona peligrosa
 
-    def method_missing(symbol,*args)
-      meta = symbol.to_s.partition('_')[2]
-      head = symbol.to_s.partition('_')[0]
-      super(symbol,*args) unless self.methods(false).include? (meta + '?').to_sym or self.instance_variables.include? ('@' + meta.to_sym)
-      MissingMethodManager.new(head,meta,self,args[0])
-    end
-
-    class MissingMethodManager
-      def new(head, meta,obj, arg)
-        @obj = obj
-        @arg = args[0]
-        if head.equal? "ser"
-          @meta = meta + '?'.to_sym
-          ejecutar_metodo_bool
-        else
-          @meta = ('@' + meta).to_sym
-          comparar_variable
-        end
-      end
-      def ejecutar_metodo_bool
-        @obj.send(@meta,@arg)
-      end
-
-      def comparar_variable
-        @obj.instance_variable_get(@meta).eql? @arg
-      end
-
-    end
-
-    def evaluar(algo)
-      self.instance_eval(&algo)
-    end
-
-    def ser(algo)
-      proc do
-      if algo.is_a? Proc
-        self.instance_eval(&algo)
-      else
-        self.eql? algo
-      end
-      end
-    end
-
-    def entender (algo)
-     proc  do
-       self.class.instance_methods.include? algo
-     end
-    end
-
-    def mayor_a algo
-      proc {self > algo}
-    end
-
-    def menor_a algo
-      proc{self < algo}
-    end
-  end
+    # esta clase es de prueba_se va a borrar
   class A
     attr_accessor :hello
+    def initialize
+      @hello = 25
+    end
+
     def hola?
       true
     end
   end
-  puts A.new.deberia ser_hola?
-  puts holita.deberia tener_hello 1
+
+
 =begin
 
+  puts A.new.deberia ser_hola?
+  puts holita.deberia tener_hello 1
 
     unitTest = (Object.constants).map {|c| Object.const_get(c)}
     unitTest = unitTest.select {|k| k.is_a? Class}
