@@ -119,7 +119,7 @@
              @string = symbol.to_s
              @string[0..5]=''
              @string= ('@' + @string)
-             x.instance_variable_get(@string.to_s).eql? args[0]})
+             x.instance_variable_get(@string.to_s) == args[0]})
            else
               super(symbol, *args)
            end
@@ -147,9 +147,10 @@
 
     # esta clase es de prueba_se va a borrar
   class A
-    attr_accessor :hello
+    attr_accessor :hello,:o
     def initialize
       @hello = 25
+      @o="holas"
     end
 
     def hola?
