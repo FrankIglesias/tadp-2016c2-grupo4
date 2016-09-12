@@ -40,7 +40,6 @@
     def initialize block
       self.define_singleton_method(:run,block)
     end
-
   end
 
   class TADPObject
@@ -66,6 +65,7 @@
         end
     end
   end
+
   module TestSuite
     def mayor_a algo
       proc do
@@ -99,27 +99,31 @@
         TADPObject.new algo
       end
     end
-    
+
     def explotar_con algo
     TADPErrorBloc.new algo
     end
-=begin
+
     def method_missing(symbol,*args)
       if symbol.to_s.start_with? "ser_"
-        proc {|x|
-          symbol[0..3]=''
-          x.send(symbol.to_sym,*args) }
+        TADPBlock.new (proc {|x|
+         @string = symbol.to_s
+         @string[0..3]= ''
+          x.send(@string.to_sym) })
       else if symbol.to_s.start_with? "tener_"
-               proc {|x|
-                 symbol[0..5] = ''
-                 x.instance_variable_get.include? symbol.to_sym}
+             TADPBlock.new (proc {|x|
+                 @string=symbol.to_s
+                 @string[0..5]=''
+               @var =  x.send(@string.to_sym)
+               1.deberia ser args
+             }
+                           )
       else
               super(symbol, *args)
       end
     end
-=end
     end
-
+end
     ############# zona peligrosa
   class Object
     include TestSuite
@@ -192,7 +196,15 @@
     def menor_a algo
       proc{self < algo}
     end
-end
+  end
+  class A
+    attr_accessor :hello
+    def hola?
+      true
+    end
+  end
+  puts A.new.deberia ser_hola?
+  puts holita.deberia tener_hello 1
 =begin
 
 
