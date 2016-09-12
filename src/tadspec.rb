@@ -1,21 +1,28 @@
   class TADsPec
-    attr_accessor :test_instance
-
-    def initialize
-      @test_instance = []
-    end
 
     def self.search_instance
-      @test_instance = instance_methods.grep(/testear_que_/)
+      @@test_instances= (Object.constants.select{|x| eval(x.to_s).is_a? Class}).map {|x| eval(x.to_s)}
+      @@test_instances= @@test_instances.select{|y| (y.instance_methods false).any? {|metodo| metodo.to_s.start_with? "testear_que"}}
     end
 
-    def self.testear
-      search_instance
-      @test_instance.each do |unit_test|
+    ## un getter mas copado necesitariamos
+  def self.test_instances
+    @@test_instances
+  end
+
+    def self.testear (*args)
+      if args.length>0
+        args.each do
+        |unit_test|
+          TestContex.new.correr_simple(unit_test)
+        end
+      else
+        search_instance
+        @@test_instances.each do |unit_test|
         TestContex.new.correr_simple(unit_test)
+        end
       end
     end
-
   end
 
   class TestContex
@@ -29,23 +36,111 @@
     end
   end
 
+  class TADPBlock
+    def initialize block
+      self.define_singleton_method(:run,block)
+    end
+
+  end
+
+  class TADPObject
+    attr_accessor :object
+    def initialize algo
+      @object= algo
+    end
+    def run algo
+      @object.eql? algo
+    end
+  end
+
+  class TADPErrorBloc
+
+    def initialize error
+      @tipo_error=error
+    end
+    def run algo
+      begin
+      algo.call
+      rescue @tipo_error
+        true
+        end
+    end
+  end
+  module TestSuite
+    def mayor_a algo
+      proc do
+         |x| x>algo
+      end
+    end
+    def menor_a algo
+      proc do
+      |x| x<algo
+      end
+    end
+    def uno_de_estos (primero,*algo)
+      proc do |x|
+        if primero.is_a? Array
+          primero.include? x
+        else
+          (primero.eql? x) || (algo.include? x) end
+    end
+    end
+    def entender symbol
+      TADPBlock.new (
+      proc do
+        |x| x.respond_to? symbol
+      end)
+    end
+
+    def ser (algo)
+      if algo.send(:is_a?, Proc)
+       TADPBlock.new algo
+      else
+        TADPObject.new algo
+      end
+    end
+    
+    def explotar_con algo
+    TADPErrorBloc.new algo
+    end
+=begin
+    def method_missing(symbol,*args)
+      if symbol.to_s.start_with? "ser_"
+        proc {|x|
+          symbol[0..3]=''
+          x.send(symbol.to_sym,*args) }
+      else if symbol.to_s.start_with? "tener_"
+               proc {|x|
+                 symbol[0..5] = ''
+                 x.instance_variable_get.include? symbol.to_sym}
+      else
+              super(symbol, *args)
+      end
+    end
+=end
+    end
+
     ############# zona peligrosa
   class Object
-
-    def deberia(algo)
-      self.evaluar algo
+    include TestSuite
+    def deberia algo
+    algo.run(self)
+    end
+  end
+  class Proc
+    include TestSuite
+    def deberia algo
+      algo.run(self)
     end
   end
 
   module ModuloPrincipalTesting
 
     def method_missing(symbol,*args)
-
       meta = symbol.to_s.partition('_')[2]
       head = symbol.to_s.partition('_')[0]
       super(symbol,*args) unless self.methods(false).include? (meta + '?').to_sym or self.instance_variables.include? ('@' + meta.to_sym)
       MissingMethodManager.new(head,meta,self,args[0])
-
     end
 
     class MissingMethodManager
@@ -97,30 +192,17 @@
     def menor_a algo
       proc{self < algo}
     end
-
-    def uno_de_estos (algo, *parametros)
-      if(algo.is_a? Array)
-        proc {algo.include? self}
-      else
-        proc {if(algo.eql? self)
-                true
-              parametros.include? self
-              end}
-      end
-    end
-
-
 end
+=begin
 
 
     unitTest = (Object.constants).map {|c| Object.const_get(c)}
     unitTest = unitTest.select {|k| k.is_a? Class}
     unitTest = unitTest.select {|c| (c.instance_methods false).any? {|m| m.to_s.start_with?('testear_que_')}}
-
     unitTest.each do |ut|
       ut.send :include, ModuloPrincipalTesting
     end
-
+=end
 
 
 
