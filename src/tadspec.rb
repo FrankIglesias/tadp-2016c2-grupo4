@@ -1,6 +1,6 @@
   class TADsPec
 
-    attr_accessor :unitTest
+    #attr_accessor :unitTest, :test_totales
 
     def self.search_instance
 
@@ -9,15 +9,19 @@
       @unitTest = @unitTest.select {|c| (c.instance_methods false).any? {|m| m.to_s.start_with?('testear_que_')}}
     end
 
+    def self.search_instance_filtrar(clase)
+      @unitTest = clase
+    end
+
+
     def self.testear (*args)
 
+      @args = *args[1..-1]
+      @unitTest = []
+      @test_totales = []
       Object.send :include, TestSuite
       Proc.send :include, TestSuite
-
-      search_instance
-
       ############# zona peligrosa
-
       Object.send :define_method ,:deberia do |algo|
         algo.run(self)
       end
@@ -26,25 +30,29 @@
         algo.run(self)
       end
 
-      ############ fin de zona peligrosa
-      # no me gusta esto, estamos repitiendo codigo
-      if args.length>0
-        args.each do
-        |unit_test|
-          unit_test.send :include, TestSuite
-          TestContex.correr(unit_test)
-        end
-        remover_modulo_test
-        remover_metodos_peligrosos
+      analizar_instancias
+
+
+      @unitTest.each do |unit_test|
+        unit_test.send :include, TestSuite
+        @test_totales << TestContex.correr(unit_test, @args)
+      end
+
+      #remover_modulo_test
+      remover_metodos_peligrosos
+      @test_totales.flatten
+
+    end
+
+    def self.analizar_instancias(*args)
+      if args.length > 0
+        search_instance_filtrar(args[0])
       else
-        @unitTest.each do |unit_test|
-          unit_test.send :include, TestSuite
-          TestContex.correr(unit_test)
-        end
-        #remover_modulo_test
-        remover_metodos_peligrosos
+        search_instance
       end
     end
+
+
 
     def self.remover_metodos_peligrosos
       Object.send :remove_method, (:deberia)
@@ -58,23 +66,32 @@
   end
 
   class TestContex
-    attr_accessor :object, :met
+    #attr_accessor :object, :met, :var
 
-    def self.correr(clase)
+    def self.correr(clase,lista)
+      @var = []
       @object = clase
-      @met = (@object.instance_methods false).select {|m| m.to_s.start_with?('testear_que_')}
+
+      if lista.length > 0
+        @met = lista
+      else
+        @met = (@object.instance_methods false).select {|m| m.to_s.start_with?('testear_que_')}
+      end
+
+      print "Los test de la suit #{@object}:"
       correr_simple
+      @var
+
     end
 
     def self.correr_simple
-
       @met.each do |m|
-        var = @object.class_eval{
+        @var << @object.instance_eval{
           test = self.new
-          puts "El resultado del test fue: #{test.send m.to_sym}"
+          puts "\n\t El resultado del test #{m} fue: #{test.send m.to_sym}"
+          (test.send m.to_sym)
         }
       end
-
     end
 
     def method_to_block(block)
@@ -168,7 +185,7 @@
              @string = symbol.to_s
              @string[0..5]=''
              @string= ('@' + @string)
-             x.instance_variable_get(@string) == args[0]})
+             x.instance_variable_get(@string.to_sym) == args[0]})
 
            else
               super(symbol, *args)
@@ -177,7 +194,6 @@
     end
 
   end
-
 
   class A
     attr_accessor :hello,:o
@@ -195,29 +211,4 @@
       a = A.new
       a.deberia ser_hola?
     end
-
   end
-
-
-
-
-
-=begin
-
-  puts A.new.deberia ser_hola?
-  puts holita.deberia tener_hello 1
-
-    unitTest = (Object.constants).map {|c| Object.const_get(c)}
-    unitTest = unitTest.select {|k| k.is_a? Class}
-    unitTest = unitTest.select {|c| (c.instance_methods false).any? {|m| m.to_s.start_with?('testear_que_')}}
-    unitTest.each do |ut|
-      ut.send :include, ModuloPrincipalTesting
-    end
-=end
-
-
-
-
-
-
-  
