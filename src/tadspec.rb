@@ -15,7 +15,7 @@
     end
 
 
-    def self.testear (clase = nil ,*args)
+    def self.testear (clase = nil , *args)
 
       @unitTest = []
       @test_totales = []
@@ -51,9 +51,6 @@
       end
     end
 
-
-
-
     def self.remover_metodos_peligrosos
       Object.send :remove_method, (:deberia)
       Proc.send :remove_method, (:deberia)
@@ -88,7 +85,7 @@
       @met.each do |m|
         @var << @object.instance_eval{
           test = self.new
-          puts "\n    El resultado del test -> #{m} fue: #{test.send m.to_sym}"
+          print "\n El resultado del test -> #{m} fue: #{test.send m.to_sym}"
           (test.send m.to_sym)
         }
       end
@@ -211,4 +208,10 @@
       a = A.new
       a.deberia ser_hola?
     end
+
+    def testear_que_algo
+      a = A.new
+      a.hello.deberia ser 25
+    end
+
   end
