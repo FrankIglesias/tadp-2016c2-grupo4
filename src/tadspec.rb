@@ -141,8 +141,7 @@
       @tipo_error=error
     end
     def run algo
-      begin
-      algo.call
+      begin algo.call
       rescue @tipo_error
         true
       end
@@ -208,13 +207,19 @@
         x.send(@string.to_sym) })
 
       else if symbol.to_s.start_with? "tener_"
-
-             TADPBlock.new (proc {|x|
-             @string = symbol.to_s
-             @string[0..5]=''
-             @string= ('@' + @string)
-             x.instance_variable_get(@string.to_sym) == args[0]})
-
+             if args[0].is_a? Proc
+               TADPBlock.new (proc {|x|
+                 @string = symbol.to_s
+                 @string[0..5]=''
+                 @string= ('@' + @string)
+                 args[0].call(x.instance_variable_get(@string.to_sym))})
+             else
+               TADPBlock.new (proc {|x|
+               @string = symbol.to_s
+               @string[0..5]=''
+               @string= ('@' + @string)
+               x.instance_variable_get(@string.to_sym) == args[0]})
+             end
            else
               super(symbol, *args)
            end
