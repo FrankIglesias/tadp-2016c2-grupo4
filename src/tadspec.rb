@@ -32,8 +32,16 @@
 
       #remover_modulo_test
       remover_metodos_peligrosos
-      @test_totales.flatten
+      generar_reporte(@test_totales.flatten)
 
+    end
+
+    def self.generar_reporte(i)
+      print "\n Se corrieron #{i.count} tests de los cuales: "
+      print "\n #{i.count true} Pasaron!"
+      print "\n #{i.count false} Fallaron!"
+      print "\n #{i.count nil} Explotaron! \n"
+      i
     end
 
     def self.iniciar_entorno
