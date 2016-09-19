@@ -24,7 +24,7 @@ describe 'TADSPEC tests' do
 
       def testear_que_algo
         a = A.new
-        a.hello.deberia ser 25
+        proc{ a.hoalslafls }.deberia explotar_con NoMethodError
       end
 
 

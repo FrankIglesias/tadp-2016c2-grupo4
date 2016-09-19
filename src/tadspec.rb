@@ -141,9 +141,10 @@
       @tipo_error=error
     end
     def run algo
+
       begin algo.call
-      rescue @tipo_error
-        true
+      rescue  Exception => ex
+        ex.class.ancestors.include? (@tipo_error)
       end
     end
   end
