@@ -7,21 +7,21 @@
       @unitTest = (Object.constants).map {|c| Object.const_get(c)}
       @unitTest = @unitTest.select {|k| k.is_a? Class}
       @unitTest = @unitTest.select {|c| (c.instance_methods false).any? {|m| m.to_s.start_with?('testear_que_')}}
+
     end
 
     def self.search_instance_filtrar(clase)
-      @unitTest = clase
+      @unitTest << clase
     end
 
 
-    def self.testear (*args)
+    def self.testear (clase = nil ,*args)
 
-      @args = *args[1..-1]
       @unitTest = []
       @test_totales = []
       Object.send :include, TestSuite
       Proc.send :include, TestSuite
-      ############# zona peligrosa
+
       Object.send :define_method ,:deberia do |algo|
         algo.run(self)
       end
@@ -30,12 +30,11 @@
         algo.run(self)
       end
 
-      analizar_instancias
-
+      analizar_instancias(clase)
 
       @unitTest.each do |unit_test|
         unit_test.send :include, TestSuite
-        @test_totales << TestContex.correr(unit_test, @args)
+        @test_totales << TestContex.correr(unit_test,args)
       end
 
       #remover_modulo_test
@@ -44,13 +43,14 @@
 
     end
 
-    def self.analizar_instancias(*args)
-      if args.length > 0
-        search_instance_filtrar(args[0])
-      else
-        search_instance
+    def self.analizar_instancias(clase)
+
+      if clase.is_a? Class
+        search_instance_filtrar(clase)
+      else search_instance
       end
     end
+
 
 
 
@@ -88,7 +88,7 @@
       @met.each do |m|
         @var << @object.instance_eval{
           test = self.new
-          puts "\n\t El resultado del test #{m} fue: #{test.send m.to_sym}"
+          puts "\n    El resultado del test -> #{m} fue: #{test.send m.to_sym}"
           (test.send m.to_sym)
         }
       end
