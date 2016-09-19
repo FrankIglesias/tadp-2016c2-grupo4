@@ -193,45 +193,4 @@
 
   end
 
-  class A
-    attr_accessor :hello,:o
 
-    def initialize
-      @hello = 25
-      @o="holas"
-    end
-
-    def hola?
-      true
-    end
-
-    def testear_que_holis
-      a = A.new
-      a.deberia ser_hola?
-    end
-
-    def testear_que_algo
-      a = A.new
-      a.hello.deberia ser 25
-    end
-
-  end
-
-  class B
-    attr_accessor :hello,:o
-
-    def initialize
-      @hello = 25
-      @o="holas"
-    end
-
-    def hola?
-      true
-    end
-
-    def testear_que_holis
-      b = A.new
-      b.deberia ser_hola?
-    end
-
-  end
