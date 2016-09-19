@@ -19,6 +19,24 @@
 
       @unitTest = []
       @test_totales = []
+
+      iniciar_entorno
+      analizar_instancias(clase)
+
+      @unitTest.each do |unit_test|
+        unit_test.send :include, TestSuite
+        @test_totales << TestContex.correr(unit_test,args)
+        puts "\n"
+      end
+
+
+      #remover_modulo_test
+      remover_metodos_peligrosos
+      @test_totales.flatten
+
+    end
+
+    def self.iniciar_entorno
       Object.send :include, TestSuite
       Proc.send :include, TestSuite
 
@@ -29,19 +47,6 @@
       Proc.send :define_method ,:deberia do |algo|
         algo.run(self)
       end
-
-      analizar_instancias(clase)
-
-      @unitTest.each do |unit_test|
-        unit_test.send :include, TestSuite
-        @test_totales << TestContex.correr(unit_test,args)
-        puts "\n"
-      end
-
-      #remover_modulo_test
-      remover_metodos_peligrosos
-      @test_totales.flatten
-
     end
 
     def self.analizar_instancias(clase)
@@ -84,11 +89,16 @@
 
     def self.correr_simple
       @met.each do |m|
-        @var << @object.instance_eval{
+        @var << @object.instance_eval do
+          begin
           test = self.new
-          print "\n El resultado del test -> #{m} fue: #{test.send m.to_sym}"
+          print "\n El resultado del test: #{m} -> fue: #{test.send m.to_sym}"
           (test.send m.to_sym)
-        }
+          rescue Exception => a
+            print "\n El resultado del test #{m} -> fue: EXPLOSIVO = #{a}"
+            (nil)
+          end
+        end
       end
     end
 
@@ -108,10 +118,14 @@
     def initialize algo
       @object= algo
     end
+
     def run algo
+
       @object.eql? algo
+
     end
   end
+
 
   class TADPErrorBloc
 
@@ -159,7 +173,7 @@
 
     def ser (algo)
       if algo.send(:is_a?, Proc)
-       TADPBlock.new algo
+        TADPBlock.new algo
       else
         TADPObject.new algo
       end
@@ -192,5 +206,7 @@
     end
 
   end
+
+
 
 
