@@ -100,7 +100,7 @@
         @var << @object.instance_eval do
           begin
           test = self.new
-          print "\n El resultado del test: #{m} -> fue: #{test.send m.to_sym}"
+          print "\n El resultado del test: #{m} -> fue: #{analizar_resultado(test,m.to_sym)}"
           (test.send m.to_sym)
           rescue Exception => a
             print "\n El resultado del test #{m} -> fue: EXPLOSIVO = #{a}"
@@ -109,6 +109,8 @@
         end
       end
     end
+
+
 
     def method_to_block(block)
       proc{self.instance_eval(method(block.to_sym))}
@@ -128,9 +130,7 @@
     end
 
     def run algo
-
       @object.eql? algo
-
     end
   end
 
@@ -153,7 +153,7 @@
 
     def mayor_a algo
       proc do
-         |x| x>algo
+         |x| x > algo
       end
     end
 
@@ -191,6 +191,14 @@
       TADPErrorBloc.new algo
     end
 
+    def analizar_resultado(objeto,metodo)
+      if objeto.send metodo
+        "PASO"
+      else
+        " FALLO"
+      end
+    end
+
     def method_missing(symbol,*args)
       if symbol.to_s.start_with? "ser_"
 
@@ -214,6 +222,8 @@
     end
 
   end
+
+
 
 
 
