@@ -50,13 +50,28 @@ describe 'TADSPEC tests' do
         b.deberia ser_hola?
       end
 
+      def testear_que_sea_mayor
+        b = A.new
+        b.hello.deberia ser mayor_a 15
+      end
+
+      def testear_que_sea_menor
+        b = A.new
+        b.hello.deberia ser menor_a 60
+      end
+
+      def testear_que_ande_el_ser
+        7.deberia ser 7
+      end
+
+
     end
 
   end
 
 
   it 'test_sencillo ' do
-    expect(TADsPec.testear).to eq([true,true,true])
+    expect(TADsPec.testear.inject(true, :&) ).to eq(true)
   end
 
   it 'testear solo la unit que pido' do
@@ -65,6 +80,35 @@ describe 'TADSPEC tests' do
 
   it 'testear solo la unit que pido con el metodo que pido' do
     expect(TADsPec.testear A ,:testear_que_algo ).to eq([true])
+  end
+
+  it 'testear mayor_a' do
+    expect(TADsPec.testear B ,:testear_que_sea_mayor ).to eq([true])
+  end
+
+  it 'testear menor_a' do
+    expect(TADsPec.testear B ,:testear_que_sea_menor ).to eq([true])
+  end
+
+  it 'testear ser' do
+    expect(TADsPec.testear B ,:testear_que_ande_el_ser ).to eq([true])
+  end
+
+  it 'testear entender' do
+    class Persona
+      def viejo?
+        @edad > 29
+      end
+
+
+      def testear_que_pipipi
+        leandro = Persona.new
+        leandro.deberia entender :viejo? # pasa
+      end
+    end
+
+
+    expect(TADsPec.testear Persona, :testear_que_pipipi).to eq([true])
   end
 
 end
