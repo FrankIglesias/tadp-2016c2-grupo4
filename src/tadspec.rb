@@ -40,7 +40,7 @@ class TADsPec
        mock_methods.each { |mock_method|
          metodo_a_modificar = mock_method.to_s
          metodo_a_modificar[0..4] = ''
-      mocked_class.send :define_method , (metodo_a_modificar.to_sym) , (mocked_class.singleton_method mock_method).to_proc
+      mocked_class.send :define_method , (metodo_a_modificar.to_sym) , (mocked_class.instance_method mock_method)
          mocked_class.send :undef_method , mock_method}
     }
   end
@@ -49,7 +49,7 @@ class TADsPec
     Object.send :remove_method, :deberia
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
-  remove_mock_methods
+    remove_mock_methods
   end
 
   def self.remover_modulo_test
