@@ -146,32 +146,43 @@ class TADPErrorBloc
   end
 end
 
-class TADPSpy
+class TADPMethodHistory
+  attr_accessor :method , :params
+  def initialize method, *params
+    self.method= method
+    self.params = *params
+  end
+  def se_llamo symbol , *params
+    if(params.length==0)
+      self.method ==symbol
+    else
+      self.method == symbol && self.params.eql? (*params)
+    end
+  end
+end
 
+class TADPSpy
   attr_accessor :spying_object , :lista_metodos
 
-  def initialize objeto
+        def initialize objeto
+            self.spying_object  = objeto.clone
+            @method_list = spying_object.class.instance_methods false
+            spying_object.singleton_class.send :attr_accessor , :lista_metodos
+            spying_object.send :lista_metodos= , []
+            espiar_metodos
+          end
 
-    self.spying_object  = objeto.clone
-    @method_list = spying_object.class.instance_methods false
-    spying_object.singleton_class.send :attr_accessor , :lista_metodos
-    spying_object.send :lista_metodos= , []
-    espiar_metodos
-  end
-
-  def espiar_metodos
-    @method_list.each do |m|
-      viejo_metodo = (m.to_s + '_viejo').to_sym
-      spying_object.singleton_class.send :alias_method  , viejo_metodo, m
-
-      spying_object.singleton_class.send :define_method, m , proc {
-        |*args|
-        self.lista_metodos << m
-        self.send viejo_metodo, *args
+          def espiar_metodos
+            @method_list.each do |m|
+              viejo_metodo = (m.to_s + '_viejo').to_sym
+              spying_object.singleton_class.send :alias_method  , viejo_metodo, m
+            spying_object.singleton_class.send :define_method, m , proc {
+                |*args|
+              self.lista_metodos << TADPMethodHistory.new(m,args)
+              self.send viejo_metodo, args
       }
-    end
-
-  end
+            end
+          end
 
   def method_missing (symbol, *args)
     if spying_object.class.instance_methods.include? symbol
@@ -239,12 +250,33 @@ module TestSuite
     end
   end
 
-  def haber_recibido algo
-    TADPBlock.new (proc do
-    |x| x.spying_object.lista_metodos.include? algo
-    end)
-
+class TADPMethodTester
+  attr_accessor :metodo
+  def initialize metodo
+    self.metodo = metodo
   end
+
+  def run algo
+    algo.lista_metodos.any? {|x| x.se_llamo metodo }
+end
+
+  def veces numero
+    self.define_singleton_method :run do
+      |x| x.lista_metodos.select{|m| m.se_llamo metodo }
+end
+  end
+  def con_argumentos *args
+    self.define_singleton_method :run do
+    |x| x.lista_metodos.select{|m| m.se_llamo metodo, args }
+    end
+  end
+end
+
+  def haber_recibido algo
+
+ TADPMethodTster.new algo
+  end
+
   def explotar_con algo
     TADPErrorBloc.new algo
   end
@@ -285,7 +317,7 @@ class PersonaTest
   def testear_que_se_use_la_edad
     pato = PersonaTest.new
     pato.edad= 30
-    pato = espiar pato
+     pato = espiar pato
     pato.viejo?
     pato.deberia haber_recibido :edad
   end
