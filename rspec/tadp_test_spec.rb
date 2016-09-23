@@ -126,7 +126,7 @@ describe 'TADSPEC tests' do
     class Persona
       attr_accessor :edad
       def initialize algo
-        edad = algo
+        self.edad = algo
       end
 
       def viejo?
@@ -144,7 +144,7 @@ describe 'TADSPEC tests' do
 
         # Mockeo el mensaje para no consumir el servicio y simplificar el test
 
-        PersonaHome.mockear(:todas_las_personas) do
+        PersonaHome.mockear :todas_las_personas do
           [nico, axel, lean]
         end
 

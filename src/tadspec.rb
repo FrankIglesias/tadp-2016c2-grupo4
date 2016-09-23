@@ -22,13 +22,13 @@ class TADsPec
 
   def self.iniciar_entorno
     deberia_proc = proc { |algo| TestContex.deberia_array << (algo.run(self)) }
-    mockear_proc = proc { |symbol, &block| self.class.send :alias_method ,("mock_" + symbol.to_s).to_sym, symbol
-      self.define_singleton_method symbol,block }
+    mockear_proc = proc { |symbol, &block| self.send :alias_method ,("mock_" + symbol.to_s).to_sym, symbol
+      self.send :define_method,symbol,block }
     Object.send :include, TestSuite
     Proc.send :include, TestSuite
     Object.send :define_method, :deberia, deberia_proc
     Proc.send :define_method, :deberia, deberia_proc
-    Object.send :define_method , :mockear, mockear_proc
+    Class.send :define_method , :mockear, mockear_proc
   end
 
   def self.remove_mock_methods
@@ -46,8 +46,9 @@ class TADsPec
   end
 
   def self.remover_metodos_peligrosos
-    Object.send :remove_method, (:deberia)
-    Proc.send :remove_method, (:deberia)
+    Object.send :remove_method, :deberia
+    Proc.send :remove_method, :deberia
+    Class.send :remove_method, :mockear
     ##remove_mock_methods
   end
 
@@ -318,20 +319,4 @@ module TestSuite
   end
 end
 
-class PersonaTest
-  attr_accessor :edad
-  def viejo?
-    self.edad > 29
-  end
-  def hola *numeros
 
-  end
-  def testear_que_se_use_la_edad
-    pato = PersonaTest.new
-    pato.edad= 30
-    pato.mockear :viejo?  do true end
-    pato.viejo?.deberia ser true
-  end
-end
-
-TADsPec.testear
