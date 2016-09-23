@@ -22,7 +22,7 @@ class TADsPec
 
   def self.iniciar_entorno
     deberia_proc = proc { |algo| TestContex.deberia_array << (algo.run(self)) }
-    mockear_proc = proc { |symbol, &block| self.send :alias_method ,('mock_' + symbol.to_s).to_sym, symbol
+    mockear_proc = proc { |symbol, &block| self.send :alias_method ,('mock_'+symbol.to_s).to_sym, symbol
       self.send :define_method,symbol,block }
     Object.send :include, TestSuite
     Proc.send :include, TestSuite
@@ -40,7 +40,7 @@ class TADsPec
        mock_methods.each { |mock_method|
          metodo_a_modificar = mock_method.to_s
          metodo_a_modificar[0..4] = ''
-      mocked_class.send :define_method , (metodo_a_modificar.to_sym) , (mocked_class.method mock_method).to_proc
+      mocked_class.send :define_method , (metodo_a_modificar.to_sym) , (mocked_class.singleton_method mock_method).to_proc
          mocked_class.send :undef_method , mock_method}
     }
   end
@@ -49,7 +49,7 @@ class TADsPec
     Object.send :remove_method, :deberia
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
-  ## remove_mock_methods
+  remove_mock_methods
   end
 
   def self.remover_modulo_test
