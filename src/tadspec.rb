@@ -34,7 +34,15 @@ class TADsPec
   def self.remove_mock_methods
     mock_method_classes = (Object.constants).map { |constant| Object.const_get(constant) }
     mock_method_classes = mock_method_classess.select { |constant| constant.is_a? Class }
-    mock_method_classes = mock_method_classes.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('mock_')}}
+    mock_method_classes = mock_method_classes.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?('mock_')}}
+    mock_method_classes.each{|mocked_class|
+       mock_methods = mock_class.instance_methods.selec{|symbol| symbol.to_s.start_with?('mock_')  }
+       mock_methods.each { |mock_method|
+         metodo_a_modificar = mock_method.to_s
+         metodo_a_modificar[0..5] = ''
+      mocked_class.send :define_singleton_method , (metodo_a_modificar.to_sym) , (mocked_class.singleton_method mock_method).to_proc
+         mocked_class.send :undef_method , mock_method}
+    }
   end
 
   def self.remover_metodos_peligrosos
@@ -324,7 +332,7 @@ class PersonaTest
      pato = espiar pato
     pato.viejo?
     pato.hola 1,2,3,4
-    pato.deberia haber_recibido(:hola).con_argumentos(1,2)
+    pato.deberia haber_recibido(:hola).con_argumentos(12)
   end
 end
 
