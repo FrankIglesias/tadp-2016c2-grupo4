@@ -11,23 +11,26 @@ class TADsPec
   end
 
   def self.agregar_suites(clase)
+
     if clase.is_a? Class
       add_test_class(clase)
     else
       search_all_test_suites
     end
+
   end
 
   def self.iniciar_entorno
     deberia_proc = proc { |algo| TestContex.deberia_array << (algo.run(self)) }
-    mockear_proc = proc { |symbol,&block| self.class.send :alias_method ,("mock_" + symbol.to_s).to_sym, symbol
-      self.define_singleton_method symbol,block}
+    mockear_proc = proc { |symbol, &block| self.class.send :alias_method ,("mock_" + symbol.to_s).to_sym, symbol
+      self.define_singleton_method symbol,block }
     Object.send :include, TestSuite
     Proc.send :include, TestSuite
     Object.send :define_method, :deberia, deberia_proc
     Proc.send :define_method, :deberia, deberia_proc
     Object.send :define_method , :mockear, mockear_proc
   end
+
   def self.remove_mock_methods
     mock_method_classes = (Object.constants).map { |constant| Object.const_get(constant) }
     mock_method_classes = mock_method_classess.select { |constant| constant.is_a? Class }
@@ -38,7 +41,6 @@ class TADsPec
     Object.send :remove_method, (:deberia)
     Proc.send :remove_method, (:deberia)
     ##remove_mock_methods
-
   end
 
   def self.remover_modulo_test
@@ -109,6 +111,7 @@ class TestContex
       end
     end
   end
+
 end
 
 class TADPBlock
@@ -139,38 +142,64 @@ class TADPErrorBloc
     rescue Exception => ex
       ex.class.ancestors.include? (@tipo_error)
     end
+
   end
 end
 
 class TADPSpy
+
   attr_accessor :spying_object
+
   def new objeto
-    spying_object  =objeto.clone
-    @method_list = []
+    spying_object  = objeto.clone
+    @method_list = spying_object.methods
+    espiar_metodos
   end
+
+  def espiar_metodos
+    @method_list.each do |m|
+      viejo_metodo = (m.to_s + '_viejo').to_sym
+      spying_object.send :alias  ,viejo_metodo, m
+      spying_object.send :define_method, m do
+        @lista_metodos << m.to_s
+        self.send viejo_metodo
+    end
+  end
+
   def deberia algo
     TestContex.deberia_array << algo.run(self)
   end
+
   def method_missing(symbol,*args)
     puts spying_object.methods.include? :viejo?
       super(symbol,*args)
-
   end
+
 end
 
 module TestSuite
+
   def analizar_resultado(objeto, metodo)
+
     objeto.send metodo
     TestContex.deberia_array.all? {|resultado| resultado.eql? true}
+
   end
+
   def espiar algo
+
     TADPSpy.new algo
+
   end
+
   def haber_recibido algo
+
     TADPBlock.new (proc do
       |x| x.method_list.include? algo
     end)
+
   end
+
   def mayor_a algo
     proc do
     |x|
@@ -297,8 +326,5 @@ class PersonaTest
    ## pato.deberia haber_recibido (:edad)
   end
 end
-
-TADsPec.testear
-
 
 

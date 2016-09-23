@@ -20,6 +20,8 @@ describe 'TADSPEC tests' do
       def testear_que_holis
         a = A.new
         a.deberia tener_hello 25
+        a.deberia tener_hello 25
+        a.deberia tener_hello 25
       end
 
       def testear_que_algo
