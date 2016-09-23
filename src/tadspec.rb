@@ -150,35 +150,29 @@ class TADPSpy
 
   attr_accessor :spying_object
 
-  def new objeto
-    spying_object  = objeto.clone
-    @method_list = spying_object.methods
+  def initialize objeto
+    self.spying_object  = objeto.clone
+    @method_list = spying_object.class.instance_methods false
     espiar_metodos
   end
 
   def espiar_metodos
-
     @method_list.each do |m|
       viejo_metodo = (m.to_s + '_viejo').to_sym
-      spying_object.define_singleton_method.send :alias  , viejo_metodo, m
-      spying_object.define_singleton_method.send :define_method, m do
-        @lista_metodos << m.to_s
-        self.define_singleton_method.send viejo_metodo
+      spying_object.singleton_class.send :alias  , viejo_metodo, m
+      spying_object.singleton_class.send :define_method, m do
+        |*args|
+        @lista_metodos << m
+        self.send viejo_metodo, args
     end
-
     end
   end
-  
+  def haber_recibido algo
+    TADPBlock.new (proc do
+    |x| x.method_list.include? algo
+    end)
 
-  def deberia algo
-    TestContex.deberia_array << algo.run(self)
   end
-
-  def method_missing(symbol,*args)
-    puts spying_object.methods.include? :viejo?
-      super(symbol,*args)
-  end
-
 end
 
 module TestSuite
@@ -196,13 +190,7 @@ module TestSuite
 
   end
 
-  def haber_recibido algo
 
-    TADPBlock.new (proc do
-      |x| x.method_list.include? algo
-    end)
-
-  end
 
   def mayor_a algo
     proc do
@@ -274,47 +262,6 @@ module TestSuite
     end
   end
 end
-=begin
-class A
-  attr_accessor :algo
-  def hola?
-    true
-  end
-  def testear_que_hola1
-    a = A.new
-    a.algo=3
-    a.deberia tener_algo 4
-  end
-  def testear_que_hola2
-    a = A.new
-    a.deberia ser_hola?
-    a.algo=3
-    a.deberia tener_algo 4
-  end
-  def testear_que_hola3
-    a = A.new
-    a.algo=3
-    a.deberia tener_algo 3
-    a.deberia ser_hola?
-  end
-end
-class B
-  def hola
-    false
-  end
-  def testear_que_no_mockea
-    b = B.new
-    b.deberia ser_hola
-  end
-  def testear_que_mockea
-    b = B.new
-  b.mockear :hola do
-    true
-  end
-    b.deberia ser_hola
-  end
-end
-=end
 
 class PersonaTest
   attr_accessor :edad
@@ -324,11 +271,11 @@ class PersonaTest
 
   def testear_que_se_use_la_edad
     pato = PersonaTest.new
-    pato.edad=  30
-    pato = espiar(pato)
+    pato.edad= 30
+    pato = espiar pato
     pato.viejo?
-   ## pato.deberia haber_recibido (:edad)
+    pato.deberia haber_recibido :edad
   end
 end
 
-
+TADsPec.testear
