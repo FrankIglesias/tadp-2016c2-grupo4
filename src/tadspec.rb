@@ -148,30 +148,37 @@ end
 
 class TADPSpy
 
-  attr_accessor :spying_object
+  attr_accessor :spying_object , :lista_metodos
 
   def initialize objeto
+
     self.spying_object  = objeto.clone
     @method_list = spying_object.class.instance_methods false
+    spying_object.singleton_class.send :attr_accessor , :lista_metodos
+    spying_object.send :lista_metodos= , []
     espiar_metodos
   end
 
   def espiar_metodos
     @method_list.each do |m|
       viejo_metodo = (m.to_s + '_viejo').to_sym
-      spying_object.singleton_class.send :alias  , viejo_metodo, m
-      spying_object.singleton_class.send :define_method, m do
-        |*args|
-        @lista_metodos << m
-        self.send viejo_metodo, args
-    end
-    end
-  end
-  def haber_recibido algo
-    TADPBlock.new (proc do
-    |x| x.method_list.include? algo
-    end)
+      spying_object.singleton_class.send :alias_method  , viejo_metodo, m
 
+      spying_object.singleton_class.send :define_method, m , proc {
+        |*args|
+        self.lista_metodos << m
+        self.send viejo_metodo, *args
+      }
+    end
+
+  end
+
+  def method_missing (symbol, *args)
+    if spying_object.class.instance_methods.include? symbol
+      spying_object.send symbol, *args
+    else
+      super(symbol,*args)
+    end
   end
 end
 
@@ -232,6 +239,12 @@ module TestSuite
     end
   end
 
+  def haber_recibido algo
+    TADPBlock.new (proc do
+    |x| x.spying_object.lista_metodos.include? algo
+    end)
+
+  end
   def explotar_con algo
     TADPErrorBloc.new algo
   end
