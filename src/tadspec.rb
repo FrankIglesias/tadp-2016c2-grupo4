@@ -39,7 +39,7 @@ class TADsPec
        mock_methods = mock_class.instance_methods.selec{|symbol| symbol.to_s.start_with?('mock_')  }
        mock_methods.each { |mock_method|
          metodo_a_modificar = mock_method.to_s
-         metodo_a_modificar[0..5] = ''
+         metodo_a_modificar[0..4] = ''
       mocked_class.send :define_singleton_method , (metodo_a_modificar.to_sym) , (mocked_class.singleton_method mock_method).to_proc
          mocked_class.send :undef_method , mock_method}
     }
@@ -329,10 +329,8 @@ class PersonaTest
   def testear_que_se_use_la_edad
     pato = PersonaTest.new
     pato.edad= 30
-     pato = espiar pato
-    pato.viejo?
-    pato.hola 1,2,3,4
-    pato.deberia haber_recibido(:hola).con_argumentos(12)
+    pato.mockear :viejo?  do true end
+    pato.viejo?.deberia ser true
   end
 end
 
