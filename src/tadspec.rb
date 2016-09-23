@@ -136,13 +136,11 @@ class TADPErrorBloc
   end
 
   def run algo
-
     begin
       algo.call
     rescue Exception => ex
       ex.class.ancestors.include? (@tipo_error)
     end
-
   end
 end
 
@@ -211,8 +209,9 @@ class TADPMethodTester
 self
   end
   def con_argumentos *args
-    self.define_method :run do
-    |x| x.spy_object.lista_metodos.select{|m| m.se_llamo metodo, args }
+    self.define_singleton_method :run do
+     |x| variable = x.spying_object.lista_metodos.select{|m| m.se_llamo metodo, args }
+      variable.length>0
     end
     self
   end
@@ -316,13 +315,16 @@ class PersonaTest
   def viejo?
     self.edad > 29
   end
+  def hola *numeros
 
+  end
   def testear_que_se_use_la_edad
     pato = PersonaTest.new
     pato.edad= 30
      pato = espiar pato
     pato.viejo?
-    pato.deberia haber_recibido(:edad).veces(1)
+    pato.hola 1,2,3,4
+    pato.deberia haber_recibido(:hola).con_argumentos(1,2)
   end
 end
 
