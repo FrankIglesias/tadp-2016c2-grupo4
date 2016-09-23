@@ -158,4 +158,26 @@ describe 'TADSPEC tests' do
     expect(TADsPec.testear PersonaHomeTests).to eq([true])
     
   end
+
+  it 'testear spy' do
+    class PersonaTest
+      def testear_que_se_use_la_edad2
+        lean = Persona.new(22)
+        pato = Persona.new(23)
+        pato = espiar(pato)
+        pato.viejo?
+        pato.deberia haber_recibido(:edad)
+        # pasa: edad se llama durante la ejecución de viejo?
+        pato.deberia haber_recibido(:edad).veces(1)
+        # pasa: edad se recibió exactamente 1 vez.
+        pato.deberia haber_recibido(:viejo?).con_argumentos()
+      end
+    end
+
+
+        expect(TADsPec.testear PersonaTest).to eq([true])
+
+  end
+
+
 end
