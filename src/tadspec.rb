@@ -157,14 +157,18 @@ class TADPSpy
   end
 
   def espiar_metodos
+
     @method_list.each do |m|
       viejo_metodo = (m.to_s + '_viejo').to_sym
-      spying_object.send :alias  ,viejo_metodo, m
-      spying_object.send :define_method, m do
+      spying_object.define_singleton_method.send :alias  , viejo_metodo, m
+      spying_object.define_singleton_method.send :define_method, m do
         @lista_metodos << m.to_s
-        self.send viejo_metodo
+        self.define_singleton_method.send viejo_metodo
+    end
+
     end
   end
+  
 
   def deberia algo
     TestContex.deberia_array << algo.run(self)
