@@ -153,16 +153,16 @@ class TADPMethodHistory
     self.params = *params
   end
   def se_llamo symbol , *params
-    if(params.length==0)
+    if params.length==0
       self.method ==symbol
     else
-      self.method == symbol && self.params.eql? (*params)
+      (self.method == symbol) && (self.params.eql? (params))
     end
   end
 end
 
 class TADPSpy
-  attr_accessor :spying_object , :lista_metodos
+  attr_accessor :spying_object
 
         def initialize objeto
             self.spying_object  = objeto.clone
@@ -179,7 +179,7 @@ class TADPSpy
             spying_object.singleton_class.send :define_method, m , proc {
                 |*args|
               self.lista_metodos << TADPMethodHistory.new(m,args)
-              self.send viejo_metodo, args
+              self.send viejo_metodo, *args
       }
             end
           end
@@ -193,6 +193,30 @@ class TADPSpy
   end
 end
 
+class TADPMethodTester
+  attr_accessor :metodo
+  def initialize metodo
+    self.metodo = metodo
+  end
+
+  def run algo
+    algo.spying_object.lista_metodos.any? {|x| x.se_llamo self.metodo }
+  end
+
+  def veces numero
+    self.define_singleton_method :run do    |x| variable = x.spying_object.lista_metodos.select{|m| m.se_llamo self.metodo
+      }
+    variable.length ==numero
+    end
+self
+  end
+  def con_argumentos *args
+    self.define_method :run do
+    |x| x.spy_object.lista_metodos.select{|m| m.se_llamo metodo, args }
+    end
+    self
+  end
+end
 module TestSuite
 
   def analizar_resultado(objeto, metodo)
@@ -250,31 +274,10 @@ module TestSuite
     end
   end
 
-class TADPMethodTester
-  attr_accessor :metodo
-  def initialize metodo
-    self.metodo = metodo
-  end
 
-  def run algo
-    algo.lista_metodos.any? {|x| x.se_llamo metodo }
-end
-
-  def veces numero
-    self.define_singleton_method :run do
-      |x| x.lista_metodos.select{|m| m.se_llamo metodo }
-end
-  end
-  def con_argumentos *args
-    self.define_singleton_method :run do
-    |x| x.lista_metodos.select{|m| m.se_llamo metodo, args }
-    end
-  end
-end
 
   def haber_recibido algo
-
- TADPMethodTster.new algo
+ TADPMethodTester.new algo
   end
 
   def explotar_con algo
@@ -319,7 +322,7 @@ class PersonaTest
     pato.edad= 30
      pato = espiar pato
     pato.viejo?
-    pato.deberia haber_recibido :edad
+    pato.deberia haber_recibido(:edad).veces(1)
   end
 end
 
