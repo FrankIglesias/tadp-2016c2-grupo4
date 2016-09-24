@@ -1,3 +1,10 @@
+class Module
+  def uninclude(mod)
+    mod.instance_methods.each do |method|
+    undef_method(method)
+    end
+  end
+end
 class TADsPec
   def self.obtener_todas_las_clases
     var = (Object.constants).map { |constant| Object.const_get(constant) }
@@ -9,18 +16,12 @@ class TADsPec
     @unit_test_clases = @unit_test_clases.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
   end
 
-  def self.add_test_class(clase)
-    @unit_test_clases << clase
-  end
-
   def self.agregar_suites(clase)
-
     if clase.is_a? Class
-      add_test_class(clase)
+      @unit_test_clases << clase
     else
       search_all_test_suites
     end
-
   end
 
   def self.iniciar_entorno
@@ -52,10 +53,11 @@ class TADsPec
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
     remove_mock_methods
+   ## remover_modulo_test
   end
 
   def self.remover_modulo_test
-    Object.send :uninclude, TestSuite
+    Object.uninclude  TestSuite
     Proc.send :uninclude, TestSuite
   end
 
@@ -106,13 +108,7 @@ class TADResult
   end
 end
 
-class Module
-  def uninclude(mod)
-    mod.instance_methods.each do |method|
-      undef_method(method)
-    end
-  end
-end
+
 class TestContex
   def self.correr(clase, lista)
     @var = []
