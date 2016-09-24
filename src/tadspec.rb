@@ -99,14 +99,10 @@ class TADResult
     if(self.resultado==false)
       puts("esperaba #{esperado} y recibi #{recibido}")
     end
-
-    if(self.resultado==true)
-      true
-    end
-
     if(self.resultado==nil)
       puts recibido.backtrace
     end
+    self.resultado
   end
 
 end
