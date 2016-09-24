@@ -102,7 +102,7 @@ describe 'TADSPEC tests' do
 
 
       def testear_que_pipipi
-        leandro = Persona.new
+        leandro = Persona.new 30
         leandro.deberia entender :viejo? # pasa
       end
     end
