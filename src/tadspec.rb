@@ -1,8 +1,10 @@
 class TADsPec
-
+  def self.obtener_todas_las_clases
+    var = (Object.constants).map { |constant| Object.const_get(constant) }
+    var = var.select { |constant| constant.is_a? Class }
+  end
   def self.search_all_test_suites
-    @unit_test_clases = (Object.constants).map { |constant| Object.const_get(constant) }
-    @unit_test_clases = @unit_test_clases.select { |constant| constant.is_a? Class }
+    @unit_test_clases = obtener_todas_las_clases
     @unit_test_clases = @unit_test_clases.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
   end
 
@@ -22,26 +24,25 @@ class TADsPec
 
   def self.iniciar_entorno
     deberia_proc = proc { |algo| TestContex.deberia_array << (algo.run(self)) }
-    mockear_proc = proc { |symbol, &block| self.send :alias_method ,('mock_'+symbol.to_s).to_sym, symbol
-      self.send :define_method,symbol,block }
+    mockear_proc = proc { |symbol, &block| self.send :alias_method, ('mock_'+symbol.to_s).to_sym, symbol
+    self.send :define_method, symbol, block }
     Object.send :include, TestSuite
     Proc.send :include, TestSuite
     Object.send :define_method, :deberia, deberia_proc
     Proc.send :define_method, :deberia, deberia_proc
-    Class.send :define_method , :mockear, mockear_proc
+    Class.send :define_method, :mockear, mockear_proc
   end
 
   def self.remove_mock_methods
-    mock_method_classes = (Object.constants).map { |constant| Object.const_get(constant) }
-    mock_method_classes = mock_method_classes.select { |constant| constant.is_a? Class }
-    mock_method_classes = mock_method_classes.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?('mock_')}}
-    mock_method_classes.each{|mocked_class|
-       mock_methods = mocked_class.instance_methods.select{|symbol| symbol.to_s.start_with?('mock_')  }
-       mock_methods.each { |mock_method|
-         metodo_a_modificar = mock_method.to_s
-         metodo_a_modificar[0..4] = ''
-      mocked_class.send :define_method , (metodo_a_modificar.to_sym) , (mocked_class.instance_method mock_method)
-         mocked_class.send :undef_method , mock_method}
+    mock_method_classes = obtener_todas_las_clases
+    mock_method_classes = mock_method_classes.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?('mock_') } }
+    mock_method_classes.each { |mocked_class|
+      mock_methods = mocked_class.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
+      mock_methods.each { |mock_method|
+        metodo_a_modificar = mock_method.to_s
+        metodo_a_modificar[0..4] = ''
+        mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
+        mocked_class.send :undef_method, mock_method }
     }
   end
 
@@ -53,8 +54,8 @@ class TADsPec
   end
 
   def self.remover_modulo_test
-    Object.send :uninclude ,TestSuite
-    Proc.send :uninclude ,TestSuite
+    Object.send :uninclude, TestSuite
+    Proc.send :uninclude, TestSuite
   end
 
   def self.testear (clase = nil, *args)
@@ -108,6 +109,7 @@ class TestContex
   def self.deberia_array
     @deberia
   end
+
   def self.deberia_init
     @deberia = []
   end
@@ -118,7 +120,7 @@ class TestContex
         begin
           TestContex.deberia_init
           test = self.new
-          analizado  = analizar_resultado(test , m.to_sym)
+          analizado = analizar_resultado(test, m.to_sym)
           print "\n El resultado del test: #{m} -> fue: #{analizado.to_s.upcase}"
           analizado
         rescue Exception => a
@@ -162,12 +164,14 @@ class TADPErrorBloc
 end
 
 class TADPMethodHistory
-  attr_accessor :method , :params
+  attr_accessor :method, :params
+
   def initialize method, *params
     self.method= method
     self.params = *params
   end
-  def se_llamo symbol , *params
+
+  def se_llamo symbol, *params
     if params.length==0
       self.method ==symbol
     else
@@ -179,55 +183,59 @@ end
 class TADPSpy
   attr_accessor :spying_object
 
-        def initialize objeto
-            self.spying_object  = objeto.clone
-            @method_list = spying_object.class.instance_methods false
-            spying_object.singleton_class.send :attr_accessor , :lista_metodos
-            spying_object.send :lista_metodos= , []
-            espiar_metodos
-          end
+  def initialize objeto
+    self.spying_object = objeto.clone
+    @method_list = spying_object.class.instance_methods false
+    spying_object.singleton_class.send :attr_accessor, :lista_metodos
+    spying_object.send :lista_metodos=, []
+    espiar_metodos
+  end
 
-          def espiar_metodos
-            @method_list.each do |m|
-              viejo_metodo = (m.to_s + '_viejo').to_sym
-              spying_object.singleton_class.send :alias_method  , viejo_metodo, m
-            spying_object.singleton_class.send :define_method, m , proc {
-                |*args|
-              self.lista_metodos << TADPMethodHistory.new(m,args)
-              self.send viejo_metodo, *args
+  def espiar_metodos
+    @method_list.each do |m|
+      viejo_metodo = (m.to_s + '_viejo').to_sym
+      spying_object.singleton_class.send :alias_method, viejo_metodo, m
+      spying_object.singleton_class.send :define_method, m, proc {
+          |*args|
+        self.lista_metodos << TADPMethodHistory.new(m, args)
+        self.send viejo_metodo, *args
       }
-            end
-          end
+    end
+  end
 
   def method_missing (symbol, *args)
     if spying_object.class.instance_methods.include? symbol
       spying_object.send symbol, *args
     else
-      super(symbol,*args)
+      super(symbol, *args)
     end
   end
 end
 
 class TADPMethodTester
   attr_accessor :metodo
+
   def initialize metodo
     self.metodo = metodo
   end
 
   def run algo
-    algo.spying_object.lista_metodos.any? {|x| x.se_llamo self.metodo }
+    algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
   end
 
   def veces numero
-    self.define_singleton_method :run do    |x| variable = x.spying_object.lista_metodos.select{|m| m.se_llamo self.metodo
+    self.define_singleton_method :run do |x|
+      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo
       }
-    variable.length ==numero
+      variable.length ==numero
     end
-self
+    self
   end
+
   def con_argumentos *args
     self.define_singleton_method :run do
-     |x| variable = x.spying_object.lista_metodos.select{|m| m.se_llamo metodo, args }
+    |x|
+      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
       variable.length>0
     end
     self
@@ -238,7 +246,7 @@ module TestSuite
   def analizar_resultado(objeto, metodo)
 
     objeto.send metodo
-    TestContex.deberia_array.all? {|resultado| resultado.eql? true}
+    TestContex.deberia_array.all? { |resultado| resultado.eql? true }
 
   end
 
@@ -247,7 +255,6 @@ module TestSuite
     TADPSpy.new algo
 
   end
-
 
 
   def mayor_a algo
@@ -291,9 +298,8 @@ module TestSuite
   end
 
 
-
   def haber_recibido algo
- TADPMethodTester.new algo
+    TADPMethodTester.new algo
   end
 
   def explotar_con algo
