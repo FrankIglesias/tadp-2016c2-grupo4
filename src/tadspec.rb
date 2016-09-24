@@ -292,27 +292,24 @@ module TestSuite
   def mayor_a algo
     proc do
     |x|
-      resultado= x > algo
-      TADResult.new resultado, "ser mayor a #{x} ", algo
+      x > algo
     end
   end
 
   def menor_a algo
     proc do
     |x|
-      resuelto= x<algo
-      TADResult.new resultado, "ser menor a #{x} ", algo
+      x<algo
     end
   end
 
   def uno_de_estos (primero, *algo)
     proc do |x|
       if primero.is_a? Array
-        resultado= primero.include? x
+        primero.include? x
       else
-        resultado= (primero.eql? x) || (algo.include? x)
+        (primero.eql? x) || (algo.include? x)
       end
-      TADResult.new resultado, "ser uno de a #{primero} ", algo
     end
   end
 
@@ -348,11 +345,7 @@ module TestSuite
       TADPBlock.new (proc { |x|
         @string = symbol.to_s
         @string[0..3]= ''
-        resultado= x.send(@string.to_sym)
-        TADResult.new resultado, true, resultado
-      }
-
-        )
+        x.send(@string.to_sym) })
 
     else
       if symbol.to_s.start_with? "tener_"
@@ -361,7 +354,7 @@ module TestSuite
         string = ('@' + string)
         if args[0].is_a? Proc
           TADPBlock.new (proc { |x|
-           args[0].call(x.instance_variable_get(string.to_sym)) })
+            args[0].call(x.instance_variable_get(string.to_sym)) })
         else
           TADPBlock.new (proc { |x|
             x.instance_variable_get(string.to_sym) == args[0] })
