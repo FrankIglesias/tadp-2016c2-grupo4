@@ -3,6 +3,7 @@ class TADsPec
     var = (Object.constants).map { |constant| Object.const_get(constant) }
     var = var.select { |constant| constant.is_a? Class }
   end
+
   def self.search_all_test_suites
     @unit_test_clases = obtener_todas_las_clases
     @unit_test_clases = @unit_test_clases.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
@@ -64,7 +65,6 @@ class TADsPec
     iniciar_entorno
     agregar_suites clase
 
-    ## CORRER TESTS
     @unit_test_clases.each do |unit_test|
       unit_test.send :include, TestSuite
       @test_totales << TestContex.correr(unit_test, args)
@@ -96,10 +96,10 @@ class TADResult
   end
 
   def analizar_resultados
-    if(self.resultado==false)
+    if (self.resultado==false)
       puts("esperaba #{esperado} y recibi #{recibido}")
     end
-    if(self.resultado==nil)
+    if (self.resultado==nil)
       puts recibido.backtrace
     end
     self.resultado
@@ -216,13 +216,13 @@ class TADPSpy
 
   def espiar_metodos
     @method_list.each do |m|
-      viejo_metodo = (m.to_s + '_viejo').to_sym
-      spying_object.singleton_class.send :alias_method, viejo_metodo, m
-      spying_object.singleton_class.send :define_method, m, proc {
-          |*args|
-        self.lista_metodos << TADPMethodHistory.new(m, args)
-        self.send viejo_metodo, *args
-      }
+      self.spying_object.class.mockear m  do
+        |*args|
+      viejo_metodo = ('mock_'+ m.to_s).to_sym
+      self.lista_metodos << TADPMethodHistory.new(m, args)
+      self.send viejo_metodo, *args
+    end
+
     end
   end
 
@@ -244,7 +244,7 @@ class TADPMethodTester
 
   def run algo
     resultado= algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
-    TADResult.new resultado, "Uno de #{algo.spying_object.lista_metodos}" ,metodo
+    TADResult.new resultado, "Uno de #{algo.spying_object.lista_metodos}", metodo
   end
 
   def veces numero
@@ -252,7 +252,7 @@ class TADPMethodTester
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo
       }
       resultado= variable.length ==numero
-      TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces" , numero
+      TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces", numero
     end
     self
   end
@@ -262,7 +262,7 @@ class TADPMethodTester
     |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
       resultado= variable.length>0
-      TADResult.new resultado, "que el metodo haya recibido #{variable.map {|m| m.params}}" , args
+      TADResult.new resultado, "que el metodo haya recibido #{variable.map { |m| m.params }}", args
     end
     self
   end
@@ -272,12 +272,12 @@ module TestSuite
 
   def analizar_resultado(objeto, metodo)
     begin
-    objeto.send metodo
-    TestContex.deberia_array.all? { |resultado| resultado.analizar_resultados }
+      objeto.send metodo
+      TestContex.deberia_array.all? { |resultado| resultado.analizar_resultados }
     rescue Exception => ex
       puts ex.backtrace
       raise
-      end
+    end
   end
 
   def espiar algo
@@ -290,25 +290,25 @@ module TestSuite
   def mayor_a algo
     proc do
     |x|
-     resultado= x > algo
-     TADResult.new resultado, "ser mayor a #{x} ", algo
+      resultado= x > algo
+      TADResult.new resultado, "ser mayor a #{x} ", algo
     end
   end
 
   def menor_a algo
     proc do
     |x|
-     resultado= x<algo
-     TADResult.new resultado, "ser menor a #{x} ", algo
+      resultado= x<algo
+      TADResult.new resultado, "ser menor a #{x} ", algo
     end
   end
 
   def uno_de_estos (primero, *algo)
     proc do |x|
       if primero.is_a? Array
-       resultado= primero.include? x
+        resultado= primero.include? x
       else
-       resultado= (primero.eql? x) || (algo.include? x)
+        resultado= (primero.eql? x) || (algo.include? x)
       end
       TADResult.new resultado, "ser uno de a #{primero} ", algo
     end
@@ -347,7 +347,7 @@ module TestSuite
         @string = symbol.to_s
         @string[0..3]= ''
         resultado= x.send(@string.to_sym)
-        TADResult.new resultado, true, resultado})
+        TADResult.new resultado, true, resultado })
 
     else
       if symbol.to_s.start_with? "tener_"
@@ -360,14 +360,14 @@ module TestSuite
         else
           TADPBlock.new (proc { |x|
             resultado= x.instance_variable_get(string.to_sym) == args[0]
-            TADResult.new resultado, x.instance_variable_get(string.to_sym), args[0]})
+            TADResult.new resultado, x.instance_variable_get(string.to_sym), args[0] })
         end
       else
         super(symbol, *args)
       end
     end
   end
-  end
+end
 
 
 
