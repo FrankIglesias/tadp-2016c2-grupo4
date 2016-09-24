@@ -99,13 +99,11 @@ class TADResult
     if(self.resultado==false)
       puts("esperaba #{esperado} y recibi #{recibido}")
     end
-
     if(self.resultado==nil)
       puts recibido.backtrace
     end
     self.resultado
   end
-
 end
 
 class Module
@@ -273,10 +271,13 @@ end
 module TestSuite
 
   def analizar_resultado(objeto, metodo)
-
+    begin
     objeto.send metodo
     TestContex.deberia_array.all? { |resultado| resultado.analizar_resultados }
-
+    rescue Exception => ex
+      puts ex.backtrace
+      raise
+      end
   end
 
   def espiar algo
@@ -358,13 +359,15 @@ module TestSuite
             args[0].call(x.instance_variable_get(string.to_sym)) })
         else
           TADPBlock.new (proc { |x|
-            x.instance_variable_get(string.to_sym) == args[0] })
+            resultado= x.instance_variable_get(string.to_sym) == args[0]
+            TADResult.new resultado, x.instance_variable_get(string.to_sym), args[0]})
         end
       else
         super(symbol, *args)
       end
     end
   end
-end
+  end
+
 
 

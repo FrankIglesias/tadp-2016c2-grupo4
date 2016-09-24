@@ -102,7 +102,7 @@ describe 'TADSPEC tests' do
 
 
       def testear_que_pipipi
-        leandro = Persona.new 30
+        leandro = Persona.new
         leandro.deberia entender :viejo? # pasa
       end
     end
@@ -179,5 +179,28 @@ describe 'TADSPEC tests' do
 
   end
 
+  it 'testear que falla' do
+    class PersonaTestecito
+      def testear_que_son_las_4_am
+        fran = Persona.new 15
+        fran.deberia ser_viejo?
+      end
+    end
+
+    expect(TADsPec.testear PersonaTestecito).to eq([false])
+
+  end
+
+  it 'testear que rompe todo a la mierda' do
+    class PersonaTestecitos
+      def testear_que_son_las_4_am
+        fran = Persona.new 15
+        fran.deberia ser_puto?
+      end
+    end
+
+    expect(TADsPec.testear PersonaTestecitos).to eq([nil])
+
+  end
 
 end
