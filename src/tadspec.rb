@@ -85,6 +85,32 @@ class TADsPec
   end
 end
 
+class TADResult
+
+  attr_accessor :resultado, :esperado, :recibido
+
+  def initialize resultado, esperado= nil, recibido= nil
+    self.resultado= resultado
+    self.esperado= esperado
+    self.recibido= recibido
+  end
+
+  def analizar_resultados
+    if(self.resultado==false)
+      puts("esperaba #{esperado} y recibi #{recibido}")
+    end
+
+    if(self.resultado==true)
+      true
+    end
+
+    if(self.resultado==nil)
+      puts recibido.backtrace
+    end
+  end
+
+end
+
 class Module
   def uninclude(mod)
     mod.instance_methods.each do |method|
@@ -145,7 +171,8 @@ class TADPObject
   end
 
   def run algo
-    @object.eql? algo
+    resultado= @object.eql? algo
+    TADResult.new resultado, @object, algo
   end
 end
 
@@ -158,7 +185,8 @@ class TADPErrorBloc
     begin
       algo.call
     rescue Exception => ex
-      ex.class.ancestors.include? (@tipo_error)
+      resultado= ex.class.ancestors.include? (@tipo_error)
+      TADResult.new resultado, @tipo_error, ex.class
     end
   end
 end
@@ -220,14 +248,16 @@ class TADPMethodTester
   end
 
   def run algo
-    algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
+    resultado= algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
+    TADResult.new resultado, "Uno de #{algo.spying_object.lista_metodos}" ,metodo
   end
 
   def veces numero
     self.define_singleton_method :run do |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo
       }
-      variable.length ==numero
+      resultado= variable.length ==numero
+      TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces" , numero
     end
     self
   end
@@ -236,17 +266,19 @@ class TADPMethodTester
     self.define_singleton_method :run do
     |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
-      variable.length>0
+      resultado= variable.length>0
+      TADResult.new resultado, "que el metodo haya recibido #{variable.map {|m| m.params}}" , args
     end
     self
   end
 end
+
 module TestSuite
 
   def analizar_resultado(objeto, metodo)
 
     objeto.send metodo
-    TestContex.deberia_array.all? { |resultado| resultado.eql? true }
+    TestContex.deberia_array.all? { |resultado| resultado.analizar_resultados }
 
   end
 
@@ -285,7 +317,8 @@ module TestSuite
     TADPBlock.new (
                       proc do
                       |x|
-                        x.respond_to? symbol
+                        resultado= x.respond_to? symbol
+                        TADResult.new resultado, "alguno de #{x.methods} \n", symbol
                       end)
   end
 
