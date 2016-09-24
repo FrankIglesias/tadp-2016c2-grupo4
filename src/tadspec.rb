@@ -100,13 +100,10 @@ class TADResult
       puts("esperaba #{esperado} y recibi #{recibido}")
     end
 
-    if(self.resultado==true)
-      true
-    end
-
     if(self.resultado==nil)
       puts recibido.backtrace
     end
+    self.resultado
   end
 
 end
@@ -292,24 +289,27 @@ module TestSuite
   def mayor_a algo
     proc do
     |x|
-      x > algo
+     resultado= x > algo
+     TADResult.new resultado, "ser mayor a #{x} ", algo
     end
   end
 
   def menor_a algo
     proc do
     |x|
-      x<algo
+     resultado= x<algo
+     TADResult.new resultado, "ser menor a #{x} ", algo
     end
   end
 
   def uno_de_estos (primero, *algo)
     proc do |x|
       if primero.is_a? Array
-        primero.include? x
+       resultado= primero.include? x
       else
-        (primero.eql? x) || (algo.include? x)
+       resultado= (primero.eql? x) || (algo.include? x)
       end
+      TADResult.new resultado, "ser uno de a #{primero} ", algo
     end
   end
 
@@ -345,7 +345,8 @@ module TestSuite
       TADPBlock.new (proc { |x|
         @string = symbol.to_s
         @string[0..3]= ''
-        x.send(@string.to_sym) })
+        resultado= x.send(@string.to_sym)
+        TADResult.new resultado, true, resultado})
 
     else
       if symbol.to_s.start_with? "tener_"
