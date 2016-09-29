@@ -1,5 +1,4 @@
 require '../src/TADPClasses'
-require '../src/ClassRefactors'
 require '../src/TestSuite'
 
 class TADsPec

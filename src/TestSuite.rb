@@ -1,4 +1,3 @@
-
 module TestSuite
 
   def analizar_resultado(objeto, metodo)
@@ -55,7 +54,7 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc { |valor_a_comparar| TADResult.new(matcher==valor_a_comparar, valor_a_comparar,matcher) }
+      proc { |valor_a_comparar| TADResult.new(matcher==valor_a_comparar, valor_a_comparar, matcher) }
     end
   end
 
@@ -102,18 +101,11 @@ module TestSuite
   end
 
   def method_missing(symbol, *args)
-
     name = symbol.to_s
     if self.is_a_dynamic_matcher?(name)
       dynamic_name = name.sub('tener_', "").sub('ser_', "")
-
-      if name.start_with? 'tener_'
-        self.dynamic_variable(dynamic_name, args[0])
-      else  if name.start_with? 'ser_'
-              self.dynamic_method(dynamic_name)
-            end
-      end
-
+      return self.dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
+      return self.dynamic_method(dynamic_name) if name.start_with? 'ser_'
     else
       super(symbol, *args)
     end

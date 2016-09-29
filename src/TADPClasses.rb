@@ -79,7 +79,6 @@ class TADPMethodTester
     self
   end
 end
-
 class TADResult
 
   attr_accessor :resultado, :esperado, :recibido
