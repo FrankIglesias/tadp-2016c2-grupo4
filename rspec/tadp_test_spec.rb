@@ -24,50 +24,53 @@ describe 'TADSPEC tests' do
         a.deberia tener_hello 25
       end
 
-      def testear_que_algo
+
+    def testear_que_algo
         a = A.new
         proc{ a.hoalslafls }.deberia explotar_con NoMethodError
       end
 
 
 
+
+    end
     end
 
     class B
-      attr_accessor :hello,:o
+    attr_accessor :hello,:o
 
-      def initialize
-        @hello = 25
-        @o="holas"
-      end
+    def initialize
+      @hello = 25
+      @o="holas"
+    end
 
-      def hola?
-        true
-      end
+    def hola?
+      true
+    end
 
-      def testear_que_holis
-        b = A.new
-        b.deberia ser_hola?
-      end
+    def testear_que_holis
+      b = A.new
+      b.deberia ser_hola?
+    end
 
-      def testear_que_sea_mayor
-        b = A.new
-        b.hello.deberia ser mayor_a 15
-      end
+    def testear_que_sea_mayor
+      b = A.new
+      b.hello.deberia ser mayor_a 15
+    end
 
-      def testear_que_sea_menor
-        b = A.new
-        b.hello.deberia ser menor_a 60
-      end
+    def testear_que_sea_menor
+      b = A.new
+      b.hello.deberia ser menor_a 60
+    end
 
-      def testear_que_ande_el_ser
-        7.deberia ser 7
-      end
-
-
+    def testear_que_ande_el_ser
+      7.deberia ser 7
     end
 
   end
+
+
+
 
 
   it 'test_sencillo ' do

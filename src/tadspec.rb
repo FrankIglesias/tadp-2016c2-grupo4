@@ -43,7 +43,7 @@ class TADsPec
       mock_methods.each { |mock_method|
         metodo_a_modificar = mock_method.to_s.sub('mock_', "")
         mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
-        mocked_class.send :undef, mock_method }
+        mocked_class.send(:undef_method, mock_method) }
     }
   end
 
@@ -160,21 +160,6 @@ class TADPObject
   def run algo
     resultado= @object.eql? algo
     TADResult.new resultado, @object, algo
-  end
-end
-
-class TADPErrorBloc
-  def initialize error
-    @tipo_error=error
-  end
-
-  def run algo
-    begin
-      algo.call
-    rescue Exception => ex
-      resultado= ex.class.ancestors.include? (@tipo_error)
-      TADResult.new resultado, @tipo_error, ex.class
-    end
   end
 end
 
@@ -307,7 +292,7 @@ module TestSuite
 
   def entender(metodo)
     proc do |objeto|
-      TADResult.new(objeto.respond_to? metodo, "alguno de #{objeto.methods} \n", metodo)
+      TADResult.new(objeto.respond_to?(metodo), "alguno de #{objeto.methods} \n", metodo)
     end
   end
 
@@ -315,7 +300,7 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc { |valor_a_comparar| matcher == valor_a_comparar }
+      proc { |valor_a_comparar| TADResult.new(matcher==valor_a_comparar, valor_a_comparar,matcher) }
     end
   end
 
@@ -325,8 +310,16 @@ module TestSuite
   end
 
   def explotar_con (algo)
-    TADPErrorBloc.new algo
-  end
+    proc do
+    |objeto|
+      begin
+        objeto.call
+      rescue Exception => ex
+        resultado= ex.class.ancestors.include? (algo)
+        TADResult.new resultado, algo, ex.class
+      end
+    end
+      end
 
   def is_a_dynamic_matcher?(name)
     name.start_with?('ser_')|| name.start_with?('tener_')
@@ -339,17 +332,18 @@ module TestSuite
       end
     else
       proc do |objeto|
-        dynamic_name.insert(0, '@').to_sym
-        TADResult.new(objeto.instance_variable_get(dynamic_name.to_sym)==value, x.instance_variable_get(string.to_sym), value)
+        dynamic_name= ('@' + dynamic_name).to_sym
+        TADResult.new(objeto.instance_variable_get(dynamic_name.to_sym)==value, objeto.instance_variable_get(dynamic_name.to_sym), value)
       end
     end
 
   end
 
-  def dynamic_method(dynamic_name, value)
+  def dynamic_method(dynamic_name)
+    puts("ebtre")
     proc do |objeto|
-      puts "rompe"
-      ##objeto.send(dynamic_name.to_sym, value)
+      resultado= objeto.send(dynamic_name.to_sym)
+      TADResult.new(resultado, true, resultado)
     end
   end
 
@@ -358,8 +352,14 @@ module TestSuite
     name = symbol.to_s
     if self.is_a_dynamic_matcher?(name)
       dynamic_name = name.sub('tener_', "").sub('ser_', "")
-      self.dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
-      self.dynamic_method(dynamic_name, args[0]) if name.start_with? 'ser_'
+
+      if name.start_with? 'tener_'
+      self.dynamic_variable(dynamic_name, args[0])
+      else  if name.start_with? 'ser_'
+        self.dynamic_method(dynamic_name)
+            end
+      end
+
     else
       super(symbol, *args)
     end
