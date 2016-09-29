@@ -245,8 +245,7 @@ class TADPMethodTester
 
   def veces numero
     self.define_singleton_method :run do |x|
-      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo
-      }
+      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo }
       resultado= variable.length ==numero
       TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces", numero
     end
@@ -276,54 +275,43 @@ module TestSuite
     end
   end
 
-  def espiar algo
-
-    TADPSpy.new algo
-
+  def espiar(objeto_espiado)
+    TADPSpy.new(objeto_espiado)
   end
 
-
-  def mayor_a algo
-    proc do
-    |x|
-      resultado= x > algo
-      TADResult.new resultado, "ser mayor a #{x} ", algo
+  def mayor_a(numero)
+    proc do |objeto|
+      TADResult.new(objeto > numero, "ser mayor a #{objeto} ", numero)
     end
   end
 
-  def menor_a algo
-    proc do
-    |x|
-      resultado= x<algo
-      TADResult.new resultado, "ser menor a #{x} ", algo
+  def menor_a(numero)
+    proc do |objeto|
+      TADResult.new(objeto < numero, "ser menor a #{objeto} ", numero)
     end
   end
 
-  def uno_de_estos (primero, *algo)
-    proc do |x|
-      if primero.is_a? Array
-        resultado= primero.include? x
-      else
-        resultado= (primero.eql? x) || (algo.include? x)
-      end
-      TADResult.new resultado, "ser uno de a #{primero} ", algo
+  def uno_de_estos(primero, *demas_valores)
+    lista_parametros = []
+    lista_parametros << primero << demas_valores
+    lista_parametros.flatten!
+
+    proc do |objeto|
+      TADResult.new((lista_parametros.include? objeto), "ser uno de a #{primero} ", lista_parametros)
     end
   end
 
-  def entender symbol
-    TADPBlock.new (
-                      proc do
-                      |x|
-                        resultado= x.respond_to? symbol
-                        TADResult.new resultado, "alguno de #{x.methods} \n", symbol
-                      end)
+  def entender(metodo)
+    proc do |objeto|
+      TADResult.new(objeto.respond_to? metodo, "alguno de #{objeto.methods} \n", metodo)
+    end
   end
 
-  def ser (algo)
-    if algo.send(:is_a?, Proc)
-      TADPBlock.new algo
+  def ser (matcher)
+    if matcher.is_a? Proc
+      matcher
     else
-      TADPObject.new algo
+      proc {|valor_a_comparar| matcher == valor_a_comparar }
     end
   end
 
