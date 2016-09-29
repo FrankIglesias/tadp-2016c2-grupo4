@@ -1,7 +1,7 @@
 class Module
   def uninclude(mod)
     mod.instance_methods.each do |method|
-    undef_method(method)
+      undef_method(method)
     end
   end
 end
@@ -25,7 +25,7 @@ class TADsPec
   end
 
   def self.iniciar_entorno
-    deberia_proc = proc { |algo| TestContex.deberia_array << (algo.run(self)) }
+    deberia_proc = proc { |algo| TestContex.deberia_array << (algo.call(self)) }
     mockear_proc = proc { |symbol, &block| self.send :alias_method, ('mock_'+symbol.to_s).to_sym, symbol
     self.send :define_method, symbol, block }
     Object.send :include, TestSuite
@@ -53,11 +53,11 @@ class TADsPec
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
     remove_mock_methods
-   ## remover_modulo_test
+    ## remover_modulo_test
   end
 
   def self.remover_modulo_test
-    Object.uninclude  TestSuite
+    Object.uninclude TestSuite
     Proc.send :uninclude, TestSuite
   end
 
@@ -150,11 +150,6 @@ class TestContex
 
 end
 
-class TADPBlock
-  def initialize block
-    self.define_singleton_method(:run, block)
-  end
-end
 
 class TADPObject
   def initialize algo
@@ -212,12 +207,12 @@ class TADPSpy
 
   def espiar_metodos
     @method_list.each do |m|
-      self.spying_object.class.mockear m  do
-        |*args|
-      viejo_metodo = ('mock_'+ m.to_s).to_sym
-      self.lista_metodos << TADPMethodHistory.new(m, args)
-      self.send viejo_metodo, *args
-    end
+      self.spying_object.class.mockear m do
+      |*args|
+        viejo_metodo = ('mock_'+ m.to_s).to_sym
+        self.lista_metodos << TADPMethodHistory.new(m, args)
+        self.send viejo_metodo, *args
+      end
 
     end
   end
@@ -226,7 +221,7 @@ class TADPSpy
     if spying_object.class.instance_methods.include? symbol
       spying_object.send symbol, *args
     else
-      super(symbol, *args)
+      super
     end
   end
 end
@@ -238,13 +233,13 @@ class TADPMethodTester
     self.metodo = metodo
   end
 
-  def run algo
+  def call algo
     resultado= algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
     TADResult.new resultado, "Uno de #{algo.spying_object.lista_metodos}", metodo
   end
 
   def veces numero
-    self.define_singleton_method :run do |x|
+    self.define_singleton_method :call do |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo }
       resultado= variable.length ==numero
       TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces", numero
@@ -253,7 +248,7 @@ class TADPMethodTester
   end
 
   def con_argumentos *args
-    self.define_singleton_method :run do
+    self.define_singleton_method :call do
     |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
       resultado= variable.length>0
@@ -311,7 +306,7 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc {|valor_a_comparar| matcher == valor_a_comparar }
+      proc { |valor_a_comparar| matcher == valor_a_comparar }
     end
   end
 
@@ -324,31 +319,32 @@ module TestSuite
     TADPErrorBloc.new algo
   end
 
+  def self.is_a_dynamic_matcher?(name)
+    name.start_with? ('ser_')|| name.start_with? ('tener_')
+  end
+
+  def self.dynamic_variable(dynamic_name, value)
+    dynamic_name.insert(0, '@').to_sym    unless value.is_a? Proc
+    proc do |objeto|
+      objeto.instance_variable_get(dynamic_name.to_sym).deberia ser value
+      ##value.call(objeto.instance_variable_get(dynamic_name.to_sym))
+    end
+  end
+
+  def self.dynamic_method(dynamic_name, value)
+    proc do |objeto|
+      objeto.send(dynamic_name.to_sym, value)
+    end
+  end
+
   def method_missing(symbol, *args)
-    if symbol.to_s.start_with? "ser_"
-
-      TADPBlock.new (proc { |x|
-        @string = symbol.to_s
-        @string[0..3]= ''
-        resultado= x.send(@string.to_sym)
-        TADResult.new resultado, true, resultado })
-
+    name = symbol.to_s
+    if is_a_dynamic_matcher?(name)
+      dynamic_name = name.sub('tener_', "").sub('ser_', "")
+      dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
+      dynamic_method(dynamic_name, args[0]) if name.start_with? 'ser_'
     else
-      if symbol.to_s.start_with? "tener_"
-        string = symbol.to_s
-        string[0..5]=''
-        string = ('@' + string)
-        if args[0].is_a? Proc
-          TADPBlock.new (proc { |x|
-            args[0].call(x.instance_variable_get(string.to_sym)) })
-        else
-          TADPBlock.new (proc { |x|
-            resultado= x.instance_variable_get(string.to_sym) == args[0]
-            TADResult.new resultado, x.instance_variable_get(string.to_sym), args[0] })
-        end
-      else
-        super(symbol, *args)
-      end
+      super
     end
   end
 end
