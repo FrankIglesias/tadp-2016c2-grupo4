@@ -5,6 +5,8 @@ class Module
     end
   end
 end
+
+
 class TADsPec
   def self.obtener_todas_las_clases
     var = (Object.constants).map { |constant| Object.const_get(constant) }
@@ -28,8 +30,8 @@ class TADsPec
     deberia_proc = proc { |algo| TestContex.deberia_array << (algo.call(self)) }
     mockear_proc = proc { |symbol, &block| self.send :alias_method, ('mock_'+symbol.to_s).to_sym, symbol
     self.send :define_method, symbol, block }
-    Object.send :include, TestSuite
-    Proc.send :include, TestSuite
+    #Object.send :include, ModuleRemover
+    #Proc.send :include, TestSuite
     Object.send :define_method, :deberia, deberia_proc
     Proc.send :define_method, :deberia, deberia_proc
     Class.send :define_method, :mockear, mockear_proc
@@ -47,6 +49,7 @@ class TADsPec
     }
   end
 
+
   def self.remover_metodos_peligrosos
     Object.send :remove_method, :deberia
     Proc.send :remove_method, :deberia
@@ -54,6 +57,7 @@ class TADsPec
     remove_mock_methods
     ## remover_modulo_test
   end
+
 
   def self.remover_modulo_test
     Object.uninclude TestSuite
@@ -109,9 +113,11 @@ end
 
 
 class TestContex
+
   def self.correr(clase, lista)
     @var = []
     @object = clase
+    @object.class.send(:include, TestSuite)
     if lista.length > 0
       @test_methods = lista
     else
@@ -340,7 +346,6 @@ module TestSuite
   end
 
   def dynamic_method(dynamic_name)
-    puts("ebtre")
     proc do |objeto|
       resultado= objeto.send(dynamic_name.to_sym)
       TADResult.new(resultado, true, resultado)
