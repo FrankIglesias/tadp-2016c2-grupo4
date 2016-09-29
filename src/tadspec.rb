@@ -41,10 +41,9 @@ class TADsPec
     mock_method_classes.each { |mocked_class|
       mock_methods = mocked_class.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
       mock_methods.each { |mock_method|
-        metodo_a_modificar = mock_method.to_s
-        metodo_a_modificar[0..4] = ''
+        metodo_a_modificar = mock_method.to_s.sub('mock_', "")
         mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
-        mocked_class.send :undef_method, mock_method }
+        mocked_class.send :undef, mock_method }
     }
   end
 
@@ -139,6 +138,8 @@ class TestContex
           test = self.new
           analizado = analizar_resultado(test, m.to_sym)
           print "\n El resultado del test: #{m} -> fue: #{analizado.to_s.upcase}"
+        ##  eliminar_mock_methods
+        ##  TestSuite.methods.each { |suite_method| self.undef_method suite_method }
           analizado
         rescue Exception => a
           print "\n El resultado del test #{m} -> fue: EXPLOSIVO = #{a}"
@@ -221,7 +222,7 @@ class TADPSpy
     if spying_object.class.instance_methods.include? symbol
       spying_object.send symbol, *args
     else
-      super
+      super(symbol, *args)
     end
   end
 end
@@ -270,6 +271,14 @@ module TestSuite
     end
   end
 
+  def eliminar_mock_methods
+    metodos_mockeados = self.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
+    metodos_mockeados.each { |mock_method|
+      metodo_a_modificar = mock_method.to_s.sub('mock_', "")
+      self.send :define_method, (metodo_a_modificar.to_sym), (self.instance_method mock_method)
+      self.send :undef, mock_method }
+  end
+
   def espiar(objeto_espiado)
     TADPSpy.new(objeto_espiado)
   end
@@ -311,40 +320,48 @@ module TestSuite
   end
 
 
-  def haber_recibido algo
+  def haber_recibido(algo)
     TADPMethodTester.new algo
   end
 
-  def explotar_con algo
+  def explotar_con (algo)
     TADPErrorBloc.new algo
   end
 
-  def self.is_a_dynamic_matcher?(name)
-    name.start_with? ('ser_')|| name.start_with? ('tener_')
+  def is_a_dynamic_matcher?(name)
+    name.start_with?('ser_')|| name.start_with?('tener_')
   end
 
-  def self.dynamic_variable(dynamic_name, value)
-    dynamic_name.insert(0, '@').to_sym    unless value.is_a? Proc
-    proc do |objeto|
-      objeto.instance_variable_get(dynamic_name.to_sym).deberia ser value
-      ##value.call(objeto.instance_variable_get(dynamic_name.to_sym))
+  def dynamic_variable(dynamic_name, value)
+    if value.is_a? Proc
+      proc do |objeto|
+        value.call(objeto.instance_variable_get(dynamic_name.to_sym))
+      end
+    else
+      proc do |objeto|
+        dynamic_name.insert(0, '@').to_sym
+        TADResult.new(objeto.instance_variable_get(dynamic_name.to_sym)==value, x.instance_variable_get(string.to_sym), value)
+      end
     end
+
   end
 
-  def self.dynamic_method(dynamic_name, value)
+  def dynamic_method(dynamic_name, value)
     proc do |objeto|
-      objeto.send(dynamic_name.to_sym, value)
+      puts "rompe"
+      ##objeto.send(dynamic_name.to_sym, value)
     end
   end
 
   def method_missing(symbol, *args)
+
     name = symbol.to_s
-    if is_a_dynamic_matcher?(name)
+    if self.is_a_dynamic_matcher?(name)
       dynamic_name = name.sub('tener_', "").sub('ser_', "")
-      dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
-      dynamic_method(dynamic_name, args[0]) if name.start_with? 'ser_'
+      self.dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
+      self.dynamic_method(dynamic_name, args[0]) if name.start_with? 'ser_'
     else
-      super
+      super(symbol, *args)
     end
   end
 end
