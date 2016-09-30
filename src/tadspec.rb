@@ -46,18 +46,19 @@ class TADsPec
   end
 
 
-  def self.remover_metodos_peligrosos
+  def self.remover_metodos_peligrosos(lista_unit)
     Object.send :remove_method, :deberia
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
     remove_mock_methods
-    ## remover_modulo_test
+    #remover_modulo_test(lista_unit)
   end
 
 
-  def self.remover_modulo_test
-    Object.uninclude TestSuite
-    Proc.send :uninclude, TestSuite
+  def self.remover_modulo_test(lista_unit)
+    lista_unit.each do |unit|
+      unit.send(:uninclude,TestSuite)
+    end
   end
 
   def self.testear (clase = nil, *args)
@@ -72,7 +73,7 @@ class TADsPec
       puts "\n"
     end
 
-    remover_metodos_peligrosos
+    remover_metodos_peligrosos(lista_suits)
     generar_reporte(lista_test_totales.flatten)
 
   end
