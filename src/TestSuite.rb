@@ -13,7 +13,7 @@ module TestSuite
   def eliminar_mock_methods
     metodos_mockeados = self.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
     metodos_mockeados.each { |mock_method|
-      metodo_a_modificar = mock_method.to_s.sub('mock_', "")
+      metodo_a_modificar = mock_method.to_s.sub('mock_', '')
       self.send :define_method, (metodo_a_modificar.to_sym), (self.instance_method mock_method)
       self.send :undef, mock_method }
   end
@@ -103,7 +103,7 @@ module TestSuite
   def method_missing(symbol, *args)
     name = symbol.to_s
     if self.is_a_dynamic_matcher?(name)
-      dynamic_name = name.sub('tener_', "").sub('ser_', "")
+      dynamic_name = name.sub('tener_', '').sub('ser_', '')
       return self.dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
       return self.dynamic_method(dynamic_name) if name.start_with? 'ser_'
     else

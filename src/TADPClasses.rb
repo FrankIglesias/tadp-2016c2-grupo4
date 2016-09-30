@@ -1,13 +1,12 @@
-
 class TADPMethodHistory
   attr_accessor :method, :params
 
-  def initialize method, *params
+  def initialize (method, *params)
     self.method= method
     self.params = *params
   end
 
-  def se_llamo symbol, *params
+  def se_llamo (symbol, *params)
     if params.length==0
       self.method ==symbol
     else
@@ -19,16 +18,16 @@ end
 class TADPSpy
   attr_accessor :spying_object
 
-  def initialize objeto
-    self.spying_object = objeto.clone
+  def initialize (objeto)
+    self.spying_object = objeto
     lista_metodos_a_espiar = spying_object.class.instance_methods false
     spying_object.singleton_class.send :attr_accessor, :lista_metodos
     spying_object.send :lista_metodos=, []
     espiar_metodos(lista_metodos_a_espiar)
   end
 
-  def espiar_metodos(lista_metodos_a_espiar)
-    lista_metodos_a_espiar.each do |m|
+  def espiar_metodos(lista_metodos)
+    lista_metodos.each do |m|
       self.spying_object.class.mockear m do
       |*args|
         viejo_metodo = ('mock_'+ m.to_s).to_sym
@@ -51,16 +50,15 @@ end
 class TADPMethodTester
   attr_accessor :metodo
 
-  def initialize metodo
+  def initialize (metodo)
     self.metodo = metodo
   end
 
-  def call algo
-    resultado= algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
-    TADResult.new resultado, "\n Uno de #{algo.spying_object.lista_metodos}", metodo
+  def call (algo)
+    TADResult.new(algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }, "\n Uno de #{algo.spying_object.lista_metodos}", metodo)
   end
 
-  def veces numero
+  def veces (numero)
     self.define_singleton_method :call do |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo }
       resultado= variable.length ==numero
@@ -69,12 +67,11 @@ class TADPMethodTester
     self
   end
 
-  def con_argumentos *args
+  def con_argumentos (*args)
     self.define_singleton_method :call do
     |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
-      resultado= variable.length>0
-      TADResult.new resultado, "\n que el metodo haya recibido #{variable.map { |m| m.params }}", args
+      TADResult.new(variable.length>0, "\n que el metodo haya recibido #{variable.map { |m| m.params }}", args)
     end
     self
   end
@@ -83,19 +80,16 @@ class TADResult
 
   attr_accessor :resultado, :esperado, :recibido
 
-  def initialize resultado, esperado= nil, recibido= nil
+  def initialize (resultado, esperado= nil, recibido= nil)
     self.resultado= resultado
     self.esperado= esperado
     self.recibido= recibido
   end
 
   def analizar_resultados
-    if (self.resultado==false)
-      puts("\n esperaba #{esperado} y recibi #{recibido}")
-    end
-    if (self.resultado==nil)
-      puts recibido.backtrace
-    end
+
+    puts("\n esperaba #{esperado} y recibi #{recibido}") if (self.resultado.eql? false)
+    puts recibido.backtrace if (self.resultado.nil?)
     self.resultado
   end
 end

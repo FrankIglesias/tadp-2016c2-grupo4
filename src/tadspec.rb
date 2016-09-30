@@ -5,12 +5,12 @@ class TADsPec
 
   def self.obtener_todas_las_clases
     var = (Object.constants).map { |constant| Object.const_get(constant) }
-    var = var.select { |constant| constant.is_a? Class }
+    var.select { |constant| constant.is_a? Class }
   end
 
   def self.search_all_test_suites(lista_suit)
     lista_suit = obtener_todas_las_clases
-    lista_suit = lista_suit.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
+   lista_suit.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
   end
 
   def self.agregar_suites(clase,lista_suit)
@@ -38,7 +38,7 @@ class TADsPec
     mock_method_classes.each { |mocked_class|
       mock_methods = mocked_class.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
       mock_methods.each { |mock_method|
-        metodo_a_modificar = mock_method.to_s.sub('mock_', "")
+        metodo_a_modificar = mock_method.to_s.sub('mock_', '')
         mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
         mocked_class.send(:undef_method, mock_method) }
     }
