@@ -21,14 +21,14 @@ class TADPSpy
 
   def initialize objeto
     self.spying_object = objeto.clone
-    @method_list = spying_object.class.instance_methods false
+    lista_metodos_a_espiar = spying_object.class.instance_methods false
     spying_object.singleton_class.send :attr_accessor, :lista_metodos
     spying_object.send :lista_metodos=, []
-    espiar_metodos
+    espiar_metodos(lista_metodos_a_espiar)
   end
 
-  def espiar_metodos
-    @method_list.each do |m|
+  def espiar_metodos(lista_metodos_a_espiar)
+    lista_metodos_a_espiar.each do |m|
       self.spying_object.class.mockear m do
       |*args|
         viejo_metodo = ('mock_'+ m.to_s).to_sym
