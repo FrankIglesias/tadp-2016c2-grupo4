@@ -9,16 +9,16 @@ class TADsPec
     var = var.select { |constant| constant.is_a? Class }
   end
 
-  def self.search_all_test_suites
-    @unit_test_clases = obtener_todas_las_clases
-    @unit_test_clases = @unit_test_clases.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
+  def self.search_all_test_suites(lista_suit)
+    lista_suit = obtener_todas_las_clases
+    lista_suit = lista_suit.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
   end
 
-  def self.agregar_suites(clase)
+  def self.agregar_suites(clase,lista_suit)
     if clase.is_a? Class
-      @unit_test_clases << clase
+      lista_suit << clase
     else
-      search_all_test_suites
+      search_all_test_suites(lista_suit)
     end
   end
 
@@ -61,19 +61,19 @@ class TADsPec
   end
 
   def self.testear (clase = nil, *args)
-    @unit_test_clases = []
-    @test_totales = []
+    lista_suits = []
+    lista_test_totales = []
     iniciar_entorno
-    agregar_suites clase
+    agregar_suites(clase,lista_suits)
 
-    @unit_test_clases.each do |unit_test|
+    lista_suits.each do |unit_test|
       unit_test.send :include, TestSuite
-      @test_totales << TestContex.correr(unit_test, args)
+      lista_test_totales << TestContex.correr(unit_test, args)
       puts "\n"
     end
 
     remover_metodos_peligrosos
-    generar_reporte(@test_totales.flatten)
+    generar_reporte(lista_test_totales.flatten)
 
   end
 
