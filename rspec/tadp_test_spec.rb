@@ -22,6 +22,7 @@ describe 'TADSPEC tests' do
         a.deberia tener_hello 25
         a.deberia tener_hello 25
         a.deberia tener_hello 25
+        1.deberia ser 1
       end
 
 

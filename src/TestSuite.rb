@@ -1,14 +1,6 @@
 module TestSuite
 
-  def analizar_resultado(objeto, metodo)
-    begin
-      objeto.send metodo
-      TestContex.deberia_array.all? { |resultado| resultado.analizar_resultados }
-    rescue Exception => ex
-      puts ex.backtrace
-      raise
-    end
-  end
+
 
   def eliminar_mock_methods
     metodos_mockeados = self.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
