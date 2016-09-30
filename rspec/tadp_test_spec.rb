@@ -1,5 +1,7 @@
 require 'rspec'
-require  '../src/tadspec'
+require  '../src/TADsPec'
+
+
 
 describe 'TADSPEC tests' do
 

@@ -1,3 +1,7 @@
+require_relative '../../src/helpers/TADPSpy'
+require_relative '../../src/helpers/TADPResult'
+require_relative '../../src/helpers/TADPMethodTester'
+
 module TestSuite
 
   def espiar(objeto_espiado)
@@ -6,13 +10,13 @@ module TestSuite
 
   def mayor_a(numero)
     proc do |objeto|
-      TADResult.new(objeto > numero, "\n ser mayor a #{objeto} ", numero)
+      TADPResult.new(objeto > numero, "\n ser mayor a #{objeto} ", numero)
     end
   end
 
   def menor_a(numero)
     proc do |objeto|
-      TADResult.new(objeto < numero, "\n ser menor a #{objeto} ", numero)
+      TADPResult.new(objeto < numero, "\n ser menor a #{objeto} ", numero)
     end
   end
 
@@ -22,13 +26,13 @@ module TestSuite
     lista_parametros.flatten!
 
     proc do |objeto|
-      TADResult.new((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
+      TADPResult.new((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
     end
   end
 
   def entender(metodo)
     proc do |objeto|
-      TADResult.new(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
+      TADPResult.new(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
     end
   end
 
@@ -36,7 +40,7 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc { |valor_a_comparar| TADResult.new(matcher==valor_a_comparar, valor_a_comparar, matcher) }
+      proc { |valor_a_comparar| TADPResult.new(matcher==valor_a_comparar, valor_a_comparar, matcher) }
     end
   end
 
@@ -52,7 +56,7 @@ module TestSuite
         objeto.call
       rescue Exception => ex
         resultado= ex.class.ancestors.include? (error)
-        TADResult.new resultado, error, ex.class
+        TADPResult.new resultado, error, ex.class
       end
     end
   end
@@ -69,7 +73,7 @@ module TestSuite
       end
     else
       proc do |objeto|
-        TADResult.new(objeto.instance_variable_get(dynamic_name)==value, objeto.instance_variable_get(dynamic_name), value)
+        TADPResult.new(objeto.instance_variable_get(dynamic_name)==value, objeto.instance_variable_get(dynamic_name), value)
       end
     end
 
@@ -78,7 +82,7 @@ module TestSuite
   def dynamic_method(dynamic_name)
     proc do |objeto|
       resultado= objeto.send(dynamic_name.to_sym)
-      TADResult.new(resultado, true, resultado)
+      TADPResult.new(resultado, true, resultado)
     end
   end
 
