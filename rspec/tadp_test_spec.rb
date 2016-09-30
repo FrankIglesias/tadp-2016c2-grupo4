@@ -70,6 +70,16 @@ describe 'TADSPEC tests' do
 
   end
 
+  class Persona
+    attr_accessor :edad
+    def initialize algo
+      self.edad = algo
+    end
+
+    def viejo?
+      self.edad > 29
+    end
+  end
 
 
 
@@ -99,20 +109,19 @@ describe 'TADSPEC tests' do
   end
 
   it 'testear entender' do
-    class Persona
-      def viejo?
-        @edad > 29
-      end
+
+
+  class Holis
 
 
       def testear_que_pipipi
-        leandro = Persona.new
+        leandro = Persona.new(15)
         leandro.deberia entender :viejo? # pasa
       end
     end
 
 
-    expect(TADsPec.testear Persona, :testear_que_pipipi).to eq([true])
+    expect(TADsPec.testear Holis, :testear_que_pipipi).to eq([true])
 
   end
 
@@ -127,17 +136,6 @@ describe 'TADSPEC tests' do
       end
     end
 
-    class Persona
-      attr_accessor :edad
-      def initialize algo
-        self.edad = algo
-      end
-
-      def viejo?
-        self.edad > 29
-      end
-    end
-    
     class PersonaHomeTests
 
       def testear_que_personas_viejas_trae_solo_a_los_viejos
@@ -166,7 +164,7 @@ describe 'TADSPEC tests' do
   it 'testear spy' do
     class PersonaTest
       def testear_que_se_use_la_edad2
-        lean = Persona.new(22)
+
         pato = Persona.new(23)
         pato = espiar(pato)
         pato.viejo?
@@ -184,9 +182,10 @@ describe 'TADSPEC tests' do
   end
 
   it 'testear que falla' do
+
     class PersonaTestecito
       def testear_que_son_las_4_am
-        fran = Persona.new 15
+        fran = Persona.new(5)
         fran.deberia ser_viejo?
       end
     end

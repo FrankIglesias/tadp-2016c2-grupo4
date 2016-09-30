@@ -20,15 +20,15 @@ class TADPSpy
 
   def initialize (objeto)
     self.spying_object = objeto
-    lista_metodos_a_espiar = spying_object.class.instance_methods false
-    spying_object.singleton_class.send :attr_accessor, :lista_metodos
-    spying_object.send :lista_metodos=, []
+    lista_metodos_a_espiar = self.spying_object.class.instance_methods false
+    self.spying_object.instance_variable_set(:@lista_metodos, [])
+    self.spying_object.define_singleton_method(:lista_metodos, proc do @lista_metodos end)
     espiar_metodos(lista_metodos_a_espiar)
   end
 
   def espiar_metodos(lista_metodos)
     lista_metodos.each do |m|
-      self.spying_object.class.mockear m do
+      self.spying_object.singleton_class.mockear m do
       |*args|
         viejo_metodo = ('mock_'+ m.to_s).to_sym
         self.lista_metodos << TADPMethodHistory.new(m, args)

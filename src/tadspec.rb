@@ -70,6 +70,8 @@ class TestContex
       metodo_a_modificar = mock_method.to_s.sub('mock_', '')
       mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
       mocked_class.send(:undef_method, mock_method) }
+    mocked_class.send(:undef_method, :lista_metodos) if mocked_class.new.respond_to? :lista_metodos
+    mocked_class.send(:undef_method, :lista_metodos=) if mocked_class.new.respond_to? :lista_metodos=
   end
 
   def self.correr(clase, lista)
@@ -82,7 +84,7 @@ class TestContex
     end
     print "\nLos test de la suite #{clase}:"
     run_test_suite_tests(clase, lista_test, lista_resultado)
-    remove_mock_methods (clase)
+   # remove_mock_methods (clase)
   ## TestSuite.instance_methods.each { |metodo| clase.send(:undef_method, metodo) if clase.new.respond_to? metodo }
     lista_resultado
   end
@@ -101,14 +103,16 @@ class TestContex
         begin
           TestContex.deberia_init
           test = self.new
-
+          test.singleton_class.send(:include, TestSuite)
           analizado = TestContex.analizar_resultado(test, m.to_sym)
           print "\n El resultado del test: #{m} -> fue: #{analizado.to_s.upcase}"
-          TestSuite.instance_methods.each { |metodo| test..send(:undef_method, metodo)}
+          TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo)}
+          TestContex.remove_mock_methods(test.class)
           analizado
         rescue Exception => a
           print "\n El resultado del test #{m} -> fue: EXPLOSIVO = #{a}"
-          TestSuite.instance_methods.each { |metodo| self.send(:undef_method, metodo)}
+          puts a.backtrace
+          TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo)}
           (nil)
         end
 
