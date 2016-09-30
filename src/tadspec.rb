@@ -3,6 +3,7 @@ require '../src/ClassRefactors'
 require '../src/TestSuite'
 
 class TADsPec
+
   def self.obtener_todas_las_clases
     var = (Object.constants).map { |constant| Object.const_get(constant) }
     var = var.select { |constant| constant.is_a? Class }
@@ -88,17 +89,16 @@ end
 class TestContex
 
   def self.correr(clase, lista)
-    @var = []
-    @object = clase
-    @object.class.send(:include, TestSuite)
+    lista_resultado = []
+    clase.class.send(:include, TestSuite)
     if lista.length > 0
-      @test_methods = lista
+      lista_test = lista
     else
-      @test_methods = (@object.instance_methods false).select { |m| m.to_s.start_with?('testear_que_') }
+      lista_test = (clase.instance_methods false).select { |m| m.to_s.start_with?('testear_que_') }
     end
-    print "\nLos test de la suite #{@object}:"
-    run_test_suite_tests
-    @var
+    print "\nLos test de la suite #{clase}:"
+    run_test_suite_tests(clase,lista_test,lista_resultado)
+    lista_resultado
   end
 
   def self.deberia_array
@@ -109,9 +109,9 @@ class TestContex
     @deberia = []
   end
 
-  def self.run_test_suite_tests
-    @test_methods.each do |m|
-      @var << @object.instance_eval do
+  def self.run_test_suite_tests(clase,lista_metodos_test,lista_resultados)
+    lista_metodos_test.each do |m|
+      lista_resultados << clase.instance_eval do
         begin
           TestContex.deberia_init
           test = self.new
