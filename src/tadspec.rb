@@ -17,7 +17,7 @@ class TADsPec
   end
 
   def self.asignar_deberia_y_mockear
-    deberia_proc = proc { |algo| TestContex.deberia_list << (algo.call(self)) }
+    deberia_proc = proc { |bloque| TestContex.deberia_list << (bloque.call(self)) }
     mockear_proc = proc { |symbol, &block| self.send :alias_method, ('mock_'+symbol.to_s).to_sym, symbol
     self.send :define_method, symbol, block }
     Object.send :define_method, :deberia, deberia_proc
