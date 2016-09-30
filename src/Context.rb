@@ -1,6 +1,5 @@
 require_relative '../src/helpers/TestSuite'
 
-
 class TestContex
 
   def self.analizar_resultado(objeto, metodo)
@@ -19,15 +18,20 @@ class TestContex
 
   def self.correr(clase, lista)
     lista_resultado = []
+    lista_test = crear_lista_test(clase,lista)
+    print "\nLos test de la suite #{clase}:"
+    run_test_suite_tests(clase, lista_test, lista_resultado)
+    lista_resultado
+  end
+
+  def self.crear_lista_test(clase,lista)
     if lista.length > 0
       lista_test = lista
     else
       lista_test = (clase.instance_methods false).select { |m| m.to_s.start_with?('testear_que_') }
     end
-    print "\nLos test de la suite #{clase}:"
-    run_test_suite_tests(clase, lista_test, lista_resultado)
-    lista_resultado
   end
+
 
   def self.deberia_list
     @deberia
@@ -54,10 +58,8 @@ class TestContex
           TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo)}
           (nil)
         end
-
       end
     end
   end
-
 end
 

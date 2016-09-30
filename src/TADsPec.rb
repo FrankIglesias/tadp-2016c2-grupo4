@@ -1,4 +1,4 @@
-require '../src/Context'
+require_relative '../src/Context'
 
 class TADsPec
 
