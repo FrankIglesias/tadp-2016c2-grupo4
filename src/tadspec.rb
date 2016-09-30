@@ -47,12 +47,12 @@ class TADsPec
 
   end
 
-  def self.generar_reporte(i)
-    print "\n Se corrieron #{i.count} tests de los cuales: "
-    print "\n #{i.count true} Pasaron!"
-    print "\n #{i.count false} Fallaron!"
-    print "\n #{i.count nil} Explotaron! \n"
-    i
+  def self.generar_reporte(resultados_tests)
+    print "\n Se corrieron #{resultados_tests.count} tests de los cuales: "
+    print "\n #{resultados_tests.count true} Pasaron!"
+    print "\n #{resultados_tests.count false} Fallaron!"
+    print "\n #{resultados_tests.count nil} Explotaron! \n"
+    resultados_tests
   end
 end
 
@@ -70,13 +70,10 @@ class TestContex
       metodo_a_modificar = mock_method.to_s.sub('mock_', '')
       mocked_class.send :define_method, (metodo_a_modificar.to_sym), (mocked_class.instance_method mock_method)
       mocked_class.send(:undef_method, mock_method) }
-    mocked_class.send(:undef_method, :lista_metodos) if mocked_class.new.respond_to? :lista_metodos
-    mocked_class.send(:undef_method, :lista_metodos=) if mocked_class.new.respond_to? :lista_metodos=
   end
 
   def self.correr(clase, lista)
     lista_resultado = []
-    ##clase.send(:include, TestSuite)
     if lista.length > 0
       lista_test = lista
     else
@@ -84,8 +81,6 @@ class TestContex
     end
     print "\nLos test de la suite #{clase}:"
     run_test_suite_tests(clase, lista_test, lista_resultado)
-   # remove_mock_methods (clase)
-  ## TestSuite.instance_methods.each { |metodo| clase.send(:undef_method, metodo) if clase.new.respond_to? metodo }
     lista_resultado
   end
 
@@ -98,20 +93,19 @@ class TestContex
   end
 
   def self.run_test_suite_tests(clase, lista_metodos_test, lista_resultados)
-    lista_metodos_test.each do |m|
+    lista_metodos_test.each do |test_metodo|
       lista_resultados << clase.instance_eval do
         begin
           TestContex.deberia_init
           test = self.new
           test.singleton_class.send(:include, TestSuite)
-          analizado = TestContex.analizar_resultado(test, m.to_sym)
-          print "\n El resultado del test: #{m} -> fue: #{analizado.to_s.upcase}"
+          analizado = TestContex.analizar_resultado(test, test_metodo.to_sym)
+          print "\n El resultado del test: #{test_metodo} -> fue: #{analizado.to_s.upcase}"
           TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo)}
           TestContex.remove_mock_methods(test.class)
           analizado
-        rescue Exception => a
-          print "\n El resultado del test #{m} -> fue: EXPLOSIVO = #{a}"
-          puts a.backtrace
+        rescue Exception => ex
+          print "\n El resultado del test #{test_metodo} -> fue: EXPLOSIVO = #{ex}"
           TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo)}
           (nil)
         end

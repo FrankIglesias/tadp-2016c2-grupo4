@@ -1,15 +1,5 @@
 module TestSuite
 
-
-
-  def eliminar_mock_methods
-    metodos_mockeados = self.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
-    metodos_mockeados.each { |mock_method|
-      metodo_a_modificar = mock_method.to_s.sub('mock_', '')
-      self.send :define_method, (metodo_a_modificar.to_sym), (self.instance_method mock_method)
-      self.send :undef, mock_method }
-  end
-
   def espiar(objeto_espiado)
     TADPSpy.new(objeto_espiado)
   end
@@ -51,18 +41,18 @@ module TestSuite
   end
 
 
-  def haber_recibido(algo)
-    TADPMethodTester.new algo
+  def haber_recibido(metodo)
+    TADPMethodTester.new metodo
   end
 
-  def explotar_con (algo)
+  def explotar_con (error)
     proc do
     |objeto|
       begin
         objeto.call
       rescue Exception => ex
-        resultado= ex.class.ancestors.include? (algo)
-        TADResult.new resultado, algo, ex.class
+        resultado= ex.class.ancestors.include? (error)
+        TADResult.new resultado, error, ex.class
       end
     end
   end

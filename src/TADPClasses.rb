@@ -20,18 +20,18 @@ class TADPSpy
 
   def initialize (objeto)
     self.spying_object = objeto
-    lista_metodos_a_espiar = self.spying_object.class.instance_methods false
-    self.spying_object.instance_variable_set(:@lista_metodos, [])
-    self.spying_object.define_singleton_method(:lista_metodos, proc do @lista_metodos end)
-    espiar_metodos(lista_metodos_a_espiar)
+    lista_metodos_llamados_a_espiar = self.spying_object.class.instance_methods false
+    self.spying_object.instance_variable_set(:@lista_metodos_llamados, [])
+    self.spying_object.define_singleton_method(:lista_metodos_llamados, proc do @lista_metodos_llamados end)
+    espiar_metodos(lista_metodos_llamados_a_espiar)
   end
 
-  def espiar_metodos(lista_metodos)
-    lista_metodos.each do |m|
-      self.spying_object.singleton_class.mockear m do
+  def espiar_metodos(lista_metodos_a_espiar)
+    lista_metodos_a_espiar.each do |metodo|
+      self.spying_object.singleton_class.mockear metodo do
       |*args|
-        viejo_metodo = ('mock_'+ m.to_s).to_sym
-        self.lista_metodos << TADPMethodHistory.new(m, args)
+        viejo_metodo = ('mock_'+ metodo.to_s).to_sym
+        self.lista_metodos_llamados << TADPMethodHistory.new(metodo, args)
         self.send viejo_metodo, *args
       end
 
@@ -55,12 +55,12 @@ class TADPMethodTester
   end
 
   def call (algo)
-    TADResult.new(algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }, "\n Uno de #{algo.spying_object.lista_metodos}", metodo)
+    TADResult.new(algo.spying_object.lista_metodos_llamados.any? { |tester| tester.se_llamo self.metodo }, "\n Uno de #{algo.spying_object.lista_metodos_llamados}", metodo)
   end
 
   def veces (numero)
     self.define_singleton_method :call do |x|
-      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo }
+      variable = x.spying_object.lista_metodos_llamados.select { |tester| tester.se_llamo self.metodo }
       resultado= variable.length ==numero
       TADResult.new resultado, "\n que el metodo haya sido llamado #{variable.length} veces", numero
     end
@@ -69,9 +69,9 @@ class TADPMethodTester
 
   def con_argumentos (*args)
     self.define_singleton_method :call do
-    |x|
-      variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
-      TADResult.new(variable.length>0, "\n que el metodo haya recibido #{variable.map { |m| m.params }}", args)
+    |espia|
+      metodos_que_cumplen_argumentos = espia.spying_object.lista_metodos_llamados.select { |tester| tester.se_llamo(metodo, args) }
+      TADResult.new(metodos_que_cumplen_argumentos.length>0, "\n que el metodo haya recibido #{metodos_que_cumplen_argumentos.map { |m| m.params }}", args)
     end
     self
   end
