@@ -17,12 +17,16 @@ describe 'TADSPEC tests' do
         true
       end
 
-      def testear_que_holis
+      def testear_que_general
         a = A.new
         a.deberia tener_hello 25
         a.deberia tener_hello 25
         a.deberia tener_hello 25
         1.deberia ser 1
+        1.deberia ser uno_de_estos [1,2,3]
+        1.deberia ser uno_de_estos 1,2,3
+        a.deberia tener_hello mayor_a 5
+        a.deberia tener_hello menor_a 35
       end
 
 
@@ -79,6 +83,10 @@ describe 'TADSPEC tests' do
     def viejo?
       self.edad > 29
     end
+
+    def fran hola
+      true
+    end
   end
 
 
@@ -117,6 +125,7 @@ describe 'TADSPEC tests' do
       def testear_que_pipipi
         leandro = Persona.new(15)
         leandro.deberia entender :viejo? # pasa
+        leandro.deberia entender :class
       end
     end
 
@@ -168,11 +177,13 @@ describe 'TADSPEC tests' do
         pato = Persona.new(23)
         pato = espiar(pato)
         pato.viejo?
+        pato.fran 1
         pato.deberia haber_recibido(:edad)
         # pasa: edad se llama durante la ejecución de viejo?
         pato.deberia haber_recibido(:edad).veces(1)
         # pasa: edad se recibió exactamente 1 vez.
         pato.deberia haber_recibido(:viejo?).con_argumentos()
+        pato.deberia haber_recibido(:fran).con_argumentos(1)
       end
     end
 

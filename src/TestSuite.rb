@@ -62,14 +62,14 @@ module TestSuite
   end
 
   def dynamic_variable(dynamic_name, value)
+    dynamic_name= ('@' + dynamic_name).to_sym
     if value.is_a? Proc
       proc do |objeto|
-        value.call(objeto.instance_variable_get(dynamic_name.to_sym))
+        value.call(objeto.instance_variable_get(dynamic_name))
       end
     else
       proc do |objeto|
-        dynamic_name= ('@' + dynamic_name).to_sym
-        TADResult.new(objeto.instance_variable_get(dynamic_name.to_sym)==value, objeto.instance_variable_get(dynamic_name.to_sym), value)
+        TADResult.new(objeto.instance_variable_get(dynamic_name)==value, objeto.instance_variable_get(dynamic_name), value)
       end
     end
 
