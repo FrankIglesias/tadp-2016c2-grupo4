@@ -57,14 +57,14 @@ class TADPMethodTester
 
   def call algo
     resultado= algo.spying_object.lista_metodos.any? { |x| x.se_llamo self.metodo }
-    TADResult.new resultado, "Uno de #{algo.spying_object.lista_metodos}", metodo
+    TADResult.new resultado, "\n Uno de #{algo.spying_object.lista_metodos}", metodo
   end
 
   def veces numero
     self.define_singleton_method :call do |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo self.metodo }
       resultado= variable.length ==numero
-      TADResult.new resultado, "que el metodo haya sido llamado #{variable.length} veces", numero
+      TADResult.new resultado, "\n que el metodo haya sido llamado #{variable.length} veces", numero
     end
     self
   end
@@ -74,7 +74,7 @@ class TADPMethodTester
     |x|
       variable = x.spying_object.lista_metodos.select { |m| m.se_llamo metodo, args }
       resultado= variable.length>0
-      TADResult.new resultado, "que el metodo haya recibido #{variable.map { |m| m.params }}", args
+      TADResult.new resultado, "\n que el metodo haya recibido #{variable.map { |m| m.params }}", args
     end
     self
   end
@@ -92,7 +92,7 @@ class TADResult
 
   def analizar_resultados
     if (self.resultado==false)
-      puts("esperaba #{esperado} y recibi #{recibido}")
+      puts("\n esperaba #{esperado} y recibi #{recibido}")
     end
     if (self.resultado==nil)
       puts recibido.backtrace

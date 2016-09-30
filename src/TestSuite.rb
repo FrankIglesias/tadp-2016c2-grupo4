@@ -25,13 +25,13 @@ module TestSuite
 
   def mayor_a(numero)
     proc do |objeto|
-      TADResult.new(objeto > numero, "ser mayor a #{objeto} ", numero)
+      TADResult.new(objeto > numero, "\n ser mayor a #{objeto} ", numero)
     end
   end
 
   def menor_a(numero)
     proc do |objeto|
-      TADResult.new(objeto < numero, "ser menor a #{objeto} ", numero)
+      TADResult.new(objeto < numero, "\n ser menor a #{objeto} ", numero)
     end
   end
 
@@ -41,13 +41,13 @@ module TestSuite
     lista_parametros.flatten!
 
     proc do |objeto|
-      TADResult.new((lista_parametros.include? objeto), "ser uno de a #{primero} ", lista_parametros)
+      TADResult.new((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
     end
   end
 
   def entender(metodo)
     proc do |objeto|
-      TADResult.new(objeto.respond_to?(metodo), "alguno de #{objeto.methods} \n", metodo)
+      TADResult.new(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
     end
   end
 
