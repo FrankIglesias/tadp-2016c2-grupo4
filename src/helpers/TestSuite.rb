@@ -1,16 +1,19 @@
 require_relative '../../src/helpers/TADPSpy'
-require_relative '../../src/helpers/TADPResult'
 require_relative '../../src/helpers/TADPMethodTester'
 require_relative '../../src/TADsPec'
 module TestSuite
 
-  def deberia_init
-    TADsPec.deberia_init
+  def devolver_resultado_test(resultado, esperado, recibido)
+    proc do
+      puts("\n esperaba #{esperado} y recibi #{recibido}") if (resultado.eql? false)
+      puts recibido.backtrace if (resultado.nil?)
+      resultado
+    end
   end
 
-  def analizar_resultado(test, metodo)
+  def correr_metodo_test(test, metodo)
     test.send metodo
-    resultado= TADsPec.deberia_list.all? { |resultado| resultado.analizar_resultados }
+    TADsPec.deberia_list.all? { |resultado| resultado.call }
   end
 
   def remove_mock_methods(mocked_class)
@@ -27,13 +30,13 @@ module TestSuite
 
   def mayor_a(numero)
     proc do |objeto|
-      TADPResult.new(objeto > numero, "\n ser mayor a #{objeto} ", numero)
+      devolver_resultado_test(objeto > numero, "\n ser mayor a #{objeto} ", numero)
     end
   end
 
   def menor_a(numero)
     proc do |objeto|
-      TADPResult.new(objeto < numero, "\n ser menor a #{objeto} ", numero)
+      devolver_resultado_test(objeto < numero, "\n ser menor a #{objeto} ", numero)
     end
   end
 
@@ -43,13 +46,13 @@ module TestSuite
     lista_parametros.flatten!
 
     proc do |objeto|
-      TADPResult.new((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
+      devolver_resultado_test((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
     end
   end
 
   def entender(metodo)
     proc do |objeto|
-      TADPResult.new(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
+      devolver_resultado_test(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
     end
   end
 
@@ -57,7 +60,7 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc { |valor_a_comparar| TADPResult.new(matcher==valor_a_comparar, valor_a_comparar, matcher) }
+      proc { |valor_a_comparar| devolver_resultado_test(matcher==valor_a_comparar, valor_a_comparar, matcher) }
     end
   end
 
@@ -73,7 +76,7 @@ module TestSuite
         objeto.call
       rescue Exception => ex
         resultado= ex.class.ancestors.include? (error)
-        TADPResult.new resultado, error, ex.class
+        devolver_resultado_test(resultado, error, ex.class)
       end
     end
   end
@@ -90,7 +93,7 @@ module TestSuite
       end
     else
       proc do |objeto|
-        TADPResult.new(objeto.instance_variable_get(dynamic_name)==value, objeto.instance_variable_get(dynamic_name), value)
+        devolver_resultado_test(objeto.instance_variable_get(dynamic_name)==value, objeto.instance_variable_get(dynamic_name), value)
       end
     end
 
@@ -99,7 +102,7 @@ module TestSuite
   def dynamic_method(dynamic_name)
     proc do |objeto|
       resultado= objeto.send(dynamic_name.to_sym)
-      TADPResult.new(resultado, true, resultado)
+      devolver_resultado_test(resultado, true, resultado)
     end
   end
 

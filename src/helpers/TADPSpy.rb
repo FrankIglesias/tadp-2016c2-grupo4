@@ -1,4 +1,3 @@
-require_relative '../../src/helpers/TADPMethodHistory'
 
 class TADPSpy
   attr_accessor :spying_object
@@ -13,11 +12,14 @@ class TADPSpy
 
   def espiar_metodos(lista_metodos_a_espiar)
     lista_metodos_a_espiar.each do |metodo|
-      self.spying_object.singleton_class.mockear metodo do
-      |*args|
+      self.spying_object.singleton_class.mockear metodo do |*args|
+        se_llamo=
+            proc do |symbol, params|
+          args.length==0? metodo == symbol : (metodo == symbol) && (args.eql? (params))
+        end
         viejo_metodo = ('mock_'+ metodo.to_s).to_sym
-        self.lista_metodos_llamados << TADPMethodHistory.new(metodo, args)
-        self.send viejo_metodo, *args
+        self.lista_metodos_llamados << se_llamo
+        self.send(viejo_metodo, *args)
       end
 
     end

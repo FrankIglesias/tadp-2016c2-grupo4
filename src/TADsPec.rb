@@ -1,12 +1,9 @@
-require_relative '../src/Context'
+require_relative '../src/helpers/TestSuite.rb'
+
 
 class TADsPec
-  def self.deberia_init
-    @deberia = []
-  end
-
-  def self.deberia_list
-    @deberia
+  class << self
+    attr_accessor :deberia_list
   end
 
   def self.obtener_todas_las_clases
@@ -15,11 +12,11 @@ class TADsPec
   end
 
   def self.search_all_test_suites
-    obtener_todas_las_clases.select { |klass| (klass.instance_methods false).any? { |method| method.to_s.start_with?('testear_que_') } }
+    obtener_todas_las_clases.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?('testear_que_') } }
   end
 
-  def self.obtener_suites(clase, lista_suit)
-    (clase.is_a? Class) ? lista_suit << clase : lista_suit = search_all_test_suites
+  def self.obtener_suites(clase)
+    (clase.is_a? Class) ? [clase] : search_all_test_suites
   end
 
   def self.asignar_deberia_y_mockear
@@ -31,29 +28,61 @@ class TADsPec
     Class.send :define_method, :mockear, mockear_proc
   end
 
-
   def self.remover_deberia_mockear
     Object.send :remove_method, :deberia
     Proc.send :remove_method, :deberia
     Class.send :remove_method, :mockear
   end
 
+  def self.correr(clase, lista)
+        lista_resultado = []
+        lista_test = crear_lista_test(clase, lista)
+        print "\nLos test de la suite #{clase}:"
+        run_test_suite_tests(clase, lista_test, lista_resultado)
+        lista_resultado
+      end
+
+  def self.crear_lista_test (clase, lista)
+    if lista.length > 0
+      lista
+    else
+      clase.instance_methods.select { |m| m.to_s.start_with?('testear_que_') }
+    end
+    end
+
+  def self.run_test_suite_tests (clase, lista_metodos_test, lista_resultados)
+    lista_metodos_test.each do |test_metodo|
+      lista_resultados << clase.instance_eval do
+        begin
+          test = self.new
+          test.singleton_class.send(:include, TestSuite)
+          TADsPec.deberia_list=[]
+          analizado = test.correr_metodo_test(test, test_metodo.to_sym)
+          print "\n El resultado del test: #{test_metodo} -> fue: #{analizado.to_s.upcase}"
+          test.remove_mock_methods(test.singleton_class)
+          TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo) }
+          analizado
+        rescue Exception => ex
+          print "\n El resultado del test #{test_metodo} -> fue: EXPLOSIVO = #{ex}"
+          TestSuite.instance_methods.each { |metodo| test.singleton_class.send(:undef_method, metodo) }
+          (nil)
+        end
+      end
+    end
+  end
+
   def self.testear (clase = nil, *args)
 
     asignar_deberia_y_mockear
     lista_test_totales =[]
-    suits(clase).each do |unit_test|
-      lista_test_totales << TestContex.correr(unit_test, args)
+    obtener_suites(clase).each do |unit_test|
+      lista_test_totales << correr(unit_test, args)
       puts "\n"
     end
 
     remover_deberia_mockear
     generar_reporte(lista_test_totales.flatten)
 
-  end
-
-  def self.suits(clase)
-    obtener_suites(clase, lista = [])
   end
 
   def self.generar_reporte(resultados_tests)
