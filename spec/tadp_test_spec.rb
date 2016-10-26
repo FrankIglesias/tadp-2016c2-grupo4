@@ -1,5 +1,5 @@
 require 'rspec'
-require  '../src/TADsPec'
+require_relative '../src/TADsPec'
 
 
 
