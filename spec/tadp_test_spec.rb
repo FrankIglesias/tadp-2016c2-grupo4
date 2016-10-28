@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../src/TAD_sPec'
+require_relative '../src/tad_sPec'
 
 describe 'TADSPEC tests' do
   before do

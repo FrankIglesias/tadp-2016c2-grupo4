@@ -1,5 +1,4 @@
-require_relative '../src/helpers/Test_suite.rb'
-
+require_relative '../src/helpers/test_suite.rb'
 
 class TADsPec
   class << self
@@ -7,22 +6,23 @@ class TADsPec
   end
 
   def self.obtener_todas_las_clases
-    var = (Object.constants).map { |constant| Object.const_get(constant) }
+    var = Object.constants.map { |constant| Object.const_get(constant) }
     var.select { |constant| constant.is_a? Class }
   end
 
   def self.search_all_test_suites
-    obtener_todas_las_clases.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?('testear_que_') } }
+    obtener_todas_las_clases.select { |klass| (klass.instance_methods).any? { |method| method.to_s.start_with?'testear_que_' } }
   end
 
   def self.obtener_suites(clase)
-    (clase.is_a? Class) ? [clase] : search_all_test_suites
+    clase.is_a? Class ? [clase] : search_all_test_suites
   end
 
   def self.asignar_deberia_y_mockear
-    deberia_proc = proc { |bloque| TADsPec.deberia_list << (bloque.call(self)) }
-    mockear_proc = proc { |symbol, &block| self.send :alias_method, ('mock_'+symbol.to_s).to_sym, symbol
-    self.send :define_method, symbol, block }
+    deberia_proc = proc { |bloque| TADsPec.deberia_list << bloque.call(self) }
+    mockear_proc = proc do |symbol, &block|
+     send :alias_method, ('mock_' + symbol.to_s).to_sym, symbol
+    send :define_method, symbol, block end
     Object.send :define_method, :deberia, deberia_proc
     Proc.send :define_method, :deberia, deberia_proc
     Class.send :define_method, :mockear, mockear_proc
