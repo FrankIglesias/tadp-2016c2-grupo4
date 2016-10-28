@@ -1,6 +1,6 @@
-require_relative '../../src/helpers/TADPSpy'
-require_relative '../../src/helpers/TADPMethodTester'
-require_relative '../../src/TADsPec'
+require_relative '../../src/helpers/TADP_spy'
+require_relative '../../src/helpers/TADP_method_tester'
+require_relative '../../src/TAD_sPec'
 module TestSuite
 
   def devolver_resultado_test(resultado, esperado, recibido)
@@ -64,6 +64,10 @@ module TestSuite
     end
   end
 
+
+  def no(bloque)
+    devolver_bloque_negado(bloque)
+  end
 
   def haber_recibido(metodo)
     TADPMethodTester.new metodo

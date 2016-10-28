@@ -1,4 +1,4 @@
-require_relative '../../src/helpers/TestSuite'
+require_relative '../../src/helpers/Test_suite'
 
 
 class TADPMethodTester

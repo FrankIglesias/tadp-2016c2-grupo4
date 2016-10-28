@@ -1,4 +1,4 @@
-require_relative '../src/helpers/TestSuite.rb'
+require_relative '../src/helpers/Test_suite.rb'
 
 
 class TADsPec
