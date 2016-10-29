@@ -1,28 +1,31 @@
-require_relative '../../src/helpers/tADP_spy'
+require_relative '../../src/helpers/tadp_spy'
 require_relative '../../src/helpers/tadp_method_tester'
-require_relative '../../src/tad_sPec'
+require_relative '../../src/tad_spec'
 module TestSuite
-
   def devolver_resultado_test(resultado, esperado, recibido)
     proc do
-      puts("\n esperaba #{esperado} y recibi #{recibido}") if (resultado.eql? false)
-      puts recibido.backtrace if (resultado.nil?)
+      puts("\n esperaba #{esperado} y recibi #{recibido}") if resultado.eql? false
+      puts recibido.backtrace if resultado.nil?
       resultado
     end
   end
 
   def correr_metodo_test(test, metodo)
     test.send metodo
-    TADsPec.deberia_list.all? { |resultado| resultado.call }
+    TADsPec.deberia_list.all?(&:call)
   end
 
   def remove_mock_methods(mocked_class)
-    mock_methods = mocked_class.instance_methods.select { |symbol| symbol.to_s.start_with?('mock_') }
-    mock_methods.each { |mock_method|
-      metodo_a_modificar = mock_method.to_s.sub('mock_', '')
-      mocked_class.send :define_method, metodo_a_modificar.to_sym, (mocked_class.instance_method mock_method)
+    mock_methods = mocked_class.instance_methods.select do |symbol|
+      symbol.to_s.start_with?('mock_')
+    end
+    mock_methods.each do |mock_method|
+      metodo_a_modificar = mock_method.to_s
+                                      .sub('mock_', '')
+      mocked_class.send :define_method, metodo_a_modificar.to_sym,
+                        (mocked_class.instance_method mock_method)
       mocked_class.send(:undef_method, mock_method)
-    }
+    end
   end
 
   def espiar(objeto_espiado)
@@ -47,13 +50,15 @@ module TestSuite
     lista_parametros.flatten!
 
     proc do |objeto|
-      devolver_resultado_test((lista_parametros.include? objeto), "\n ser uno de a #{primero} ", lista_parametros)
+      devolver_resultado_test((lista_parametros.include? objeto),
+                              "\n ser uno de a #{primero} ", lista_parametros)
     end
   end
 
   def entender(metodo)
     proc do |objeto|
-      devolver_resultado_test(objeto.respond_to?(metodo), "\n alguno de #{objeto.methods} \n", metodo)
+      devolver_resultado_test(objeto.respond_to?(metodo),
+                              "\n alguno de #{objeto.methods} \n", metodo)
     end
   end
 
@@ -61,7 +66,10 @@ module TestSuite
     if matcher.is_a? Proc
       matcher
     else
-      proc { |valor_a_comparar| devolver_resultado_test(matcher==valor_a_comparar, valor_a_comparar, matcher) }
+      proc do |valor_a_comparar|
+        devolver_resultado_test(matcher == valor_a_comparar,
+                                valor_a_comparar, matcher)
+      end
     end
   end
 
@@ -97,7 +105,8 @@ module TestSuite
     else
       proc do |objeto|
         devolver_resultado_test(objeto.instance_variable_get(dynamic_name) ==
-                                    value, objeto.instance_variable_get(dynamic_name), value)
+                                value, objeto.instance_variable_get(dynamic_name),
+                                value)
       end
     end
   end
@@ -111,7 +120,7 @@ module TestSuite
 
   def method_missing(symbol, *args)
     name = symbol.to_s
-    if self.a_dynamic_matcher?(name)
+    if a_dynamic_matcher?(name)
       dynamic_name = name.sub('tener_', '').sub('ser_', '')
       return dynamic_variable(dynamic_name, args[0]) if name.start_with? 'tener_'
       return dynamic_method(dynamic_name) if name.start_with? 'ser_'
