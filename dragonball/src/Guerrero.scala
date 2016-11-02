@@ -8,7 +8,8 @@ case class Guerrero(
     //val listaDeMovimientos: List[(Unit =>Guerrero)], la lista puede variar segun el objeto instanciado??
     val ki: Int,
     val kiMaximo: Int,
-    val especie: Especie) {
+    val especie: Especie,
+    val listaDeItems: List[Item]) {
 
   def dejarseFajar(): Guerrero = this.copy()
   def cargarKi(): Guerrero = {
@@ -18,7 +19,6 @@ case class Guerrero(
       case _ => this.copy(ki = 100)
     }
   }
-  def usarItem(item: Items, guerro: Guerrero): Guerrero = {
-    usarItem
-  }
+  
+  def usarItem(item: Item, guerrero: Guerrero): Guerrero = ???
 }

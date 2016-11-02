@@ -1,6 +1,7 @@
-abstract class Items{
+abstract class Item{
   def usarCon:(Guerrero=>Guerrero)
 }
+
 case object ArmaRoma  extends {
   def usarCon(guerrero: Guerrero): Guerrero = {
     guerrero.especie match {
@@ -9,14 +10,15 @@ case object ArmaRoma  extends {
     }
   }
 }
+
 case object ArmaFilosa  extends {
   def usarCon(guerrero: Guerrero): Guerrero = {
 
     /*Las armas filosas reducen el ki del oponente 
 en un punto por cada 100 del atacante. 
-Además, si un Saiyajin con cola es atacado 
+Ademï¿½s, si un Saiyajin con cola es atacado 
 por un arma filosa, la pierde. Esto causa 
-que su ki se reduzca automáticamente a 1 
+que su ki se reduzca automï¿½ticamente a 1 
 y, si estaba convertido en Mono Gigante, 
 vuelva a su forma normal y quede inconsciente.
 */

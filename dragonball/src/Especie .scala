@@ -1,4 +1,5 @@
 trait Especie
+
 case object Humano extends Especie
 case class Saiyajins(poseeCola :Boolean) extends Especie
 case class Mono(poseeCola : Boolean) extends Especie
