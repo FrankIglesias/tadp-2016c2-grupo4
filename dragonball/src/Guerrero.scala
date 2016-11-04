@@ -17,7 +17,7 @@ case class Guerrero(
   def cargar(delta: Int) = copy(ki = ki + delta min kiMaximo)
 
   def dejarseFajar(): Guerrero = copy()
-
+  
   def cargarKi(): Guerrero = {
     especie match {
       case SuperSaiyajins(_, nivel) => cargar(150 * nivel)
@@ -62,5 +62,3 @@ case class Guerrero(
  }
  copy()
  }
- 
-}

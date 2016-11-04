@@ -1,3 +1,4 @@
+
 abstract class Items
 
 abstract class Armas extends Items{
@@ -14,17 +15,10 @@ case object ArmaRoma  extends {
     }
   }
 }
+
 case object ArmaFilosa  extends {
   def usarCon(guerrero: Guerrero): Guerrero = {
 
-    /*Las armas filosas reducen el ki del oponente 
-en un punto por cada 100 del atacante. 
-Además, si un Saiyajin con cola es atacado 
-por un arma filosa, la pierde. Esto causa 
-que su ki se reduzca automáticamente a 1 
-y, si estaba convertido en Mono Gigante, 
-vuelva a su forma normal y quede inconsciente.
-*/
     //val guerreroReducido = guerrero.copy(estado, ki, especie)
     guerrero
   }
