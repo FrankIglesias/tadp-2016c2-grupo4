@@ -1,6 +1,11 @@
-abstract class Items{
-  def usarCon:(Guerrero=>Guerrero)
+abstract class Items
+
+abstract class Armas extends Items{
+  def usarCon: (Guerrero => Guerrero)
 }
+object FotodeLaLuna extends Items
+object EsferaDeDragon extends Items
+
 case object ArmaRoma  extends {
   def usarCon(guerrero: Guerrero): Guerrero = {
     guerrero.especie match {
@@ -34,9 +39,8 @@ case class ArmaDeFuego(var municiones: Integer) extends Items{
         case Humano => guerrero.copy(ki = guerrero.ki - 20)
         case _ => guerrero.copy()
       }
-    } else {
-      guerrero.copy() // DEBERIA EXPLOTAR???????
-    }
+   }
+         guerrero.copy()
   }
 }
 

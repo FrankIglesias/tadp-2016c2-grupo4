@@ -1,24 +1,66 @@
+import scala.util.{ Try, Success, Failure }
+
+
 abstract class EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
 case object Muerto extends EstadoGuerrero
 case object Vivo extends EstadoGuerrero
 
 case class Guerrero(
-    val estado: EstadoGuerrero,
-    //val listaDeMovimientos: List[(Unit =>Guerrero)], la lista puede variar segun el objeto instanciado??
-    val ki: Int,
-    val kiMaximo: Int,
-    val especie: Especie) {
+    estado: EstadoGuerrero = Vivo,
+    listaDeMovimientos: List[(Unit => Guerrero)],
+    listaDeItems: List[Items],
+    ki: Int,
+    kiMaximo: Int,
+    especie: Especie) {
 
-  def dejarseFajar(): Guerrero = this.copy()
+  def cargar(delta: Int) = copy(ki = ki + delta min kiMaximo)
+
+  def dejarseFajar(): Guerrero = copy()
+
   def cargarKi(): Guerrero = {
     especie match {
-      case SuperSaiyajins(_, _) => copy(ki = 150 /*anterior.ki*anterior.especie.nivel*/ )
-      case Androides(_) => this.copy()
-      case _ => this.copy(ki = 100)
+      case SuperSaiyajins(_, nivel) => cargar(150 * nivel)
+      case Androides(_) => cargar(0)
+      case _ => cargar(100)
     }
   }
-  def usarItem(item: Items, guerro: Guerrero): Guerrero = {
-    usarItem
+
+  def usarItem(item: Items, guerrero: Guerrero): Guerrero = {
+    item.asInstanceOf[Armas].usarCon(guerrero)
   }
+  def comerseAlOponente(guerrero: Guerrero) = {
+    especie match {
+      case m: Monstruos => if (guerrero.ki < ki) Try(this).flatMap { guerrero => m.funcion(this, guerrero) }
+      case _ => // should explode
+    }
+  }
+  def convertirseEnMono(): Guerrero = {
+    especie match {
+      case Saiyajins(c) => if (c == true && listaDeItems.contains(FotodeLaLuna)) copy(especie = Mono(true), kiMaximo = kiMaximo * 3, ki = kiMaximo * 3) else copy()
+      case _ => copy() // SHOULD EXPLODE
+    }
+
+  }
+  def convertirseEnSS(): Guerrero = {
+    especie match {
+      case Saiyajins(c) => if (ki >= kiMaximo / 2) this.copy(especie = SuperSaiyajins(c, 1)) else copy()
+      case SuperSaiyajins(cola, nivel) => if (ki >= kiMaximo / 2) this.copy(especie = SuperSaiyajins(cola, nivel + 1))else copy()
+      case _ => copy()
+    }
+  }
+ def fusionarse(guerrero : Guerrero) : Guerrero = {
+ especie match {
+ case Humano | Saiyajins(_) | Namukesins => copy(especie = Fusionado(this), ki = ki +guerrero.ki, kiMaximo = kiMaximo + guerrero.kiMaximo)
+ case _ => copy()
+ }
+ }
+ def magia(guerrero : Guerrero,f : (Guerrero=>Try[Guerrero])) : Guerrero = {
+ especie match {
+ case  Namukesins  | Monstruos(_) =>Try(this).flatMap { guerrero => f(guerrero) } 
+ case _ => if(listaDeItems.filter { item => equals(EsferaDeDragon)}.size == 7) Try(this).flatMap { guerrero => f(guerrero) } 
+ }
+ copy()
+ }
+ 
 }
