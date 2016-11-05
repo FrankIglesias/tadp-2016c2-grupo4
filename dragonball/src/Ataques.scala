@@ -1,6 +1,6 @@
-case class Ataques() extends Movimientos 
+case class Ataque() extends Movimiento // ¿sirve que extienda?
   
-class MuchosGolpes() extends Ataques
-class Explotar() extends Ataques
-class Onda() extends Ataques
-class Genkidame() extends Ataques
+class MuchosGolpes() extends Ataque
+class Explotar() extends Ataque
+class Onda() extends Ataque
+class Genkidame() extends Ataque
