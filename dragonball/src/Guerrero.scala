@@ -9,16 +9,8 @@ case object Vivo extends EstadoGuerrero
 case class Guerrero(
     estado: EstadoGuerrero = Vivo,
     listaDeMovimientos: List[Movimiento],
-    listaDeItems: List[Items],
+    listaDeItems: List[Item],
     ki: Int,
     kiMaximo: Int,
-    especie: Especie) {
-
-  
-  
+    especie: Especie) {  
 }
-
-  
-
-// def aplicarEfecto(???) : Guerrero = ???
- 

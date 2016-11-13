@@ -9,7 +9,5 @@ import scala.util.{ Try, Success, Failure }
   case class SuperSaiyajin(poseeCola: Boolean, nivel: Integer) extends Especie
   case class Androide(bateria: Integer) extends Especie
   case object Namukesins extends Especie
-  case class Monstruos(comemeToda: ((Guerrero, Guerrero) => Try[Guerrero])) extends Especie {
-    val funcion = comemeToda
-  }
+  case object Monstruos extends Especie
   case class Fusionado(guerreroAnterior: Guerrero) extends Especie

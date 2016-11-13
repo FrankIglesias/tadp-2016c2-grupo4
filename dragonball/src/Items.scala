@@ -1,10 +1,20 @@
 
-trait Item
-trait Arma extends Item
+import Tipos._
+import Movimiento._
+class Item
 
-
-
-
-case class ArmaRoma()  extends Arma
-case class ArmaFilosa()  extends Arma
-case class ArmaDeFuego(var municiones: Integer) extends Arma
+class Arma extends Item {
+  object ArmaRoma  extends Arma {
+    def apply(duelo:Duelo) = {
+      defensor(duelo).especie match {
+        case Androide(_) => defensor(duelo).copy()
+        case otro if defensor(duelo).ki < 300 => defensor(duelo).copy(estado = Inconsciente)
+      }
+    }
+  }
+  
+  object ArmaFilosa  extends Arma{
+    def apply(duelo:Duelo) = ???
+  }
+  object ArmaDeFuego extends Arma
+}
