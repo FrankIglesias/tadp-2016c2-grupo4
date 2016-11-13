@@ -7,12 +7,14 @@ object Movimiento{
   def atacante(duelo:Duelo) : Guerrero = duelo._1
   def defensor(duelo:Duelo) : Guerrero = duelo._2
   
+  def generarDueloNuevo(atacante:Guerrero)(defensor:Guerrero): Duelo=(atacante,defensor)
+  
   case object DejarseFajar extends Movimiento {
     def apply(duelo: Duelo): Duelo = duelo.copy()
   }
   
   case object CargarKi extends Movimiento {
-    def apply(ki:Int, duelo:Duelo) : Duelo = duelo.copy(aumentarElKiSegunTipo(atacante(duelo)),defensor(duelo).copy())
+    def apply(ki:Int, duelo:Duelo) : Duelo = generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo).copy())
     
   
     def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
