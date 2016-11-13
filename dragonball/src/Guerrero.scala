@@ -1,5 +1,5 @@
 import scala.util.{ Try, Success, Failure }
-
+import Tipos._
 
 abstract class EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero

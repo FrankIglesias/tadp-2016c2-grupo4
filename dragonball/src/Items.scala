@@ -1,13 +1,14 @@
 
 import Tipos._
-import Movimiento._
+import TodosLosMovimientos._
+
 class Item{
   def apply(duelo:Duelo) = duelo.copy()
 }
 
 class Arma extends Item {
   object ArmaRoma  extends Arma {
-    def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaRoma(defensor(duelo)))}
+    override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaRoma(defensor(duelo)))}
     def matcheaDefensorArmaRoma(defensor:Guerrero)={
       defensor.especie match {
         case Androide(_) => defensor.copy()
@@ -17,7 +18,7 @@ class Arma extends Item {
   }
   
   object ArmaFilosa  extends Arma{
-    def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(analizaEfectoAlDefensor(atacante(duelo).ki,defensor(duelo)))}
+    override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(analizaEfectoAlDefensor(atacante(duelo).ki,defensor(duelo)))}
     def analizaEfectoAlDefensor(kiDelAtacante:Int, defensor:Guerrero) : Guerrero = {
       defensor.especie match {
         case Saiyajin(true) => defensor.copy(ki = 1, especie = Saiyajin(false))
@@ -28,6 +29,6 @@ class Arma extends Item {
   }
   
   object ArmaDeFuego extends Arma{
-    def apply(duelo:Duelo) = ???
+    override def apply(duelo:Duelo) = ???
   }
 }
