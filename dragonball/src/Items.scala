@@ -22,8 +22,8 @@ class Arma extends Item {
     def analizaEfectoAlDefensor(kiDelAtacante:Int, defensor:Guerrero) : Guerrero = {
       defensor.especie match {
         case Saiyajin(true) => defensor.copy(ki = 1, especie = Saiyajin(false))
-        case Mono(_) => defensor.copy(especie = Saiyajin(true),estado = Inconsciente, ki = kiDelAtacante/100)
-        case _ => defensor.copy(ki = kiDelAtacante/100) 
+        case Mono(_) => defensor.copy(especie = Saiyajin(true),estado = Inconsciente, ki = defensor.ki - kiDelAtacante/100)
+        case _ => defensor.copy(ki = defensor.ki - kiDelAtacante/100) 
       }
     }
   }
