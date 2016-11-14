@@ -3,6 +3,7 @@ import Tipos._
 import TodosLosMovimientos._
 
 object ObjetoItem{
+  
   class Item(var nombre:String){
     def apply(duelo:Duelo) = duelo.copy()
   }
@@ -32,7 +33,6 @@ object ObjetoItem{
     object ArmaDeFuego extends Arma(nombre){
       override def apply(duelo:Duelo) = {
         if (atacante(duelo).tenesBalas(this)){
-          atacante(duelo).disminuirMunicion(this,1)
           generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaDeFuego(defensor(duelo)))
         }
         else{
