@@ -16,7 +16,7 @@ case class Guerrero(
     especie: Especie) {  
   
   def tenesBalas(arma:Arma) = listaDeItems
-  .find{item => item.asInstanceOf[Municion].nombreDelArma.eq(arma.nombre)}
+  .find{item => item.asInstanceOf[Municion].nombreDelArma.eq(arma.asInstanceOf[Arma].nombre)}
   .map{municion => municion.asInstanceOf[Municion].disminuirMunicion(1)}
   .isEmpty
 }

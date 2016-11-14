@@ -4,11 +4,11 @@ import TodosLosMovimientos._
 
 object ObjetoItem{
   
-  class Item(var nombre:String){
+  class Item{
     def apply(duelo:Duelo) = duelo.copy()
   }
   
-  class Arma(nombre:String) extends Item(nombre) {
+  class Arma(val nombre:String) extends Item {
     object ArmaRoma  extends Arma(nombre) {
       override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaRoma(defensor(duelo)))}
       def matcheaDefensorArmaRoma(defensor:Guerrero)={
@@ -48,9 +48,14 @@ object ObjetoItem{
     }
   }
   
+  class SemillaDeErmitaño extends Item{
+    override def apply(duelo:Duelo) = {generarDueloNuevo(aumentarKiAlMango(atacante(duelo)))(defensor(duelo))}
+    def aumentarKiAlMango(alguien:Guerrero) = alguien.copy(ki = alguien.kiMaximo)
+  }
+  
   class Municion(
       var nombreDelArma:String,
-      var cantidad:Int) extends Item(nombreDelArma){
+      var cantidad:Int) extends Item{
     
     def aumentarMunicion(cantidadAAumentar:Int) = {
        cantidad = cantidad + cantidadAAumentar

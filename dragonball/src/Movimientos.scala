@@ -12,7 +12,7 @@ object TodosLosMovimientos{
     }
     
     case object CargarKi extends Movimiento {
-      def apply(ki:Int, duelo:Duelo) : Duelo ={ generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo).copy())}
+      def apply(ki:Int, duelo:Duelo) : Duelo ={ generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))}
       
     
       def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
