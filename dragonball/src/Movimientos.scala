@@ -7,12 +7,12 @@ object TodosLosMovimientos{
   
   trait Movimiento{
   
-    case object DejarseFajar extends Movimiento {
+    case class DejarseFajar() extends Movimiento {
       def apply(duelo: Duelo): Duelo = duelo.copy()
     }
     
-    case object CargarKi extends Movimiento {
-      def apply(ki:Int, duelo:Duelo) : Duelo ={ generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))}
+    case class CargarKi(kiACargar:Int) extends Movimiento {
+      def apply(duelo:Duelo) : Duelo ={ generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))}
       
     
       def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
@@ -24,8 +24,15 @@ object TodosLosMovimientos{
       }
     }
     
-    case object UsarItem extends Movimiento {
-      def apply(item: Item, duelo:Duelo) : Duelo = item(duelo)
+    case class ComerseAlOponente() extends Movimiento{
+      def apply(duelo:Duelo) = ???
+    }
+    
+    case class UsarItem(itemAUsar:Item) extends Movimiento {
+      def apply(duelo:Duelo) : Duelo = atacante(duelo)
+        .listaDeItems
+        .find {item => item.equals(itemAUsar)}
+        .fold(duelo.copy())(item => item(duelo))
     }
     
     case object Convertirse extends Movimiento {
@@ -43,8 +50,6 @@ object TodosLosMovimientos{
     //  def apply(ataque:Ataque, duelo:Duelo) = ???
     //}
     
-    case object ComerseAlOponente extends Movimiento{
-      def apply(duelo:Duelo) = ???
-    }
+    
   }
 }
