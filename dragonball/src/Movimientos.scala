@@ -49,7 +49,6 @@ object TodosLosMovimientos{
     //case object Atacar extends Movimiento {
     //  def apply(ataque:Ataque, duelo:Duelo) = ???
     //}
-    
-    
+
   }
 }
