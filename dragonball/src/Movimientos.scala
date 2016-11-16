@@ -70,13 +70,13 @@ object TodosLosMovimientos{
      }
     }
     
-    case object Fusion extends Movimiento {
+    case class Fusion(otroGuerrero:Guerrero) extends Movimiento {
       def apply(duelo: Duelo)  : Duelo = {
          atacante(duelo).especie match {
-         case (Humano | Saiyajin(_) | Namekusein) if contieneAEstaEspecie(List(Humano,Saiyajin(true),Saiyajin(false),Namekusein),defensor(duelo).especie) =>
+         case (Humano | Saiyajin(_) | Namekusein) if contieneAEstaEspecie(List(Humano,Saiyajin(true),Saiyajin(false),Namekusein),otroGuerrero.especie) =>
                generarDueloNuevo(atacante(duelo).copy(
                especie = Fusionado(atacante(duelo)), 
-               ki = atacante(duelo).ki + defensor(duelo).ki, 
+               ki = atacante(duelo).ki + otroGuerrero.ki, 
                kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo))(defensor(duelo))
          case _ => duelo.copy()
         }
