@@ -10,5 +10,5 @@ import Tipos._
   case class SuperSaiyajin(poseeCola: Boolean,nivel:Int) extends Especie
   case class Androide(bateria: Integer) extends Especie
   case object Namekusein extends Especie
-  case class Monstruos(maneraDeDigerir : Digerir) extends Especie
+  case class Monstruo(maneraDeDigerir : Digerir) extends Especie
   case class Fusionado(guerreroAnterior: Guerrero) extends Especie

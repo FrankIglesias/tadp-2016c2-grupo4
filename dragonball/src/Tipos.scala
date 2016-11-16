@@ -4,7 +4,7 @@ import scala.util.Try
 object Tipos {
   type Duelo = (Guerrero,Guerrero)
   type Movimiento = Duelo => Duelo
-  type Digerir = Guerrero => Unit
+  type Digerir = Guerrero => Guerrero
   
   def atacante(duelo:Duelo) : Guerrero = duelo._1
   def defensor(duelo:Duelo) : Guerrero = duelo._2

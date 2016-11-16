@@ -25,7 +25,17 @@ object TodosLosMovimientos{
     }
     
     case class ComerseAlOponente() extends Movimiento{
-      def apply(duelo:Duelo) = ???
+      def apply(duelo:Duelo) = {
+        atacante(duelo).especie match {
+          case Monstruo(_) if kiEsMenor(atacante(duelo),defensor(duelo)) => generarDueloNuevo(
+             atacante(duelo)
+            .especie
+            .asInstanceOf[Monstruo]
+            .maneraDeDigerir(defensor(duelo)))(defensor(duelo).copy(estado = Muerto))
+          case _ => duelo.copy()
+        }
+      }
+      def kiEsMenor(atacante:Guerrero, defensor:Guerrero) ={atacante.ki>defensor.ki}
     }
     
     case class UsarItem(itemAUsar:Item) extends Movimiento {
