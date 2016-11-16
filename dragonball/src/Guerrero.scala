@@ -19,4 +19,11 @@ case class Guerrero(
   .find{item => item.asInstanceOf[Municion].armaAsociada.eq(arma.asInstanceOf[Arma])}
   .map{municion => municion.asInstanceOf[Municion].disminuirMunicion(1)}
   .isEmpty
+  
+  def quedateInconsiente() ={
+    this.especie match {
+      case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p))
+      case _ => this.copy(estado = Inconsciente)
+    }
+  }
 }

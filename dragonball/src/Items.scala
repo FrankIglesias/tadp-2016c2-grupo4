@@ -15,7 +15,7 @@ object ObjetoItem{
    def matcheaDefensorArmaRoma(defensor:Guerrero)={
      defensor.especie match {
        case Androide(_) => defensor.copy()
-       case otro if defensor.ki < 300 => defensor.copy(estado = Inconsciente)
+       case otro if defensor.ki < 300 => defensor.quedateInconsiente()
      }
    }
  }
@@ -62,4 +62,6 @@ object ObjetoItem{
     def disminuirMunicion(cantidadADisminuir:Int) = {cantidadDeBalas = cantidadDeBalas - cantidadADisminuir
     }
   }
+ 
+ object FotodeLaLuna extends Item
 }
