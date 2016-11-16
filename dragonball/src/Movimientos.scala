@@ -86,7 +86,9 @@ object TodosLosMovimientos{
     }
     
     case object Magia extends Movimiento {
-      def apply(magia: TipoDeMagia, duelo: Duelo) : Duelo = ???
+      def apply(magia: (Duelo=>Duelo), duelo: Duelo) : Duelo = {
+        magia(duelo) 
+      }
     }
     
     //case object Atacar extends Movimiento {
