@@ -46,8 +46,28 @@ object TodosLosMovimientos{
     }
     
     case object Convertirse extends Movimiento {
-      def apply(estado: Especie, duelo: Duelo) : Duelo = ???
+      def apply(especie: Especie, duelo: Duelo) : Duelo = { 
+        especie match {
+          case Mono(_) => generarDueloNuevo(convertirseEnMono(atacante(duelo)))(defensor(duelo))
+          case SuperSaiyajins(_,_) =>  generarDueloNuevo(convertirseEnSS(atacante(duelo)))(defensor(duelo))
+          case _ => duelo.copy()
+        }
+      }
     }
+    
+    def convertirseEnMono(guerrero:Guerrero) : Guerrero = {
+      guerrero.especie match {
+        case Saiyajin(c) => if (c == true && listaDeItems.contains(FotodeLaLuna)) copy(especie = Mono(true), kiMaximo = guerrero.kiMaximo * 3, ki = guerrero.kiMaximo * 3) else guerrero.copy()
+        case _ => guerrero.copy()
+    }
+      
+    def convertirseEnSS(guerrero:Guerrero): Guerrero = {
+     guerreo.especie match {
+       case Saiyajin(c) => if (ki >= guerrero.kiMaximo / 2) this.copy(especie = SuperSaiyajin(c, 1)) else guerrero.copy()
+       case SuperSaiyajin(cola, nivel) => if (ki >= kiMaximo / 2) this.copy(especie = SuperSaiyajin(cola, nivel + 1))else guerrero.copy()
+       case _ => guerrero.copy()
+     }
+    
     
     case object Fusion extends Movimiento {
       def apply(otroGuerrero: Guerrero, duelo: Duelo)  : Duelo = ???
