@@ -46,8 +46,8 @@ object TodosLosMovimientos{
     }
     
     case object Convertirse extends Movimiento {
-      def apply(especie: Especie, duelo: Duelo) : Duelo = { 
-        especie match {
+      def apply(duelo: Duelo) : Duelo = { 
+        atacante(duelo).especie match {
           case Mono(_) => generarDueloNuevo(convertirseEnMono(atacante(duelo)))(defensor(duelo))
           case SuperSaiyajin(_,_) =>  generarDueloNuevo(convertirseEnSS(atacante(duelo)))(defensor(duelo))
           case _ => duelo.copy()
@@ -71,20 +71,18 @@ object TodosLosMovimientos{
     }
     
     case object Fusion extends Movimiento {
-      def apply(otroGuerrero: Guerrero, duelo: Duelo)  : Duelo = {
+      def apply(duelo: Duelo)  : Duelo = {
          atacante(duelo).especie match {
-         case Humano | Saiyajin(_) | Namukesin => 
-           otroGuerrero.especie match {
-             case Humano | Saiyajin(_) | Namukesin => 
-               generarDueloNuevo(atacante(duelo).
-                   copy(especie = Fusionado(atacante(duelo)), 
-                       ki = atacante(duelo).ki + otroGuerrero.ki, 
-                       kiMaximo = atacante(duelo).kiMaximo + otroGuerrero.kiMaximo))(defensor(duelo))
-              case _ => duelo.copy()
-           }
+         case (Humano | Saiyajin(_) | Namekusein) if contieneAEstaEspecie(List(Humano,Saiyajin(true),Saiyajin(false),Namekusein),defensor(duelo).especie) =>
+               generarDueloNuevo(atacante(duelo).copy(
+               especie = Fusionado(atacante(duelo)), 
+               ki = atacante(duelo).ki + defensor(duelo).ki, 
+               kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo))(defensor(duelo))
          case _ => duelo.copy()
         }
       }
+      
+      def contieneAEstaEspecie(listaDeEspecies: List[Especie], especie:Especie) = { listaDeEspecies.contains(especie)}
     }
     
     case object Magia extends Movimiento {
