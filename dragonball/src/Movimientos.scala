@@ -70,11 +70,23 @@ object TodosLosMovimientos{
      }
     }
     
-    
-    
     case object Fusion extends Movimiento {
-      def apply(otroGuerrero: Guerrero, duelo: Duelo)  : Duelo = ???
+      def apply(otroGuerrero: Guerrero, duelo: Duelo)  : Duelo = {
+         atacante(duelo).especie match {
+         case Humano | Saiyajin(_) | Namukesin => 
+           otroGuerrero.especie match {
+             case Humano | Saiyajin(_) | Namukesin => 
+               generarDueloNuevo(atacante(duelo).
+                   copy(especie = Fusionado(atacante(duelo)), 
+                       ki = atacante(duelo).ki + otroGuerrero.ki, 
+                       kiMaximo = atacante(duelo).kiMaximo + otroGuerrero.kiMaximo))(defensor(duelo))
+              case _ => duelo.copy()
+           }
+         case _ => duelo.copy()
+        }
+      }
     }
+    
     case object Magia extends Movimiento {
       def apply(magia: TipoDeMagia, duelo: Duelo) : Duelo = ???
     }
