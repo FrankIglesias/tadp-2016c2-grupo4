@@ -7,13 +7,14 @@ object TodosLosMovimientos{
   
   trait Movimiento{
   
-    case class DejarseFajar() extends Movimiento {
+    case object DejarseFajar() extends Movimiento {
       def apply(duelo: Duelo): Duelo = duelo.copy()
     }
     
     case class CargarKi(kiACargar:Int) extends Movimiento {
-      def apply(duelo:Duelo) : Duelo ={ generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))}
-      
+      def apply(duelo:Duelo) : Duelo = {
+        generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))
+        }
     
       def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
         guerrero.especie match {
@@ -24,7 +25,7 @@ object TodosLosMovimientos{
       }
     }
     
-    case class ComerseAlOponente() extends Movimiento{
+    case object ComerseAlOponente() extends Movimiento {
       def apply(duelo:Duelo) = {
         atacante(duelo).especie match {
           case Monstruo(_) if kiEsMenor(atacante(duelo),defensor(duelo)) => generarDueloNuevo(
@@ -35,7 +36,10 @@ object TodosLosMovimientos{
           case _ => duelo.copy()
         }
       }
-      def kiEsMenor(atacante:Guerrero, defensor:Guerrero) ={atacante.ki>defensor.ki}
+      
+      def kiEsMenor(atacante:Guerrero, defensor:Guerrero) = { 
+        atacante.ki>defensor.ki 
+        }
     }
     
     case class UsarItem(itemAUsar:Item) extends Movimiento {
@@ -82,7 +86,9 @@ object TodosLosMovimientos{
         }
       }
       
-      def contieneAEstaEspecie(listaDeEspecies: List[Especie], especie:Especie) = { listaDeEspecies.contains(especie)}
+      def contieneAEstaEspecie(listaDeEspecies: List[Especie], especie:Especie) = { 
+        listaDeEspecies.contains(especie) 
+        }
     }
     
     case object Magia extends Movimiento {
