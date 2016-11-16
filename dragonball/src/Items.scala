@@ -2,6 +2,7 @@
 import Tipos._
 import TodosLosMovimientos._
 
+
 object ObjetoItem{
   
  class Item{
