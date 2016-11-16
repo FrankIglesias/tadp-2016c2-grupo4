@@ -7,7 +7,7 @@ object TodosLosMovimientos{
   
   trait Movimiento{
   
-    case object DejarseFajar() extends Movimiento {
+    case object DejarseFajar extends Movimiento {
       def apply(duelo: Duelo): Duelo = duelo.copy()
     }
     
@@ -25,7 +25,7 @@ object TodosLosMovimientos{
       }
     }
     
-    case object ComerseAlOponente() extends Movimiento {
+    case object ComerseAlOponente extends Movimiento {
       def apply(duelo:Duelo) = {
         atacante(duelo).especie match {
           case Monstruo(_) if kiEsMenor(atacante(duelo),defensor(duelo)) => generarDueloNuevo(
@@ -93,7 +93,16 @@ object TodosLosMovimientos{
     
     case object Magia extends Movimiento {
       def apply(magia: (Duelo=>Duelo), duelo: Duelo) : Duelo = {
-        magia(duelo) 
+        atacante(duelo).especie match {
+          case Namekusein | Monstruo(_) => magia(duelo)
+          case _ if atacante(duelo).listaDeItems.count{item => item.eq(EsferaDeDragon)} > 7 => removeEsferasYGeneraDuelo(duelo,magia)
+          case _ => duelo.copy()
+        }
+      }
+      
+      def removeEsferasYGeneraDuelo(duelo:Duelo,magia:(Duelo=>Duelo)) = {
+        atacante(duelo).listaDeItems.dropWhile { item => item.eq(EsferaDeDragon)}
+        magia(duelo)
       }
     }
     

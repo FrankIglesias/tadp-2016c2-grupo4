@@ -64,4 +64,5 @@ object ObjetoItem{
   }
  
  object FotodeLaLuna extends Item
+ object EsferaDeDragon extends Item
 }
