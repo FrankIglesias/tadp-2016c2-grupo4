@@ -95,7 +95,7 @@ object TodosLosMovimientos{
       def apply(magia: (Duelo=>Duelo), duelo: Duelo) : Duelo = {
         atacante(duelo).especie match {
           case Namekusein | Monstruo(_) => magia(duelo)
-          case _ if atacante(duelo).listaDeItems.count{item => item.eq(EsferaDeDragon)} > 7 => removeEsferasYGeneraDuelo(duelo,magia)
+          case _ if atacante(duelo).listaDeItems.count{item => item.eq(EsferaDeDragon)} >= 7 => removeEsferasYGeneraDuelo(duelo,magia)
           case _ => duelo.copy()
         }
       }
