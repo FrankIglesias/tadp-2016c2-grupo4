@@ -30,4 +30,7 @@ case class Guerrero(
   def disminuirElKi(kiADisminuir:Int)={
     this.copy(ki = this.ki - kiADisminuir)
   }
+  
+  def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.ki) this.disminuirElKi(20) else this.copy())
+  
 }

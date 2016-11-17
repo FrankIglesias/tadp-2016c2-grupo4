@@ -14,6 +14,10 @@ object TiposDeAtaque {
           atacante(duelo).disminuirElKi(10))(
           defensor(duelo))
       }
+      case _ => definirQuienEsElDeMenorKiYFajarlo(duelo)
     }
+    def definirQuienEsElDeMenorKiYFajarlo(duelo:Duelo) ={generarDueloNuevo(
+        atacante(duelo).seLaBancaContra(defensor(duelo).ki))(
+        defensor(duelo).seLaBancaContra(atacante(duelo).ki))}
   }
 }

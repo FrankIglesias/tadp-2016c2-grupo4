@@ -10,4 +10,5 @@ object Tipos {
   def defensor(duelo:Duelo) : Guerrero = duelo._2
   
   def generarDueloNuevo(atacante:Guerrero)(defensor:Guerrero): Duelo=(atacante.copy(),defensor.copy())
+
 }
