@@ -1,7 +1,7 @@
 
 import Tipos._
 import ObjetoItem._
-import TiposDeAtaque.Ataque
+import TiposDeAtaque._
 
 object TodosLosMovimientos{
     
@@ -108,7 +108,7 @@ object TodosLosMovimientos{
     }
     
     case object Atacar extends Movimiento {
-      def apply(ataque:Ataque, duelo:Duelo) = ataque(duelo)
+       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque(duelo)
     }
   }
 }
