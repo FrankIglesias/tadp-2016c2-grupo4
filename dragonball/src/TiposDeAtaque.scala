@@ -48,10 +48,7 @@ object TiposDeAtaque {
        case _ => cambiarKiYGenerarDuelo(ataque(duelo))
      } 
    }
-   
-   def negarSegundoParametro(delta:(Integer,Integer)):(Integer, Integer) = {
-     return (delta._1,-delta._2)
-   }
+
    
    def cambiarKiYGenerarDuelo(delta : (Integer, Integer)) {
      generarDueloNuevo(atacante(duelo).copy(ki = atacante(duelo).ki - delta._1 min atacante(duelo).kiMaximo))(defensor(duelo).copy(ki = defensor(duelo).ki + delta._2 min defensor(duelo).kiMaximo))
