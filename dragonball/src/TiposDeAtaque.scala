@@ -2,7 +2,10 @@
 import Tipos._
 
 object TiposDeAtaque {
-  class Ataque{ def apply(duelo:Duelo) = duelo.copy()}
+  
+  class Ataque{ 
+    def apply(duelo:Duelo) = duelo.copy() 
+    }
   
   
   class AtaqueDeEnergia extends Ataque()
