@@ -108,17 +108,7 @@ object TodosLosMovimientos{
     }
     
     case object Atacar extends Movimiento {
-       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = {ataque match{
-         case AtaqueDeEnergia() => siEsAndroideAumentaLaBateria(duelo,ataque)
-         case AtaqueFisico() => ataque(duelo)
-       }
-      }
-      def siEsAndroideAumentaLaBateria(duelo:Duelo,ataque:Ataque) = {
-        atacante(duelo).especie match {
-          case Androide(_) => ???
-          case _ => ataque(duelo)
-        }
-      }
+       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque(duelo)
     }
   }
 }

@@ -46,15 +46,13 @@ object TiposDeAtaque {
      defensor(duelo).especie match {
        case Androide(_) => cambiarKiYGenerarDuelo(negarSegundoParametro(ataque(duelo)))
        case _ => cambiarKiYGenerarDuelo(ataque(duelo))
-     }
-     
+     } 
    }
    
    def negarSegundoParametro(delta:(Integer,Integer)):(Integer, Integer) = {
      return (delta._1,-delta._2)
    }
    
-   //TODO lo de la bateria del androide, esta solo con ki 
    def cambiarKiYGenerarDuelo(delta : (Integer, Integer)) {
      generarDueloNuevo(atacante(duelo).copy(ki = atacante(duelo).ki - delta._1 min atacante(duelo).kiMaximo))(defensor(duelo).copy(ki = defensor(duelo).ki + delta._2 min defensor(duelo).kiMaximo))
    }
