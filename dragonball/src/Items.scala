@@ -8,9 +8,9 @@ object ObjetoItem{
    def apply(duelo:Duelo) = duelo.copy()
  }
   
- class Arma extends Item{}
+ class Arma() extends Item{}
  
- class ArmaRoma  extends Arma {
+ case class ArmaRoma()  extends Arma {
    override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaRoma(defensor(duelo)))}
    def matcheaDefensorArmaRoma(defensor:Guerrero)={
      defensor.especie match {
@@ -20,7 +20,7 @@ object ObjetoItem{
    }
  }
    
- class ArmaFilosa  extends Arma{
+ case class ArmaFilosa()  extends Arma{
    override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(analizaEfectoAlDefensor(atacante(duelo).ki,defensor(duelo)))}
    def analizaEfectoAlDefensor(kiDelAtacante:Int, defensor:Guerrero) : Guerrero = {
      defensor.especie match {
@@ -31,7 +31,7 @@ object ObjetoItem{
    }
  }
   
- class ArmaDeFuego extends Arma{
+ case class ArmaDeFuego() extends Arma{
    override def apply(duelo:Duelo) = {
      if (atacante(duelo).tenesBalas(this)){
        generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaDeFuego(defensor(duelo)))
@@ -48,12 +48,12 @@ object ObjetoItem{
    }
  }
   
- class SemillaDeErmitaño extends Item{
+ case class SemillaDeErmitaño() extends Item{
     override def apply(duelo:Duelo) = {generarDueloNuevo(aumentarKiAlMango(atacante(duelo)))(defensor(duelo))}
     def aumentarKiAlMango(alguien:Guerrero) = alguien.copy(ki = alguien.kiMaximo)
   }
   
- class Municion(
+ case class Municion(
       var armaAsociada: ArmaDeFuego,
       var cantidadDeBalas:Int) extends Item{
     

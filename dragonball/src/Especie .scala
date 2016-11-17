@@ -1,7 +1,6 @@
 import scala.util.{ Try, Success, Failure }
 import Tipos._
 
-
   trait Especie
   
   case object Humano extends Especie

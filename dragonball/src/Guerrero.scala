@@ -26,4 +26,8 @@ case class Guerrero(
       case _ => this.copy(estado = Inconsciente)
     }
   }
+  
+  def disminuirElKi(kiADisminuir:Int)={
+    this.copy(ki = this.ki - kiADisminuir)
+  }
 }
