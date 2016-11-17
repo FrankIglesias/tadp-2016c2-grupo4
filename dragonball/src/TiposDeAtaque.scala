@@ -7,8 +7,6 @@ object TiposDeAtaque {
     def apply(duelo:Duelo) = duelo.copy() 
     }
   
-  
-  case class AtaqueDeEnergia() extends Ataque()
   case class AtaqueFisico() extends Ataque()
   
   object MuchosGolpesNinja extends AtaqueFisico(){
@@ -42,4 +40,27 @@ object TiposDeAtaque {
     atacante(duelo).morite())(
     defensor(duelo).recibiExplosion(bateria * 3))
     }
+  
+  case class AtacarDeEnergia() extends Ataque() {
+   def apply(duelo:Duelo) = {
+     defensor(duelo).especie match {
+       case Androide(_) => cambiarKiYGenerarDuelo(negarSegundoParametro(ataque(duelo)))
+       case _ => cambiarKiYGenerarDuelo(ataque(duelo))
+     }
+     
+   }
+   
+   def negarSegundoParametro(delta:(Integer,Integer)):(Integer, Integer) = {
+     return (delta._1,-delta._2)
+   }
+   
+   //TODO lo de la bateria del androide, esta solo con ki 
+   def cambiarKiYGenerarDuelo(delta : (Integer, Integer)) {
+     generarDueloNuevo(atacante(duelo).copy(ki = atacante(duelo).ki - delta._1 min atacante(duelo).kiMaximo))(defensor(duelo).copy(ki = defensor(duelo).ki + delta._2 min defensor(duelo).kiMaximo))
+   }
+  }
+  
+  class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia()
+  object Genkidama extends AtacarDeEnergia()
+
 }
