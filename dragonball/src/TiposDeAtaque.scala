@@ -8,10 +8,10 @@ object TiposDeAtaque {
     }
   
   
-  class AtaqueDeEnergia extends Ataque()
-  class AtaqueFisico extends Ataque()
+  case class AtaqueDeEnergia() extends Ataque()
+  case class AtaqueFisico() extends Ataque()
   
-  case object MuchosGolpesNinja extends AtaqueFisico(){
+  object MuchosGolpesNinja extends AtaqueFisico(){
     override def apply(duelo:Duelo) = atacante(duelo).especie match {
       case Humano if defensor(duelo).especie.eq(Androide) => {generarDueloNuevo(
           atacante(duelo).disminuirElKi(10))(
@@ -24,7 +24,7 @@ object TiposDeAtaque {
         defensor(duelo).seLaBancaContra(atacante(duelo).ki))}
   }
   
-  case object Explotar extends AtaqueFisico(){
+  object Explotar extends AtaqueFisico(){
     override def apply(duelo:Duelo) = atacante(duelo).especie match{
       case Monstruo(_) => explotaComoElMonstruoQueSos(duelo)
       case Androide(bateria) => explotaComoElRobotQueSos(duelo,bateria)
