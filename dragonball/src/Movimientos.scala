@@ -106,9 +106,14 @@ object TodosLosMovimientos{
       }
     }
     
-    //case object Atacar extends Movimiento {
-    //  def apply(ataque:Ataque, duelo:Duelo) = ???
-    //}
+    case object Atacar extends Movimiento {
+      def apply(ataque:Ataque, duelo:Duelo) = {
+        ataque.getClass match {
+          case AtaqueDeEnergia => 
+        }
+        
+      }
+    }
 
   }
 }
