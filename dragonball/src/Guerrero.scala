@@ -14,7 +14,7 @@ case class Guerrero(
     ki: Int,
     kiMaximo: Int,
     especie: Especie) {  
-  
+    
   def tenesBalas(arma:Arma) = listaDeItems
   .find{item => item.asInstanceOf[Municion].armaAsociada.eq(arma.asInstanceOf[Arma])}
   .map{municion => municion.asInstanceOf[Municion].disminuirMunicion(1)}
