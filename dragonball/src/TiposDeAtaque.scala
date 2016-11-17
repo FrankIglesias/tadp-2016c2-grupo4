@@ -20,4 +20,23 @@ object TiposDeAtaque {
         atacante(duelo).seLaBancaContra(defensor(duelo).ki))(
         defensor(duelo).seLaBancaContra(atacante(duelo).ki))}
   }
+  
+  case object Explotar extends AtaqueFisico(){
+    override def apply(duelo:Duelo) = atacante(duelo).especie match{
+      case Monstruo(_) => explotaComoElMonstruoQueSos(duelo)
+      case Androide(bateria) => explotaComoElRobotQueSos(duelo,bateria)
+      case _ => duelo.copy()
+    }
+  }
+  
+  
+  def explotaComoElMonstruoQueSos(duelo:Duelo) = {generarDueloNuevo(
+    atacante(duelo).morite())(
+    defensor(duelo).recibiExplosion(atacante(duelo).ki * 2))
+    }
+  
+  def explotaComoElRobotQueSos(duelo:Duelo,bateria:Int) = {generarDueloNuevo(
+    atacante(duelo).morite())(
+    defensor(duelo).recibiExplosion(bateria * 3))
+    }
 }

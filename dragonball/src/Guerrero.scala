@@ -1,6 +1,8 @@
 import scala.util.{ Try, Success, Failure }
 import Tipos._
 import ObjetoItem._
+import scala.math._
+
 
 abstract class EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
@@ -33,4 +35,12 @@ case class Guerrero(
   
   def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.ki) this.disminuirElKi(20) else this.copy())
   
+  def morite() = this.copy(ki = 0,estado = Muerto)
+  
+  def recibiExplosion(golpeDeLaExplosion:Int)={
+    this.especie match{
+      case Namekusein => this.disminuirElKi(min((this.ki - 1), golpeDeLaExplosion))
+      case _ => this.disminuirElKi(golpeDeLaExplosion)
+    }
+  }
 }
