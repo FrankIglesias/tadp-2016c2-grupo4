@@ -1,6 +1,8 @@
 
 import Tipos._
 import ObjetoItem._
+import TiposDeAtaque._
+import Especie._
 
 object TodosLosMovimientos{
     
@@ -8,8 +10,14 @@ object TodosLosMovimientos{
   trait Movimiento{
   
     case object DejarseFajar extends Movimiento {
-      def apply(duelo: Duelo): Duelo = duelo.copy()
+      def apply(duelo: Duelo): Duelo = generarDueloNuevo(
+          aumentarCantidadDeFajadas(atacante(duelo)))(
+          defensor(duelo))
+      def aumentarCantidadDeFajadas(guerrero:Guerrero) ={
+        guerrero.copy(cantidadDeFajadas = guerrero.cantidadDeFajadas + 1)
+      }
     }
+  
     
     case class CargarKi(kiACargar:Int) extends Movimiento {
       def apply(duelo:Duelo) : Duelo = {
@@ -107,13 +115,7 @@ object TodosLosMovimientos{
     }
     
     case object Atacar extends Movimiento {
-      def apply(ataque:Ataque, duelo:Duelo) = {
-        ataque.getClass match {
-          case AtaqueDeEnergia => 
-        }
-        
-      }
+       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque(duelo)
     }
-
   }
 }
