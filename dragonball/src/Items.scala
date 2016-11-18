@@ -48,7 +48,7 @@ object ObjetoItem{
    }
  }
   
- case class SemillaDeErmitaño() extends Item{
+ case class SemillaDeErmitanio() extends Item{
     override def apply(duelo:Duelo) = {generarDueloNuevo(aumentarKiAlMango(atacante(duelo)))(defensor(duelo))}
     def aumentarKiAlMango(alguien:Guerrero) = alguien.copy(ki = alguien.kiMaximo)
   }
