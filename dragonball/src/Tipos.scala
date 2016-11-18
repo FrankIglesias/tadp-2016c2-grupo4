@@ -14,5 +14,5 @@ object Tipos {
 
   val menosDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder- defensor(movimiento(duelo)).dameElPoder
   val masDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder + defensor(movimiento(duelo)).dameElPoder
- 
+  val meDejaConElMayorKi : Criterio = (movimiento,duelo) => atacante(movimiento(duelo)).dameElPoder - defensor(movimiento(duelo)).dameElPoder
 }

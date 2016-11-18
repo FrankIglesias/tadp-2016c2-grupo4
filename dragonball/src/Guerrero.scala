@@ -75,15 +75,16 @@ case class Guerrero(
   
   def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) = 
   {
-    Try(
-        listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(generarDueloNuevo(this)(otroGuerrero)))})
+    Try(listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(generarDueloNuevo(this)(otroGuerrero)))})
   }
   
   //Con que criterio el contraatacante elige que movimiento usar??
-  def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) : Duelo = 
+  def pelearRoundSegunUnCriterio(unMovimiento : Movimiento)(otroGuerrero : Guerrero)(criterio:Criterio) : Duelo = 
   {
     val ataque : Duelo = unMovimiento(generarDueloNuevo(this)(otroGuerrero))
     val movimientoDeContraataque : Try[Movimiento] = defensor(ataque).movimentoMasEfectivoContra(atacante(ataque))(masDanioHace)
     movimientoDeContraataque.getOrElse(ataque).asInstanceOf[Movimiento](generarDueloNuevo(defensor(ataque))(atacante(ataque)))
   }
+  
+  def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) = pelearRoundSegunUnCriterio(unMovimiento)(otroGuerrero)(meDejaConElMayorKi)
 }
