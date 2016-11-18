@@ -1,5 +1,6 @@
 
 import Tipos._
+import scala.math._
 
 object TiposDeAtaque {
   
@@ -63,10 +64,8 @@ object TiposDeAtaque {
   }
   
   object Genkidama extends AtacarDeEnergia(){
-    override def apply(duelo:Duelo) ={{generarDueloNuevo(
+    override def apply(duelo:Duelo) ={generarDueloNuevo(
             atacante(duelo))(
-            defensor(duelo).recibirDanioDeEnergia(2*cantidadDeKiNecesario))
-            }
+            defensor(duelo).recibirDanioDeEnergia(pow(10,(atacante(duelo).cantidadDeFajadas)).toInt))}
   }
-
 }

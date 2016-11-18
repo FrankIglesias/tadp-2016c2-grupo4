@@ -15,7 +15,8 @@ case class Guerrero(
     listaDeItems: List[Item],
     ki: Int,
     kiMaximo: Int,
-    especie: Especie) {  
+    especie: Especie,
+    cantidadDeFajadas: Int) {  
     
   def tenesBalas(arma:Arma) = listaDeItems
   .find{item => item.asInstanceOf[Municion].armaAsociada.eq(arma.asInstanceOf[Arma])}
