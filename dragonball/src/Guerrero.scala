@@ -2,7 +2,7 @@ import scala.util.{ Try, Success, Failure }
 import Tipos._
 import ObjetoItem._
 import scala.math._
-import TodosLosMovimientos._
+
 
 
 abstract class EstadoGuerrero
@@ -66,5 +66,9 @@ case class Guerrero(
     }
   }
   
+  def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) : Movimiento = 
+  {
+    return unCriterio(listaDeMovimientos, generarDueloNuevo(this)(otroGuerrero))
+  }
 
 }

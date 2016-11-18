@@ -3,8 +3,12 @@ import Tipos._
 
 object Criterios {
   
-  trait Criterio {
-    case object movimientoMasDanino 
+  case class Criterio()
+  {
+     def apply(listaMovimientos: List[Movimiento], duelo : Duelo) : Movimiento = ???
+  }
+  
+    class movimientoMasDanino extends Criterio
     {
       
       def min(t1: (Int, Int), t2: (Int, Int)): (Int, Int) = if (t1._1 < t2._2) t1 else t2
@@ -19,7 +23,6 @@ object Criterios {
         return listaMovimientos(movMasEfectivo._2 - 1)
       }
     }
-  }
   
 }
 
