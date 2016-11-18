@@ -2,7 +2,7 @@ import scala.util.{ Try, Success, Failure }
 import Tipos._
 import ObjetoItem._
 import scala.math._
-
+import TodosLosMovimientos._
 
 
 abstract class EstadoGuerrero
@@ -13,6 +13,7 @@ case object Vivo extends EstadoGuerrero
 case class Guerrero(
     estado: EstadoGuerrero = Vivo,
     listaDeMovimientos: List[Movimiento],
+    listaDeMovimientosConocidos: List[Movimiento],
     listaDeItems: List[Item],
     ki: Int,
     kiMaximo: Int,
@@ -64,4 +65,6 @@ case class Guerrero(
       case _ => this.disminuirElKi(danio)
     }
   }
+  
+
 }
