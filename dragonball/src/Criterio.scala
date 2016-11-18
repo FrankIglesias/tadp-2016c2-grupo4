@@ -11,7 +11,7 @@ object Criterios {
     class movimientoMasDanino extends Criterio
     {
       
-      def max(t1: (Int, Movimiento), t2: (Int, Movimiento)): (Int, Movimiento) = if (t1._1 > t2._2) t1 else t2
+      def max(t1: (Int, Movimiento), t2: (Int, Movimiento)): (Int, Movimiento) = if (t1._1 > t2._1) t1 else t2
       def aplicarDuelo(mov: Movimiento) : (Duelo, Movimiento) = 
       {
         return (mov(duelo), mov)
