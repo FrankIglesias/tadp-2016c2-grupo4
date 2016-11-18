@@ -19,7 +19,14 @@ case class Guerrero(
     ki: Int,
     kiMaximo: Int,
     especie: Especie,
-    cantidadDeFajadas: Int) {  
+    cantidadDeFajadas: Int) {
+  
+  def dameElPoder : Int = {especie match{
+    case Androide(bateria) => bateria
+    case _ => ki
+    }
+  }
+  
     
   def tenesBalas(arma:Arma) = listaDeItems
   .find{item => item.asInstanceOf[Municion].armaAsociada.eq(arma.asInstanceOf[Arma])}
@@ -33,37 +40,36 @@ case class Guerrero(
     }
   }
   
-  def disminuirElKi(kiADisminuir:Int) = {
-      this.copy(ki = ki - kiADisminuir min 0)
-    }
-    
   def disminuirElPoder(poderADisminuir:Int) = {
     especie match {
-      case Androide(b) => this.copy(especie = Androide(bateria = b - poderADisminuir min 0))
+      case Androide(b) => this.copy(especie = Androide(bateria = max(b - poderADisminuir,0)))
       case _ => this.copy(ki = ki - poderADisminuir min 0)
     }
   }
     
   
-  def aumentarElKi(kiAAumentas:Int)={
-    this.copy(ki = this.ki + kiAAumentas)
+  def aumentarElPoder(poderAAumentar:Int)={
+    especie match {
+      case Androide(b) => this.copy(especie = Androide(bateria = b + poderAAumentar))
+      case _ => this.copy(ki = ki - poderAAumentar)
+    }
   }
   
-  def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.ki) this.disminuirElKi(20) else this.copy())
+  def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.dameElPoder) this.disminuirElPoder(20) else this.copy())
   
   def morite() = this.copy(ki = 0,estado = Muerto)
   
   def recibiExplosion(golpeDeLaExplosion:Int)={
     this.especie match{
-      case Namekusein => this.disminuirElKi(min((this.ki - 1), golpeDeLaExplosion))
-      case _ => this.disminuirElKi(golpeDeLaExplosion)
+      case Namekusein => this.disminuirElPoder(min((this.dameElPoder - 1), golpeDeLaExplosion))
+      case _ => this.disminuirElPoder(golpeDeLaExplosion)
     }
   }
   
   def recibirDanioDeEnergia(danio:Int)={
     especie match{
-      case Androide(_) => this.aumentarElKi(danio)
-      case _ => this.disminuirElKi(danio)
+      case Androide(_) => this.aumentarElPoder(danio)
+      case _ => this.disminuirElPoder(danio)
     }
   }
   

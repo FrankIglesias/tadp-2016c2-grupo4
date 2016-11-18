@@ -13,14 +13,14 @@ object TiposDeAtaque {
   object MuchosGolpesNinja extends AtaqueFisico(){
     override def apply(duelo:Duelo) = atacante(duelo).especie match {
       case Humano if defensor(duelo).especie.eq(Androide) => {generarDueloNuevo(
-          atacante(duelo).disminuirElKi(10))(
+          atacante(duelo).disminuirElPoder(10))(
           defensor(duelo))
       }
       case _ => definirQuienEsElDeMenorKiYFajarlo(duelo)
     }
     def definirQuienEsElDeMenorKiYFajarlo(duelo:Duelo) ={generarDueloNuevo(
-        atacante(duelo).seLaBancaContra(defensor(duelo).ki))(
-        defensor(duelo).seLaBancaContra(atacante(duelo).ki))}
+        atacante(duelo).seLaBancaContra(defensor(duelo).dameElPoder))(
+        defensor(duelo).seLaBancaContra(atacante(duelo).dameElPoder))}
   }
   
   object Explotar extends AtaqueFisico(){
@@ -34,7 +34,7 @@ object TiposDeAtaque {
   
   def explotaComoElMonstruoQueSos(duelo:Duelo) = {generarDueloNuevo(
     atacante(duelo).morite())(
-    defensor(duelo).recibiExplosion(atacante(duelo).ki * 2))
+    defensor(duelo).recibiExplosion(atacante(duelo).dameElPoder * 2))
     }
   
   def explotaComoElRobotQueSos(duelo:Duelo,bateria:Int) = {generarDueloNuevo(
@@ -50,7 +50,7 @@ object TiposDeAtaque {
       defensor(duelo).especie match {
         case Monstruo(_) if tieneSuficientePoder(atacante(duelo)) => {generarDueloNuevo(
             atacante(duelo).disminuirElPoder(cantidadDeKiNecesario))(
-            defensor(duelo).disminuirElKi(cantidadDeKiNecesario/2))
+            defensor(duelo).disminuirElPoder(cantidadDeKiNecesario/2))
             }
         case _ if tieneSuficientePoder(atacante(duelo)) => {generarDueloNuevo(
             atacante(duelo).disminuirElPoder(cantidadDeKiNecesario))(
@@ -63,7 +63,7 @@ object TiposDeAtaque {
     def tieneSuficientePoder(guerrero:Guerrero) = {
       guerrero.especie match {
       case Androide(b) => b >= cantidadDeKiNecesario 
-      case _ =>  guerrero.ki >= cantidadDeKiNecesario
+      case _ =>  guerrero.dameElPoder >= cantidadDeKiNecesario
       }
     }
   }
