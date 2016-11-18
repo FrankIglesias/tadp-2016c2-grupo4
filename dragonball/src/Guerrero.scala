@@ -67,9 +67,10 @@ case class Guerrero(
     }
   }
   
-  def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) : Movimiento = 
+  def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) = 
   {
-    return unCriterio(listaDeMovimientos, generarDueloNuevo(this)(otroGuerrero))
+    Try(
+        listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(generarDueloNuevo(this)(otroGuerrero)))})
   }
   
   //Con que criterio el contraatacante elige que movimiento usar??
