@@ -2,6 +2,7 @@ import scala.util.{ Try, Success, Failure }
 import Tipos._
 import ObjetoItem._
 import scala.math._
+import Especie._
 
 
 
@@ -70,5 +71,16 @@ case class Guerrero(
   {
     return unCriterio(listaDeMovimientos, generarDueloNuevo(this)(otroGuerrero))
   }
+  
+  //Con que criterio el contraatacante elige que movimiento usar??
+  def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) : Duelo = 
+  {
+    val ataque : Duelo = unMovimiento(generarDueloNuevo(this)(otroGuerrero))
+    val movimientoDeContraataque : Movimiento = movimentoMasEfectivoContra(this)(???)
+    
+    return movimientoDeContraataque(ataque)
+  }
+  
+  
 
 }

@@ -2,6 +2,7 @@
 import Tipos._
 import ObjetoItem._
 import TiposDeAtaque._
+import Especie._
 
 object TodosLosMovimientos{
     
