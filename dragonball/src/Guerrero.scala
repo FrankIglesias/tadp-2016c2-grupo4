@@ -83,11 +83,7 @@ case class Guerrero(
   def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) : Duelo = 
   {
     val ataque : Duelo = unMovimiento(generarDueloNuevo(this)(otroGuerrero))
-    val movimientoDeContraataque : Movimiento = movimentoMasEfectivoContra(this)(???)
-    
-    return movimientoDeContraataque(ataque)
+    val movimientoDeContraataque : Try[Movimiento] = defensor(ataque).movimentoMasEfectivoContra(atacante(ataque))(masDanioHace)
+    movimientoDeContraataque.getOrElse(ataque).asInstanceOf[Movimiento](generarDueloNuevo(defensor(ataque))(atacante(ataque)))
   }
-  
-  
-
 }
