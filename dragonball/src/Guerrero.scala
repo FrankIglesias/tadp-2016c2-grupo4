@@ -4,6 +4,7 @@ import ObjetoItem._
 import scala.math._
 
 
+
 abstract class EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
 case object Muerto extends EstadoGuerrero
@@ -30,9 +31,17 @@ case class Guerrero(
     }
   }
   
-  def disminuirElKi(kiADisminuir:Int)={
-    this.copy(ki = max(this.ki - kiADisminuir,0))
+  def disminuirElKi(kiADisminuir:Int) = {
+      this.copy(ki = ki - kiADisminuir min 0)
+    }
+    
+  def disminuirElPoder(poderADisminuir:Int) = {
+    especie match {
+      case Androide(b) => this.copy(especie = Androide(bateria = b - poderADisminuir min 0))
+      case _ => this.copy(ki = ki - poderADisminuir min 0)
+    }
   }
+    
   
   def aumentarElKi(kiAAumentas:Int)={
     this.copy(ki = this.ki + kiAAumentas)

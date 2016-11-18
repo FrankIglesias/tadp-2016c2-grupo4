@@ -48,19 +48,24 @@ object TiposDeAtaque {
   class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia(){
    override def apply(duelo:Duelo) ={
       defensor(duelo).especie match {
-        case Monstruo(_) if tieneSufisienteKi(atacante(duelo)) => {generarDueloNuevo(
-            atacante(duelo).disminuirElKi(cantidadDeKiNecesario))(
-            defensor(duelo).disminuirElKi(cantidadDeKiNecesario))
+        case Monstruo(_) if tieneSuficientePoder(atacante(duelo)) => {generarDueloNuevo(
+            atacante(duelo).disminuirElPoder(cantidadDeKiNecesario))(
+            defensor(duelo).disminuirElKi(cantidadDeKiNecesario/2))
             }
-        case _ if tieneSufisienteKi(atacante(duelo)) => {generarDueloNuevo(
-            atacante(duelo).disminuirElKi(cantidadDeKiNecesario))(
+        case _ if tieneSuficientePoder(atacante(duelo)) => {generarDueloNuevo(
+            atacante(duelo).disminuirElPoder(cantidadDeKiNecesario))(
             defensor(duelo).recibirDanioDeEnergia(2*cantidadDeKiNecesario))
             }
         case _ => duelo.copy()
       }
     }
     
-    def tieneSufisienteKi(guerrero:Guerrero) = guerrero.ki >= cantidadDeKiNecesario
+    def tieneSuficientePoder(guerrero:Guerrero) = {
+      guerrero.especie match {
+      case Androide(b) => b >= cantidadDeKiNecesario 
+      case _ =>  guerrero.ki >= cantidadDeKiNecesario
+      }
+    }
   }
   
   object Genkidama extends AtacarDeEnergia(){
