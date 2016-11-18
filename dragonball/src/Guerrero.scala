@@ -3,6 +3,7 @@ import Tipos._
 import ObjetoItem._
 import scala.math._
 import Especie._
+import scala.collection.mutable.MutableList
 
 
 
@@ -87,4 +88,22 @@ case class Guerrero(
   }
   
   def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) = pelearRoundSegunUnCriterio(unMovimiento)(otroGuerrero)(meDejaConElMayorKi)
-}
+  
+  def planDeAtaqueContra(guerrero:Guerrero,cantidadDeRounds:Int)(criterio:Criterio){
+    var plan : MutableList[Movimiento] = MutableList()
+    desarrollarPlanDeAtaque(guerrero,cantidadDeRounds,criterio, plan)
+  }
+  
+  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:MutableList[Movimiento]):MutableList[Movimiento]={
+    cantidad match{
+      case 0 => planDeAtaque
+      case _ => {
+        val movi = ((movimentoMasEfectivoContra(guerrero)(criterio)).getOrElse(this.listaDeMovimientos.head))
+        val estado = pelearRound(movi)(guerrero)
+        planDeAtaque += movi
+        atacante(estado).desarrollarPlanDeAtaque(defensor(estado),cantidad - 1,criterio,planDeAtaque)      
+      }
+    }
+  }
+    
+  }
