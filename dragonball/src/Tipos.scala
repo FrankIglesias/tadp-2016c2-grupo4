@@ -1,11 +1,13 @@
 
 import scala.util.Try
+import scala.collection.mutable.MutableList
 
 object Tipos {
   type Duelo = (Guerrero,Guerrero)
   type Movimiento = Duelo => Duelo
   type Digerir = Guerrero => Guerrero
   type Criterio = (Movimiento,Duelo) => Integer
+  type PlanDeAtaque = MutableList[Movimiento]
   
   def atacante(duelo:Duelo) : Guerrero = duelo._1
   def defensor(duelo:Duelo) : Guerrero = duelo._2

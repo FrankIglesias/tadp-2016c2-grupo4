@@ -7,6 +7,7 @@ import scala.collection.mutable.MutableList
 
 
 
+
 abstract class EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
 case object Muerto extends EstadoGuerrero
@@ -90,11 +91,11 @@ case class Guerrero(
   def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) = pelearRoundSegunUnCriterio(unMovimiento)(otroGuerrero)(meDejaConElMayorKi)
   
   def planDeAtaqueContra(guerrero:Guerrero,cantidadDeRounds:Int)(criterio:Criterio){
-    var plan : MutableList[Movimiento] = MutableList()
+    var plan : PlanDeAtaque = MutableList()
     desarrollarPlanDeAtaque(guerrero,cantidadDeRounds,criterio, plan)
   }
   
-  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:MutableList[Movimiento]):MutableList[Movimiento]={
+  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:PlanDeAtaque):PlanDeAtaque={
     cantidad match{
       case 0 => planDeAtaque
       case _ => {
@@ -104,6 +105,10 @@ case class Guerrero(
         atacante(estado).desarrollarPlanDeAtaque(defensor(estado),cantidad - 1,criterio,planDeAtaque)      
       }
     }
+  }
+  
+  def pelearContra(guerrero:Guerrero)(plan:PlanDeAtaque):ResultadoPelea={
+    
   }
     
   }
