@@ -41,21 +41,32 @@ object TiposDeAtaque {
     defensor(duelo).recibiExplosion(bateria * 3))
     }
   
-  case class AtacarDeEnergia() extends Ataque() {
-   def apply(duelo:Duelo) = {
-     defensor(duelo).especie match {
-       case Androide(_) => cambiarKiYGenerarDuelo(negarSegundoParametro(ataque(duelo)))
-       case _ => cambiarKiYGenerarDuelo(ataque(duelo))
-     } 
-   }
+  case class AtacarDeEnergia() extends Ataque()
 
-   
-   def cambiarKiYGenerarDuelo(delta : (Integer, Integer)) {
-     generarDueloNuevo(atacante(duelo).copy(ki = atacante(duelo).ki - delta._1 min atacante(duelo).kiMaximo))(defensor(duelo).copy(ki = defensor(duelo).ki + delta._2 min defensor(duelo).kiMaximo))
-   }
+  
+  class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia(){
+   override def apply(duelo:Duelo) ={
+      defensor(duelo).especie match {
+        case Monstruo(_) if tieneSufisienteKi(atacante(duelo)) => {generarDueloNuevo(
+            atacante(duelo).disminuirElKi(cantidadDeKiNecesario))(
+            defensor(duelo).disminuirElKi(cantidadDeKiNecesario))
+            }
+        case _ if tieneSufisienteKi(atacante(duelo)) => {generarDueloNuevo(
+            atacante(duelo).disminuirElKi(cantidadDeKiNecesario))(
+            defensor(duelo).recibirDanioDeEnergia(2*cantidadDeKiNecesario))
+            }
+        case _ => duelo.copy()
+      }
+    }
+    
+    def tieneSufisienteKi(guerrero:Guerrero) = guerrero.ki >= cantidadDeKiNecesario
   }
   
-  class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia()
-  object Genkidama extends AtacarDeEnergia()
+  object Genkidama extends AtacarDeEnergia(){
+    override def apply(duelo:Duelo) ={{generarDueloNuevo(
+            atacante(duelo))(
+            defensor(duelo).recibirDanioDeEnergia(2*cantidadDeKiNecesario))
+            }
+  }
 
 }

@@ -108,14 +108,7 @@ object TodosLosMovimientos{
     }
     
     case object Atacar extends Movimiento {
-       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque match{
-         case AtacarDeEnergia() => analizarEfectoAndroide(ataque.asInstanceOf[AtacarDeEnergia],duelo)
-         case AtaqueFisico() => ataque(duelo)
-       }
-    }
-    def analizarEfectoAndroide(ataqueDeEnergia: AtacarDeEnergia, duelo:Duelo) = atacante(duelo).especie match {
-      case Androide(_) => negaEfeto(ataqueDeEnergia,duelo)
-      case _ => ataqueDeEnergia(duelo)
+       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque(duelo)
     }
   }
 }

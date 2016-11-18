@@ -33,6 +33,10 @@ case class Guerrero(
     this.copy(ki = max(this.ki - kiADisminuir,0))
   }
   
+  def aumentarElKi(kiAAumentas:Int)={
+    this.copy(ki = this.ki + kiAAumentas)
+  }
+  
   def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.ki) this.disminuirElKi(20) else this.copy())
   
   def morite() = this.copy(ki = 0,estado = Muerto)
@@ -41,6 +45,13 @@ case class Guerrero(
     this.especie match{
       case Namekusein => this.disminuirElKi(min((this.ki - 1), golpeDeLaExplosion))
       case _ => this.disminuirElKi(golpeDeLaExplosion)
+    }
+  }
+  
+  def recibirDanioDeEnergia(danio:Int)={
+    especie match{
+      case Androide(_) => this.aumentarElKi(danio)
+      case _ => this.disminuirElKi(danio)
     }
   }
 }
