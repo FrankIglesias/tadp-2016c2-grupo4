@@ -26,9 +26,9 @@ object TodosLosMovimientos{
     
       def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
         guerrero.especie match {
-          case SuperSaiyajin(_,n) => guerrero.copy(ki = guerrero.ki + (150 * n)) 
+          case SuperSaiyajin(_,n) => guerrero.copy(ki = guerrero.dameElPoder + (150 * n)) 
           case Androide(_) => guerrero.copy()
-          case _ => guerrero.copy(ki = guerrero.ki + 100)
+          case _ => guerrero.copy(ki = guerrero.dameElPoder + 100)
         }
       }
     }
@@ -46,7 +46,7 @@ object TodosLosMovimientos{
       }
       
       def kiEsMenor(atacante:Guerrero, defensor:Guerrero) = { 
-        atacante.ki>defensor.ki 
+        atacante.dameElPoder>defensor.dameElPoder 
         }
     }
     
