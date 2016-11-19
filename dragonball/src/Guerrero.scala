@@ -83,9 +83,9 @@ case class Guerrero(
   //Con que criterio el contraatacante elige que movimiento usar??
   def pelearRoundSegunUnCriterio(unMovimiento : Movimiento)(otroGuerrero : Guerrero)(criterio:Criterio) : Duelo = 
   {
-    val ataque : Duelo = unMovimiento(generarDueloNuevo(this)(otroGuerrero))
+    val ataque : Duelo = this.utilizarMovimiento(unMovimiento)(otroGuerrero)
     val movimientoDeContraataque : Try[Movimiento] = defensor(ataque).movimentoMasEfectivoContra(atacante(ataque))(masDanioHace)
-    movimientoDeContraataque.getOrElse(ataque).asInstanceOf[Movimiento](generarDueloNuevo(defensor(ataque))(atacante(ataque)))
+    defensor(ataque).utilizarMovimiento(movimientoDeContraataque.getOrElse(ataque).asInstanceOf[Movimiento])(atacante(ataque))
   }
   
   def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) = pelearRoundSegunUnCriterio(unMovimiento)(otroGuerrero)(meDejaConElMayorKi)
@@ -120,7 +120,7 @@ case class Guerrero(
       }
     }
    }
- def utilizarMovimiento(movimiento:Movimiento,oponente:Guerrero):Duelo={
+ def utilizarMovimiento(movimiento:Movimiento)(oponente:Guerrero):Duelo={
    this.estado match{
      case Muerto => generarDueloNuevo(this)(oponente)
      case Inconsciente =>{

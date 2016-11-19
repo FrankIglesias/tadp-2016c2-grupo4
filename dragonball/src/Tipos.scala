@@ -15,9 +15,10 @@ object Tipos {
 
   def generarDueloNuevo(atacante:Guerrero)(defensor:Guerrero): Duelo=(atacante.copy(),defensor.copy())
 
-  val menosDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder- defensor(movimiento(duelo)).dameElPoder
-  val masDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder + defensor(movimiento(duelo)).dameElPoder
-  val meDejaConElMayorKi : Criterio = (movimiento,duelo) => atacante(movimiento(duelo)).dameElPoder - defensor(movimiento(duelo)).dameElPoder
+
+  val menosDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder- defensor(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder
+  val masDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder+ defensor(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder
+  val meDejaConElMayorKi : Criterio = (movimiento,duelo) => atacante(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder - defensor(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder
 
 
 
