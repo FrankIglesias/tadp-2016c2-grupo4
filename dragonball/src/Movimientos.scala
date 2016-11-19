@@ -46,7 +46,7 @@ object TodosLosMovimientos{
       }
       
       def kiEsMenor(atacante:Guerrero, defensor:Guerrero) = { 
-        atacante.dameElPoder>defensor.dameElPoder 
+        atacante.dameElPoder>defensor.ki 
         }
     }
     

@@ -1,8 +1,8 @@
 import scala.util.{ Try, Success, Failure }
 import Tipos._
 
-  object Especie {
-  
+
+  trait Especie
   case object Humano extends Especie
   case class Saiyajin(poseeCola: Boolean) extends Especie
   case class Mono(cola: Boolean) extends Especie
@@ -12,4 +12,4 @@ import Tipos._
   case class Monstruo(maneraDeDigerir : Digerir) extends Especie
   case class Fusionado(guerreroAnterior: Guerrero) extends Especie
 
-  }
+ 

@@ -2,7 +2,6 @@ import scala.util.{ Try, Success, Failure }
 import Tipos._
 import ObjetoItem._
 import scala.math._
-import Especie._
 import scala.collection.mutable.MutableList
 
 
@@ -107,8 +106,18 @@ case class Guerrero(
     }
   }
   
-  def pelearContra(guerrero:Guerrero)(plan:PlanDeAtaque):ResultadoPelea={
-    
-  }
-    
-  }
+  def pelearContra(guerrero:Guerrero)(plan:PlanDeAtaque): ResultadoPelea={
+    this.estado match{
+      case Muerto => (Muerto,guerrero.estado)
+      case _ if guerrero.estado.eq(Muerto) => (this.estado,Muerto)
+      case _ if plan.isEmpty => (this.estado,guerrero.estado)
+      case _ => {
+        val movimiento = plan.head
+        val nuevoPlan = plan.tail
+        val nuevoDuelo = this.pelearRound(movimiento)(guerrero)
+        atacante(nuevoDuelo).pelearContra(guerrero)(nuevoPlan)
+      }
+    }
+   }
+  
+ }

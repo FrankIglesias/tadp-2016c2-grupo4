@@ -8,6 +8,7 @@ object Tipos {
   type Digerir = Guerrero => Guerrero
   type Criterio = (Movimiento,Duelo) => Integer
   type PlanDeAtaque = MutableList[Movimiento]
+  type ResultadoPelea = (EstadoGuerrero,EstadoGuerrero)
   
   def atacante(duelo:Duelo) : Guerrero = duelo._1
   def defensor(duelo:Duelo) : Guerrero = duelo._2
@@ -17,4 +18,7 @@ object Tipos {
   val menosDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder- defensor(movimiento(duelo)).dameElPoder
   val masDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder + defensor(movimiento(duelo)).dameElPoder
   val meDejaConElMayorKi : Criterio = (movimiento,duelo) => atacante(movimiento(duelo)).dameElPoder - defensor(movimiento(duelo)).dameElPoder
+
+
+
 }
