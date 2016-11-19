@@ -6,8 +6,6 @@ import TiposDeAtaque._
 object TodosLosMovimientos{
     
   
-  trait Movimiento{
-  
     case object DejarseFajar extends Movimiento {
       def apply(duelo: Duelo): Duelo = generarDueloNuevo(
           aumentarCantidadDeFajadas(atacante(duelo)))(
@@ -98,8 +96,8 @@ object TodosLosMovimientos{
         }
     }
     
-    case object Magia extends Movimiento {
-      def apply(magia: (Duelo=>Duelo), duelo: Duelo) : Duelo = {
+    case class Magia(magia: (Duelo=>Duelo)) extends Movimiento {
+      def apply(duelo: Duelo) : Duelo = {
         atacante(duelo).especie match {
           case Namekusein | Monstruo(_) => magia(duelo)
           case _ if atacante(duelo).listaDeItems.count{item => item.eq(EsferaDeDragon)} >= 7 => removeEsferasYGeneraDuelo(duelo,magia)
@@ -113,8 +111,7 @@ object TodosLosMovimientos{
       }
     }
     
-    case object Atacar extends Movimiento {
-       def apply(ataque: TiposDeAtaque.Ataque, duelo:Duelo) = ataque(duelo)
+    case class Atacar(ataque: Ataque) extends Movimiento {
+       def apply( duelo:Duelo) = ataque(duelo)
     }
-  }
 }

@@ -1,5 +1,6 @@
 import scala.util.{ Try, Success, Failure }
 import Tipos._
+import TodosLosMovimientos._
 import ObjetoItem._
 import scala.math._
 import scala.collection.mutable.MutableList
@@ -94,7 +95,7 @@ case class Guerrero(
     desarrollarPlanDeAtaque(guerrero,cantidadDeRounds,criterio, plan)
   }
   
-  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:PlanDeAtaque):PlanDeAtaque={
+  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:PlanDeAtaque):PlanDeAtaque ={
     cantidad match{
       case 0 => planDeAtaque
       case _ => {
@@ -119,5 +120,18 @@ case class Guerrero(
       }
     }
    }
+ def utilizarMovimiento(movimiento:Movimiento,oponente:Guerrero):Duelo={
+   this.estado match{
+     case Muerto => generarDueloNuevo(this)(oponente)
+     case Inconsciente =>{
+       movimiento match{
+         case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => movimiento(generarDueloNuevo(this)(oponente))
+         case _ => generarDueloNuevo(this)(oponente)
+       }
+     }
+     case _ => movimiento(generarDueloNuevo(this)(oponente)) 
+   }
+ }
+  
   
  }
