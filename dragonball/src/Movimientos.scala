@@ -10,9 +10,6 @@ object TodosLosMovimientos{
       def apply(duelo: Duelo): Duelo = generarDueloNuevo(
           aumentarCantidadDeFajadas(atacante(duelo)))(
           defensor(duelo))
-      def aumentarCantidadDeFajadas(guerrero:Guerrero) ={
-        guerrero.copy(cantidadDeFajadas = guerrero.cantidadDeFajadas + 1)
-      }
     }
   
     

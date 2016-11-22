@@ -15,7 +15,6 @@ case object Vivo extends EstadoGuerrero
 
 case class Guerrero(
     estado: EstadoGuerrero = Vivo,
-    listaDeMovimientos: List[Movimiento],
     listaDeMovimientosConocidos: List[Movimiento],
     listaDeItems: List[Item],
     ki: Int,
@@ -99,7 +98,7 @@ case class Guerrero(
     cantidad match{
       case 0 => planDeAtaque
       case _ => {
-        val movi = ((movimentoMasEfectivoContra(guerrero)(criterio)).getOrElse(this.listaDeMovimientos.head))
+        val movi = ((movimentoMasEfectivoContra(guerrero)(criterio)).getOrElse(this.listaDeMovimientosConocidos.head))
         val estado = pelearRound(movi)(guerrero)
         planDeAtaque += movi
         atacante(estado).desarrollarPlanDeAtaque(defensor(estado),cantidad - 1,criterio,planDeAtaque)      
@@ -125,13 +124,11 @@ case class Guerrero(
      case Muerto => generarDueloNuevo(this)(oponente)
      case Inconsciente =>{
        movimiento match{
-         case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => movimiento(generarDueloNuevo(this)(oponente))
+         case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => analizarMovimientoYEjecutar(movimiento,(generarDueloNuevo(this)(oponente)))
          case _ => generarDueloNuevo(this)(oponente)
        }
      }
-     case _ => movimiento(generarDueloNuevo(this)(oponente)) 
+     case _ => analizarMovimientoYEjecutar(movimiento,generarDueloNuevo(this)(oponente)) 
    }
  }
-  
-  
  }
