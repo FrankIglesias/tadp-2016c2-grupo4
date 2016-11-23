@@ -1,6 +1,7 @@
 import org.scalatest.FunSuite
 import scala.util._
 import DragonBallBuilder._
+import Tipos._
 
 class SetSuite extends FunSuite {
 
@@ -18,7 +19,7 @@ class SetSuite extends FunSuite {
 class MovimientoTest extends FunSuite {
   test("Un movimiento no genera efecto lateral"){
     val resultado = goku.utilizarMovimiento(cargar100DeKi)(vegeta)
-    assert(atacante(resultado).ki == (goku.ki + 100))
+    assert(atacante(resultado).ki==((goku.ki + 100)))
     assert(goku.ki == 20)
   }
 }
