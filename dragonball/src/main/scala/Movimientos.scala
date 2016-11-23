@@ -13,7 +13,7 @@ object TodosLosMovimientos{
     }
   
     
-    case class CargarKi(kiACargar:Int) extends Movimiento {
+    case object CargarKi extends Movimiento {
       def apply(duelo:Duelo) : Duelo = {
         generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))
         }

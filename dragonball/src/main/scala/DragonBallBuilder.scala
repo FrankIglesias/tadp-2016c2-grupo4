@@ -14,11 +14,12 @@ object DragonBallBuilder {
     cantidadDeFajadas: Int = 0)={Guerrero(estado,listaDeMovimientosConocidos,listaDeItems,ki,kiMaximo,especie,cantidadDeFajadas)}
 
   val dejarseFajar = DejarseFajar
-  val cargar100DeKi = CargarKi(100)
+  //val cargar100DeKi = CargarKi(100)
+  val cargarki = CargarKi
   
   val goku = generarGuerrero(
       Vivo,
-      List(dejarseFajar,cargar100DeKi),
+      List(dejarseFajar,cargarki),
       List(),
       20,
       1000,
@@ -27,7 +28,7 @@ object DragonBallBuilder {
       
   val vegeta = generarGuerrero(
       Vivo,
-      List(dejarseFajar,cargar100DeKi),
+      List(dejarseFajar,cargarki),
       List(),
       10,
       1000,

@@ -132,15 +132,21 @@ case class Guerrero(
     }
    }
  def utilizarMovimiento(movimiento:Movimiento)(oponente:Guerrero):Duelo={
-   this.estado match{
-     case Muerto => generarDueloNuevo(this)(oponente)
-     case Inconsciente =>{
-       movimiento match{
-         case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => analizarMovimientoYEjecutar(movimiento,(generarDueloNuevo(this)(oponente)))
-         case _ => generarDueloNuevo(this)(oponente)
+  this.listaDeMovimientosConocidos.find { m => m.eq(movimiento) } match{
+    case Some(m) =>{
+      this.estado match{
+       case Muerto => generarDueloNuevo(this)(oponente)
+       case Inconsciente =>{
+         m match{
+           case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => analizarMovimientoYEjecutar(m,(generarDueloNuevo(this)(oponente)))
+           case _ => generarDueloNuevo(this)(oponente)
+         }
        }
+       case _ => analizarMovimientoYEjecutar(m,generarDueloNuevo(this)(oponente)) 
+      }
      }
-     case _ => analizarMovimientoYEjecutar(movimiento,generarDueloNuevo(this)(oponente)) 
+    case None => generarDueloNuevo(this)(oponente)
    }
  }
- }
+ 
+}
