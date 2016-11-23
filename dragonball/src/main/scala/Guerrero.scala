@@ -43,22 +43,27 @@ case class Guerrero(
   
   def disminuirElPoder(poderADisminuir:Int) = {
     especie match {
-      case Androide(b) => this.copy(especie = Androide(bateria = max(b - poderADisminuir,0)))
-      case _ => this.copy(ki = ki - poderADisminuir min 0)
+      case Androide(b) => (this.copy(especie = Androide(bateria = max(b - poderADisminuir,0)))).morite()
+      case _ => (this.copy(ki = max(ki - poderADisminuir,0))).morite()
     }
   }
-    
+  
+
   
   def aumentarElPoder(poderAAumentar:Int)={
     especie match {
       case Androide(b) => this.copy(especie = Androide(bateria = b + poderAAumentar))
-      case _ => this.copy(ki = ki - poderAAumentar)
+      case _ => this.copy(ki = min(ki + poderAAumentar,this.kiMaximo))
     }
   }
   
   def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.dameElPoder) this.disminuirElPoder(20) else this.copy())
   
-  def morite() = this.copy(ki = 0,estado = Muerto)
+  def morite() = especie match {
+      case Androide(b) if b==0 => this.copy(especie = Androide(bateria = 0),estado = Muerto)
+      case _ if this.ki == 0 => this.copy(ki = 0, estado = Muerto)
+      case _ => this.copy()
+    }
   
   def recibiExplosion(golpeDeLaExplosion:Int)={
     this.especie match{
