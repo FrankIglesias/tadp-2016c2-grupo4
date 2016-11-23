@@ -60,14 +60,14 @@ case class Guerrero(
   def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.dameElPoder) this.disminuirElPoder(20) else this.copy())
   
   def analizaSiEstoyMuerto() = especie match {
-      case Androide(b) if b==0 => this.copy(especie = Androide(bateria = 0),estado = Muerto)
-      case _ if this.ki == 0 => this.copy(ki = 0, estado = Muerto)
+      case Androide(b) if b==0 => this.morite()
+      case _ if this.ki == 0 => this.morite()
       case _ => this.copy()
     }
   
   def morite()={
     especie match {
-      case Androide(b) => this.copy(especie = Androide(bateria = 0),estado = Muerto)
+      case Androide(_) => this.copy(especie = Androide(bateria = 0),estado = Muerto)
       case _ => this.copy(ki = 0, estado = Muerto)
     }
   }
