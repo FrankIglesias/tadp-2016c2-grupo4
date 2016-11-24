@@ -34,7 +34,7 @@ object TodosLosMovimientos{
              atacante(duelo)
             .especie
             .asInstanceOf[Monstruo]
-            .maneraDeDigerir(defensor(duelo)))(defensor(duelo).copy(estado = Muerto))
+            .maneraDeDigerir(defensor(duelo)))(defensor(duelo).morite())
           case _ => duelo.copy()
         }
       }

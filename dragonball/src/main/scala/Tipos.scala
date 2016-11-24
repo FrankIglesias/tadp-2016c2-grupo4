@@ -2,6 +2,7 @@
 import scala.util.Try
 import scala.collection.mutable.MutableList
 import TodosLosMovimientos.DejarseFajar
+import ObjetoItem._
 
 object Tipos {
   type Duelo = (Guerrero,Guerrero)
@@ -30,6 +31,16 @@ object Tipos {
   def resetearCantidadDeFajadas(guerrero:Guerrero) = {
     guerrero.copy(cantidadDeFajadas = 0)
   }
+  
+  def disminuirMunicion(item:Item,municion:Municion)={
+    if(item.eq(municion)){
+      municion.copy(cantidadDeBalas = municion.cantidadDeBalas - 1)
+    }else{
+      item
+    }
+  }
+  
+
 
   val menosDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder- defensor(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder
   val masDanioHace: Criterio = (movimiento,duelo) => defensor(duelo).dameElPoder+ defensor(atacante(duelo).utilizarMovimiento(movimiento)(defensor(duelo))).dameElPoder

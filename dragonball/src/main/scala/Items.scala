@@ -33,13 +33,12 @@ object ObjetoItem{
   
  case class ArmaDeFuego() extends Arma{
    override def apply(duelo:Duelo) = {
-     if (atacante(duelo).tenesBalas(this)){
-       generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaDeFuego(defensor(duelo)))
-     }
-     else{
-       super.apply(duelo)
-     }
+     atacante(duelo).encontrarBalas(this) match{
+       case Some(municion) => generarDueloNuevo(atacante(duelo).disminuirBalas(municion.asInstanceOf[Municion]))(matcheaDefensorArmaDeFuego(defensor(duelo)))
+       case None => duelo.copy()
    }
+  }
+   
    def matcheaDefensorArmaDeFuego(defensor:Guerrero) :Guerrero ={
      defensor.especie match {
        case Humano => defensor.copy(ki = defensor.dameElPoder - 20)
@@ -55,14 +54,13 @@ object ObjetoItem{
   }
   
  case class Municion(
-      var armaAsociada: ArmaDeFuego,
-      var cantidadDeBalas:Int) extends Item{
-    
-    def aumentarMunicion(cantidadAAumentar:Int) = {cantidadDeBalas = cantidadDeBalas + cantidadAAumentar}
-    
-    def disminuirMunicion(cantidadADisminuir:Int) = {cantidadDeBalas = cantidadDeBalas - cantidadADisminuir
-    }
-  }
+      armaAsociada: ArmaDeFuego,
+      cantidadDeBalas:Int) extends Item{
+   
+   def disminuir1Bala(guerrero:Guerrero) ={
+     guerrero.copy(listaDeItems = guerrero.listaDeItems.map{item=> disminuirMunicion(item,this)})
+   }
+ }
  
  object FotodeLaLuna extends Item
  object EsferaDeDragon extends Item

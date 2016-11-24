@@ -28,12 +28,16 @@ case class Guerrero(
     }
   }
   
-    
-  def tenesBalas(arma:Arma) = listaDeItems
-  .find{item => item.asInstanceOf[Municion].armaAsociada.eq(arma.asInstanceOf[Arma])}
-  .map{municion => municion.asInstanceOf[Municion].disminuirMunicion(1)}
-  .isEmpty
+  def encontrarBalas(armaDeFuego:ArmaDeFuego)={
+    listaDeItems
+    .filter{item => item.isInstanceOf[Municion]}
+    .find{item => item.asInstanceOf[Municion].armaAsociada.eq(armaDeFuego)}
+  }
   
+  def disminuirBalas(municion:Municion)={
+    municion.disminuir1Bala(this)
+    //this.copy(listaDeItems = this.listaDeItems.map(item => item.disminuirMunicionDe(municion)))} 
+  }
   def quedateInconsiente() ={
     this.especie match {
       case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p))
