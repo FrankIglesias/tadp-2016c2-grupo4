@@ -11,7 +11,7 @@ object ObjetoItem{
  class Arma() extends Item{}
  
  case class ArmaRoma()  extends Arma {
-   override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(matcheaDefensorArmaRoma(defensor(duelo)))}
+   override def apply(duelo:Duelo) = {(atacante(duelo),matcheaDefensorArmaRoma(defensor(duelo)))}
    def matcheaDefensorArmaRoma(defensor:Guerrero)={
      defensor.especie match {
        case Androide(_) => defensor.copy()
@@ -21,7 +21,7 @@ object ObjetoItem{
  }
    
  case class ArmaFilosa()  extends Arma{
-   override def apply(duelo:Duelo) = {generarDueloNuevo(atacante(duelo))(analizaEfectoAlDefensor(atacante(duelo).dameElPoder,defensor(duelo)))}
+   override def apply(duelo:Duelo) = {(atacante(duelo),analizaEfectoAlDefensor(atacante(duelo).dameElPoder,defensor(duelo)))}
    def analizaEfectoAlDefensor(kiDelAtacante:Int, defensor:Guerrero) : Guerrero = {
      defensor.especie match {
        case Saiyajin(true) => defensor.copy(ki = 1, especie = Saiyajin(false))
@@ -34,7 +34,7 @@ object ObjetoItem{
  case class ArmaDeFuego() extends Arma{
    override def apply(duelo:Duelo) = {
      atacante(duelo).encontrarBalas(this) match{
-       case Some(municion) => generarDueloNuevo(atacante(duelo).disminuirBalas(municion.asInstanceOf[Municion]))(matcheaDefensorArmaDeFuego(defensor(duelo)))
+       case Some(municion) => (municion.asInstanceOf[Municion].disminuir1Bala(atacante(duelo)),matcheaDefensorArmaDeFuego(defensor(duelo)))
        case None => duelo.copy()
    }
   }
@@ -49,7 +49,7 @@ object ObjetoItem{
  }
   
  case class SemillaDeErmitanio() extends Item{
-    override def apply(duelo:Duelo) = {generarDueloNuevo(aumentarPoderAlMango(atacante(duelo)))(defensor(duelo))}
+    override def apply(duelo:Duelo) = {(aumentarPoderAlMango(atacante(duelo)),defensor(duelo))}
     def aumentarPoderAlMango(alguien:Guerrero) = alguien.aumentarElPoder(alguien.kiMaximo)
   }
   
@@ -62,6 +62,6 @@ object ObjetoItem{
    }
  }
  
- object FotodeLaLuna extends Item
- object EsferaDeDragon extends Item
+   object FotodeLaLuna extends Item
+   object EsferaDeDragon extends Item
 }

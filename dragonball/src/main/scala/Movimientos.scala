@@ -7,15 +7,12 @@ object TodosLosMovimientos{
     
   
     case object DejarseFajar extends Movimiento {
-      def apply(duelo: Duelo): Duelo = generarDueloNuevo(
-          aumentarCantidadDeFajadas(atacante(duelo)))(
-          defensor(duelo))
+      def apply(duelo: Duelo): Duelo = (aumentarCantidadDeFajadas(atacante(duelo)),defensor(duelo))
     }
   
     
     case object CargarKi extends Movimiento {
-      def apply(duelo:Duelo) : Duelo = {
-        generarDueloNuevo(aumentarElKiSegunTipo(atacante(duelo)))(defensor(duelo))
+      def apply(duelo:Duelo) : Duelo = {(aumentarElKiSegunTipo(atacante(duelo)),defensor(duelo))
         }
     
       def aumentarElKiSegunTipo(guerrero:Guerrero) : Guerrero = {
@@ -30,12 +27,12 @@ object TodosLosMovimientos{
     case object ComerseAlOponente extends Movimiento {
       def apply(duelo:Duelo) = {
         atacante(duelo).especie match {
-          case Monstruo(_) if kiEsMenor(atacante(duelo),defensor(duelo)) => generarDueloNuevo(
+          case Monstruo(_) if kiEsMenor(atacante(duelo),defensor(duelo)) =>(
              atacante(duelo)
             .especie
             .asInstanceOf[Monstruo]
-            .maneraDeDigerir(defensor(duelo)))(defensor(duelo).morite())
-          case _ => duelo.copy()
+            .maneraDeDigerir(defensor(duelo)),defensor(duelo).morite())
+          case _ => duelo
         }
       }
       
@@ -54,8 +51,8 @@ object TodosLosMovimientos{
     case object Convertirse extends Movimiento {
       def apply(duelo: Duelo) : Duelo = { 
         atacante(duelo).especie match {
-          case Mono(_) => generarDueloNuevo(convertirseEnMono(atacante(duelo)))(defensor(duelo))
-          case SuperSaiyajin(_,_) =>  generarDueloNuevo(convertirseEnSS(atacante(duelo)))(defensor(duelo))
+          case Mono(_) => (convertirseEnMono(atacante(duelo)),defensor(duelo))
+          case SuperSaiyajin(_,_) => (convertirseEnSS(atacante(duelo)),defensor(duelo))
           case _ => duelo.copy()
         }
       }
@@ -64,7 +61,7 @@ object TodosLosMovimientos{
     def convertirseEnMono(guerrero:Guerrero) : Guerrero = {
       guerrero.especie match {
         case Saiyajin(c) if (c && guerrero.listaDeItems.contains(FotodeLaLuna)) => guerrero.copy(especie = Mono(c), kiMaximo = guerrero.kiMaximo * 3, ki = guerrero.kiMaximo * 3)
-        case _ => guerrero.copy()
+        case _ => guerrero
       }
     }
       
@@ -72,7 +69,7 @@ object TodosLosMovimientos{
      guerrero.especie match {
        case Saiyajin(c) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(c, 1))
        case SuperSaiyajin(cola, nivel) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(cola, nivel + 1))
-       case _ => guerrero.copy()
+       case _ => guerrero
      }
     }
     
@@ -80,10 +77,10 @@ object TodosLosMovimientos{
       def apply(duelo: Duelo)  : Duelo = {
          atacante(duelo).especie match {
          case (Humano | Saiyajin(_) | Namekusein) if contieneAEstaEspecie(List(Humano,Saiyajin(true),Saiyajin(false),Namekusein),otroGuerrero.especie) =>
-               generarDueloNuevo(atacante(duelo).copy(
+               (atacante(duelo).copy(
                especie = Fusionado(atacante(duelo)), 
                ki = atacante(duelo).ki + otroGuerrero.ki, 
-               kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo))(defensor(duelo))
+               kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo),defensor(duelo))
          case _ => duelo.copy()
         }
       }
@@ -98,7 +95,7 @@ object TodosLosMovimientos{
         atacante(duelo).especie match {
           case Namekusein | Monstruo(_) => magia(duelo)
           case _ if atacante(duelo).listaDeItems.count{item => item.eq(EsferaDeDragon)} >= 7 => removeEsferasYGeneraDuelo(duelo,magia)
-          case _ => duelo.copy()
+          case _ => duelo
         }
       }
       
@@ -109,6 +106,6 @@ object TodosLosMovimientos{
     }
     
     case class Atacar(ataque: Ataque) extends Movimiento {
-       def apply( duelo:Duelo) = ataque(duelo)
+       def apply(duelo:Duelo) = ataque(duelo)
     }
 }

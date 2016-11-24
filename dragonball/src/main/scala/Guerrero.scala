@@ -33,11 +33,7 @@ case class Guerrero(
     .filter{item => item.isInstanceOf[Municion]}
     .find{item => item.asInstanceOf[Municion].armaAsociada.eq(armaDeFuego)}
   }
-  
-  def disminuirBalas(municion:Municion)={
-    municion.disminuir1Bala(this)
-    //this.copy(listaDeItems = this.listaDeItems.map(item => item.disminuirMunicionDe(municion)))} 
-  }
+
   def quedateInconsiente() ={
     this.especie match {
       case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p))
@@ -66,7 +62,7 @@ case class Guerrero(
   def analizaSiEstoyMuerto() = especie match {
       case Androide(b) if b==0 => this.morite()
       case _ if this.ki == 0 => this.morite()
-      case _ => this.copy()
+      case _ => this
     }
   
   def morite()={
@@ -92,7 +88,7 @@ case class Guerrero(
   
   def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) = 
   {
-    Try(listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(generarDueloNuevo(this)(otroGuerrero)))})
+    Try(listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(this,otroGuerrero))})
   }
   
   //Con que criterio el contraatacante elige que movimiento usar??
@@ -139,17 +135,17 @@ case class Guerrero(
   this.listaDeMovimientosConocidos.find { m => m.eq(movimiento) } match{
     case Some(m) =>{
       this.estado match{
-       case Muerto => generarDueloNuevo(this)(oponente)
+       case Muerto => ((this),(oponente))
        case Inconsciente =>{
          m match{
-           case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => analizarMovimientoYEjecutar(m,(generarDueloNuevo(this)(oponente)))
-           case _ => generarDueloNuevo(this)(oponente)
+           case UsarItem(semilla) if semilla.eq(SemillaDeErmitanio) => analizarMovimientoYEjecutar(m,((this),(oponente)))
+           case _ => ((this),(oponente))
          }
        }
-       case _ => analizarMovimientoYEjecutar(m,generarDueloNuevo(this)(oponente)) 
+       case _ => analizarMovimientoYEjecutar(m,((this),(oponente))) 
       }
      }
-    case None => generarDueloNuevo(this)(oponente)
+    case None => ((this),(oponente))
    }
  }
  
