@@ -8,7 +8,7 @@ import scala.collection.mutable.MutableList
 
 
 
-abstract class EstadoGuerrero
+trait EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
 case object Muerto extends EstadoGuerrero
 case object Vivo extends EstadoGuerrero
