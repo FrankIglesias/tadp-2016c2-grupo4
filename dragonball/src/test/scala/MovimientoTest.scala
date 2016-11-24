@@ -46,6 +46,7 @@ class MovimientoTest extends FunSuite {
     assert(atacante(resultado)
         .listaDeItems
         .find {municion => municion.isInstanceOf[Municion]}
+        
         .getOrElse(cartuchoDeRevolver)
         .asInstanceOf[Municion].cantidadDeBalas ==5)
     }
