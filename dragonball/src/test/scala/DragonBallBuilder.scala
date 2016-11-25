@@ -23,6 +23,7 @@ object DragonBallBuilder {
   
   val cartuchoDeRevolver = new Municion(revolver,6)
   
+  val explota = new Atacar(Explotar)
   val dejarseFajar = DejarseFajar
   val cargarki = CargarKi
   val usarEspadaSencilla = new UsarItem(espadaSencilla)
@@ -132,7 +133,7 @@ val fusionarseConKrillin = new Fusion(krillin)
 
 val terminator = generarGuerrero(
       Vivo,
-      List(usarRevolver),
+      List(usarRevolver,explota),
       List(revolver,cartuchoDeRevolver),
       10,
       1000,
@@ -166,6 +167,24 @@ val magoMalvado=generarGuerrero(
     25,
     Humano,
     0)
+   
+val piccolo=generarGuerrero(
+    Vivo,
+    List(),
+    List(),
+    1200,
+    2500,
+    Namekusein,
+    0)
+    
+val terminatorSobrecargado = generarGuerrero(
+      Vivo,
+      List(usarRevolver,explota),
+      List(revolver,cartuchoDeRevolver),
+      10,
+      1000,
+      Androide(6000),
+      0)
       
       
  

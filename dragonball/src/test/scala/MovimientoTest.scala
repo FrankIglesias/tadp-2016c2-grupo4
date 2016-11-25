@@ -87,7 +87,10 @@ class MovimientoTest extends FunSuite {
     val resultado = krillinVivo.utilizarMovimiento(muchosGolpes)(terminator)
     assert(atacante(resultado).ki == (krillinVivo.ki - 10))
   }
-    
+  test("terminator explota y deja en 1 de vida a piccolo"){
+    val resultado = terminatorSobrecargado.utilizarMovimiento(explota)(piccolo)
+    assert(defensor(resultado).ki == 1)
+  }
   
   
 }
