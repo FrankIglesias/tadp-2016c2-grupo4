@@ -67,6 +67,13 @@ class MovimientoTest extends FunSuite {
     val resultado = gokuConCola.utilizarMovimiento(convertirseEnMono)(cell)
     assert(atacante(resultado).especie == Mono(true))
   }
+  
+  test("goku como un SS de nivel 4, se convierte en un SS de nivel 5"){
+    val resultado = gokuSS.utilizarMovimiento(convertirseEnSS)(cell)
+    assert(atacante(resultado).especie == SuperSaiyajin(true,5))
+  }
+  
+  
 }
   
   

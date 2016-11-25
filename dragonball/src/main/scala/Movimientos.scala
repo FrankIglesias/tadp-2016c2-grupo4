@@ -67,8 +67,8 @@ object TodosLosMovimientos{
       
     def convertirseEnSS(guerrero:Guerrero): Guerrero = {
      guerrero.especie match {
-       case Saiyajin(c) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(c, 1))
-       case SuperSaiyajin(cola, nivel) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(cola, nivel + 1))
+       case Saiyajin(c) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(c, 1),kiMaximo = guerrero.kiMaximo * 5)
+       case SuperSaiyajin(cola, nivel) if (guerrero.ki >= guerrero.kiMaximo / 2) => guerrero.copy(especie = SuperSaiyajin(cola, nivel + 1),kiMaximo = guerrero.kiMaximo * 5 * (nivel + 1))
        case _ => guerrero
      }
     }

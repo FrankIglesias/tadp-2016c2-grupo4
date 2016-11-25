@@ -29,6 +29,7 @@ object DragonBallBuilder {
   val usarSemillaDeErmitanio = new UsarItem(semillaDeErmitanio)
   val comerseAlOponente = ComerseAlOponente
   val convertirseEnMono = new Convertirse(Mono(true))
+  val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
  
   val digerirComoCell: Digerir = {duelo:Duelo => 
     defensor(duelo).especie match{
@@ -41,6 +42,16 @@ object DragonBallBuilder {
   val digerirComoMajinBu : Digerir = {duelo:Duelo =>
     atacante(duelo).copy(listaDeMovimientosConocidos = defensor(duelo).listaDeMovimientosConocidos)
   }
+  
+  val gokuSS = generarGuerrero(
+      Vivo,
+      List(dejarseFajar,cargarki,usarEspadaSencilla,convertirseEnMono,convertirseEnSS),
+      List(fotoDeLaLuna),
+      501,
+      1000,
+      SuperSaiyajin(true,4),
+      0)
+  
   
   val gokuConCola = generarGuerrero(
       Vivo,
