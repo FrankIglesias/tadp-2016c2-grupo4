@@ -33,10 +33,10 @@ object ObjetoItem{
   
  case class ArmaDeFuego() extends Arma{
    override def apply(duelo:Duelo) = {
-     atacante(duelo).encontrarBalas(this) match{
-       case Some(municion) => (municion.asInstanceOf[Municion].disminuir1Bala(atacante(duelo)),matcheaDefensorArmaDeFuego(defensor(duelo)))
-       case None => duelo
-   }
+     atacante(duelo).encontrarBalas(this).fold(duelo)(
+         {municion => 
+           (municion.asInstanceOf[Municion]
+           .disminuir1Bala(atacante(duelo)),matcheaDefensorArmaDeFuego(defensor(duelo)))})
   }
    
    def matcheaDefensorArmaDeFuego(defensor:Guerrero) :Guerrero ={
