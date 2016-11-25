@@ -48,9 +48,9 @@ object TodosLosMovimientos{
         .fold(duelo)(item => item(duelo))
     }
     
-    case object Convertirse extends Movimiento {
+    case class Convertirse(especieAConvertirse:Especie) extends Movimiento {
       def apply(duelo: Duelo) : Duelo = { 
-        atacante(duelo).especie match {
+        especieAConvertirse match {
           case Mono(_) => (convertirseEnMono(atacante(duelo)),defensor(duelo))
           case SuperSaiyajin(_,_) => (convertirseEnSS(atacante(duelo)),defensor(duelo))
           case _ => duelo

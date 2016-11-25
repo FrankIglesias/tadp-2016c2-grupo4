@@ -47,9 +47,14 @@ object ObjetoItem{
    }
  }
   
- case class SemillaDeErmitanio() extends Item{
+ case object SemillaDeErmitanio extends Item{
     override def apply(duelo:Duelo) = {(aumentarPoderAlMango(atacante(duelo)),defensor(duelo))}
-    def aumentarPoderAlMango(alguien:Guerrero) = alguien.aumentarElPoder(alguien.kiMaximo)
+    def aumentarPoderAlMango(alguien:Guerrero) = {
+      alguien.especie match{
+        case Androide(b) => alguien //Supongo que no deberia tener efectos en androide por que no tienen una "maxima bateria"
+        case _ => alguien.copy(estado = Vivo,ki = alguien.kiMaximo)
+      }
+    }
   }
   
  case class Municion(

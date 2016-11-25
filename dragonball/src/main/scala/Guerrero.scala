@@ -55,6 +55,7 @@ case class Guerrero(
       case _ => this.copy(ki = min(ki + poderAAumentar,this.kiMaximo))
     }
   }
+
   
   def seLaBancaContra(kiAComparar:Int) = (if(kiAComparar > this.dameElPoder) this.disminuirElPoder(20) else this.copy())
   

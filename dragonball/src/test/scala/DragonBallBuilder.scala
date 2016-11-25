@@ -16,6 +16,7 @@ object DragonBallBuilder {
   val espadaSencilla = new ArmaFilosa()
   val espadaOxidada = new ArmaRoma()
   val revolver = new ArmaDeFuego()
+  val semillaDeErmitanio = SemillaDeErmitanio
   
   val cartuchoDeRevolver = new Municion(revolver,6)
   
@@ -24,6 +25,8 @@ object DragonBallBuilder {
   val usarEspadaSencilla = new UsarItem(espadaSencilla)
   val usarEspadaOxidada = new UsarItem(espadaOxidada)
   val usarRevolver = new UsarItem(revolver)
+  val usarSemillaDeErmitanio = new UsarItem(semillaDeErmitanio)
+ 
   
   val goku = generarGuerrero(
       Vivo,
@@ -59,6 +62,14 @@ val terminator = generarGuerrero(
       10,
       1000,
       Androide(60),
+      0)
+val krillin = generarGuerrero(
+      Inconsciente,
+      List(usarSemillaDeErmitanio),
+      List(semillaDeErmitanio),
+      10,
+      20,
+      Humano,
       0)
       
       

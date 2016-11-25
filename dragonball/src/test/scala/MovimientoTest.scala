@@ -49,4 +49,9 @@ class MovimientoTest extends FunSuite {
         .getOrElse(cartuchoDeRevolver)
         .asInstanceOf[Municion].cantidadDeBalas == 5)
     }
+  
+  test("krillin, inconsiente, se come una semilla de ermitanio y se recupera"){
+    val resultado = krillin.utilizarMovimiento(usarSemillaDeErmitanio)(goku)
+    assert(atacante(resultado).estado == Vivo)
+  }
 }
