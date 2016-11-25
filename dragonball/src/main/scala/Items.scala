@@ -35,7 +35,7 @@ object ObjetoItem{
    override def apply(duelo:Duelo) = {
      atacante(duelo).encontrarBalas(this) match{
        case Some(municion) => (municion.asInstanceOf[Municion].disminuir1Bala(atacante(duelo)),matcheaDefensorArmaDeFuego(defensor(duelo)))
-       case None => duelo.copy()
+       case None => duelo
    }
   }
    
@@ -43,7 +43,7 @@ object ObjetoItem{
      defensor.especie match {
        case Humano => defensor.copy(ki = defensor.dameElPoder - 20)
        case Namekusein if defensor.estado.equals(Inconsciente) => defensor.copy(ki = defensor.dameElPoder - 10)
-       case _ => defensor.copy()
+       case _ => defensor
      }
    }
  }

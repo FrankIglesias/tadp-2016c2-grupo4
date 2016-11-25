@@ -45,7 +45,7 @@ object TodosLosMovimientos{
       def apply(duelo:Duelo) : Duelo = atacante(duelo)
         .listaDeItems
         .find {item => item.equals(itemAUsar)}
-        .fold(duelo.copy())(item => item(duelo))
+        .fold(duelo)(item => item(duelo))
     }
     
     case object Convertirse extends Movimiento {
@@ -53,7 +53,7 @@ object TodosLosMovimientos{
         atacante(duelo).especie match {
           case Mono(_) => (convertirseEnMono(atacante(duelo)),defensor(duelo))
           case SuperSaiyajin(_,_) => (convertirseEnSS(atacante(duelo)),defensor(duelo))
-          case _ => duelo.copy()
+          case _ => duelo
         }
       }
     }
@@ -81,7 +81,7 @@ object TodosLosMovimientos{
                especie = Fusionado(atacante(duelo)), 
                ki = atacante(duelo).ki + otroGuerrero.ki, 
                kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo),defensor(duelo))
-         case _ => duelo.copy()
+         case _ => duelo
         }
       }
       

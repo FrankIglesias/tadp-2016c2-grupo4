@@ -41,13 +41,12 @@ class MovimientoTest extends FunSuite {
     assert(defensor(resultado).estado == Inconsciente)
   }
   
-  test("un androide ataca a goku con un revolver a goku que no le pasa nada y el androide piede una bala"){
+  test("un androide ataca a goku con un revolveru que no le pasa nada y el androide pierde una bala"){
     val resultado = terminator.utilizarMovimiento(usarRevolver)(goku)
     assert(atacante(resultado)
         .listaDeItems
-        .find {municion => municion.isInstanceOf[Municion]}
-        
+        .find {municion => municion.isInstanceOf[Municion]}  
         .getOrElse(cartuchoDeRevolver)
-        .asInstanceOf[Municion].cantidadDeBalas ==5)
+        .asInstanceOf[Municion].cantidadDeBalas == 5)
     }
 }

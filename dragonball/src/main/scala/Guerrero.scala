@@ -88,18 +88,20 @@ case class Guerrero(
   
   def movimentoMasEfectivoContra(otroGuerrero : Guerrero)(unCriterio : Criterio) = 
   {
-    Try(listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(this,otroGuerrero))})
+    Option(listaDeMovimientosConocidos.maxBy{movimiento => unCriterio(movimiento,(this,otroGuerrero))})
   }
   
-  //Con que criterio el contraatacante elige que movimiento usar??
-  def pelearRoundSegunUnCriterio(unMovimiento : Movimiento)(otroGuerrero : Guerrero)(criterio:Criterio) : Duelo = 
+  def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) : Duelo = 
   {
-    val ataque : Duelo = this.utilizarMovimiento(unMovimiento)(otroGuerrero)
-    val movimientoDeContraataque : Try[Movimiento] = defensor(ataque).movimentoMasEfectivoContra(atacante(ataque))(masDanioHace)
-    defensor(ataque).utilizarMovimiento(movimientoDeContraataque.getOrElse(ataque).asInstanceOf[Movimiento])(atacante(ataque))
+    val resultadoDeMiAtaque = this.utilizarMovimiento(unMovimiento)(otroGuerrero)
+    defensor(resultadoDeMiAtaque).contraAtacar(atacante(resultadoDeMiAtaque))
   }
   
-  def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) = pelearRoundSegunUnCriterio(unMovimiento)(otroGuerrero)(meDejaConElMayorKi)
+  def contraAtacar(unGuerrero:Guerrero)={
+    val resultadoDelContraAtaque = this.movimentoMasEfectivoContra(unGuerrero)(meDejaConElMayorKi)
+    resultadoDelContraAtaque
+        .fold((this,unGuerrero))(this.utilizarMovimiento(_)(unGuerrero))
+  }
   
   def planDeAtaqueContra(guerrero:Guerrero,cantidadDeRounds:Int)(criterio:Criterio){
     var plan : PlanDeAtaque = MutableList()

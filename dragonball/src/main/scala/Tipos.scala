@@ -15,7 +15,6 @@ object Tipos {
   def atacante(duelo:Duelo) : Guerrero = duelo._1
   def defensor(duelo:Duelo) : Guerrero = duelo._2
 
-  //f generarDueloNuevo(atacante:Guerrero)(defensor:Guerrero): Duelo=(atacante.copy(),defensor.copy())
   
   def analizarMovimientoYEjecutar(movimiento:Movimiento,duelo:Duelo):Duelo = {
     movimiento match{
