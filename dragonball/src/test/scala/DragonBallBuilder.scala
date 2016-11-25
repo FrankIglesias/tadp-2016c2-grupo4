@@ -12,7 +12,7 @@ object DragonBallBuilder {
     ki: Int,
     kiMaximo: Int,
     especie: Especie,
-    cantidadDeFajadas: Int = 0)={Guerrero(estado,listaDeMovimientosConocidos,listaDeItems,ki,kiMaximo,especie,cantidadDeFajadas)}
+    cantidadDeFajadas: Int = 0 )={Guerrero(estado,listaDeMovimientosConocidos,listaDeItems,ki,kiMaximo,especie,cantidadDeFajadas)}
 
   val espadaSencilla = new ArmaFilosa()
   val espadaOxidada = new ArmaRoma()
@@ -35,6 +35,7 @@ object DragonBallBuilder {
   val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
   val muchosGolpes = new Atacar(MuchosGolpesNinja)
   val ondaDe50energia = new Atacar(Onda(50))
+  val genkidama = new Atacar(Genkidama)
   
   val magiaQueIntercambia : Movimiento= {duelo:Duelo =>
     val (atacante,oponente) = duelo
@@ -186,6 +187,15 @@ val terminatorSobrecargado = generarGuerrero(
       1000,
       Androide(6000),
       0)
+
+val gokuDestruido = generarGuerrero(
+      Vivo,
+      List(genkidama),
+      List(),
+      2,
+      45,
+      Saiyajin(false),
+      3)
       
       
  

@@ -97,6 +97,11 @@ class MovimientoTest extends FunSuite {
     assert(defensor(resultado).dameElPoder == terminator.dameElPoder + 100)
   }
   
+  test("goku destruido lanza un ataque de Genkidama contra vegetta y lo mata"){
+    val resultado = gokuDestruido.utilizarMovimiento(genkidama)(vegeta)
+    assert(defensor(resultado).estado == Muerto)
+  }
+  
   
 }
   

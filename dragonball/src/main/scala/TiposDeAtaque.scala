@@ -65,9 +65,11 @@ object TiposDeAtaque {
     }
   }
   
-  object Genkidama extends AtacarDeEnergia(){
+  case object Genkidama extends AtacarDeEnergia(){
     override def apply(duelo:Duelo) ={(
             atacante(duelo),
-            defensor(duelo).recibirDanioDeEnergia(pow(10,(atacante(duelo).cantidadDeFajadas)).toInt))}
+            defensor(duelo).recibirDanioDeEnergia(
+                pow(10,(atacante(duelo).cantidadDeFajadas)
+                    ).toInt))}
   }
 }

@@ -1,5 +1,6 @@
 
-import TodosLosMovimientos.DejarseFajar
+import TodosLosMovimientos._
+import TiposDeAtaque._
 import ObjetoItem._
 
 object Tipos {
@@ -18,6 +19,7 @@ object Tipos {
   def analizarMovimientoYEjecutar(movimiento:Movimiento,duelo:Duelo):Duelo = {
     movimiento match{
       case DejarseFajar => movimiento(aumentarCantidadDeFajadas(atacante(duelo)),defensor(duelo))
+      case Atacar(Genkidama) => movimiento(atacante(duelo),defensor(duelo))
       case _ => movimiento(resetearCantidadDeFajadas(atacante(duelo)),defensor(duelo))    
     }
   }
