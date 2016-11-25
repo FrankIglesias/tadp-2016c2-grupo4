@@ -34,6 +34,7 @@ object DragonBallBuilder {
   val convertirseEnMono = new Convertirse(Mono(true))
   val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
   val muchosGolpes = new Atacar(MuchosGolpesNinja)
+  val ondaDe50energia = new Atacar(Onda(50))
   
   val magiaQueIntercambia : Movimiento= {duelo:Duelo =>
     val (atacante,oponente) = duelo
@@ -179,7 +180,7 @@ val piccolo=generarGuerrero(
     
 val terminatorSobrecargado = generarGuerrero(
       Vivo,
-      List(usarRevolver,explota),
+      List(usarRevolver,explota,ondaDe50energia),
       List(revolver,cartuchoDeRevolver),
       10,
       1000,

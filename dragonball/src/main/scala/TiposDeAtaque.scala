@@ -42,10 +42,10 @@ object TiposDeAtaque {
     defensor(duelo).recibiExplosion(bateria * 3))
     }
   
-  case class AtacarDeEnergia() extends Ataque()
+  class AtacarDeEnergia() extends Ataque()
 
   
-  class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia(){
+  case class Onda(cantidadDeKiNecesario:Int) extends AtacarDeEnergia(){
    override def apply(duelo:Duelo) ={
       defensor(duelo).especie match {
         case Monstruo(_) if tieneSuficientePoder(atacante(duelo)) => {(
@@ -61,10 +61,7 @@ object TiposDeAtaque {
     }
     
     def tieneSuficientePoder(guerrero:Guerrero) = {
-      guerrero.especie match {
-      case Androide(b) => b >= cantidadDeKiNecesario 
-      case _ =>  guerrero.dameElPoder >= cantidadDeKiNecesario
-      }
+      guerrero.dameElPoder >= cantidadDeKiNecesario
     }
   }
   
