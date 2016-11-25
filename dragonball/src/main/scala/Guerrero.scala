@@ -5,8 +5,6 @@ import ObjetoItem._
 import scala.math._
 
 
-
-
 trait EstadoGuerrero
 case object Inconsciente extends EstadoGuerrero
 case object Muerto extends EstadoGuerrero
