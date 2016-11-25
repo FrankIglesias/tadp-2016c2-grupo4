@@ -198,6 +198,15 @@ val gokuDestruido = generarGuerrero(
       Saiyajin(false),
       3)
       
+val gokuCon2Movimientos = generarGuerrero(
+      Vivo,
+      List(usarEspadaOxidada,usarEspadaSencilla,genkidama),
+      List(espadaOxidada,espadaSencilla),
+      200,
+      4500,
+      Saiyajin(false),
+      5)
+      
       
  
 }

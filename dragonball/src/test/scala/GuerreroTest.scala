@@ -14,4 +14,9 @@ class GuerreroTest extends FunSuite {
     val duelo = goku.pelearRound(ataqueDeOndacorta)(vegeta)
     assert(defensor(duelo).ki == (vegeta.ki) - 4 /*Es lo que saca el ataque de onda corta*/ + 100 /*Es el resultado de cargarse el ki*/)
   }
+  
+  test("goku desarrolla un plan de ataque con el objetivo de generarle el mayor danio posible a vegetta en 2 turnos"){
+    val plan = gokuCon2Movimientos.planDeAtaqueContra(vegeta, 2)(masDanioHace)
+    assert(plan.contains(genkidama) && plan.contains(usarEspadaSencilla)) 
+  }
 }
