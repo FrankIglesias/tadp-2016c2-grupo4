@@ -19,4 +19,10 @@ class GuerreroTest extends FunSuite {
     val plan = gokuCon2Movimientos.planDeAtaqueContra(vegeta, 2)(masDanioHace)
     assert(plan.contains(genkidama) && plan.contains(usarEspadaSencilla)) 
   }
+  
+  test("goku lucha contra vegeta y lo mata"){
+    val plan = gokuCon2Movimientos.planDeAtaqueContra(vegeta, 2)(masDanioHace)
+    val resultadoDeLaPelea = gokuCon2Movimientos.pelearContra(vegeta)(plan)
+    assert(resultadoDeLaPelea == HayUnGanador(gokuCon2Movimientos))
+  }
 }
