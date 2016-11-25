@@ -17,6 +17,7 @@ object DragonBallBuilder {
   val espadaOxidada = new ArmaRoma()
   val revolver = new ArmaDeFuego()
   val semillaDeErmitanio = SemillaDeErmitanio
+  val fotoDeLaLuna = FotodeLaLuna
   
   val cartuchoDeRevolver = new Municion(revolver,6)
   
@@ -27,6 +28,7 @@ object DragonBallBuilder {
   val usarRevolver = new UsarItem(revolver)
   val usarSemillaDeErmitanio = new UsarItem(semillaDeErmitanio)
   val comerseAlOponente = ComerseAlOponente
+  val convertirseEnMono = new Convertirse(Mono(true))
  
   val digerirComoCell: Digerir = {duelo:Duelo => 
     defensor(duelo).especie match{
@@ -40,10 +42,19 @@ object DragonBallBuilder {
     atacante(duelo).copy(listaDeMovimientosConocidos = defensor(duelo).listaDeMovimientosConocidos)
   }
   
+  val gokuConCola = generarGuerrero(
+      Vivo,
+      List(dejarseFajar,cargarki,usarEspadaSencilla,convertirseEnMono),
+      List(fotoDeLaLuna),
+      20,
+      1000,
+      Saiyajin(true),
+      0)
+  
   val goku = generarGuerrero(
       Vivo,
-      List(dejarseFajar,cargarki,usarEspadaSencilla),
-      List(),
+      List(dejarseFajar,cargarki,usarEspadaSencilla,convertirseEnMono),
+      List(fotoDeLaLuna),
       20,
       1000,
       Saiyajin(false),

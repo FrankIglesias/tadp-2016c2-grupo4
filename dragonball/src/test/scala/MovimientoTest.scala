@@ -62,6 +62,11 @@ class MovimientoTest extends FunSuite {
         .filter {movimiento => movimiento.eq(usarRevolver)}
         .size == 1)    
   }
+  
+  test("goku se convierte en mono"){
+    val resultado = gokuConCola.utilizarMovimiento(convertirseEnMono)(cell)
+    assert(atacante(resultado).especie == Mono(true))
+  }
 }
   
   
