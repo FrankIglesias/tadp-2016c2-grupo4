@@ -54,4 +54,33 @@ class MovimientoTest extends FunSuite {
     val resultado = krillin.utilizarMovimiento(usarSemillaDeErmitanio)(goku)
     assert(atacante(resultado).estado == Vivo)
   }
+  
+  test("cell se come a terminator y aprende a disparar un revolver"){
+    val resultado = cell.utilizarMovimiento(comerseAlOponente)(terminator)
+    assert(atacante(resultado)
+        .listaDeMovimientosConocidos
+        .filter {movimiento => movimiento.eq(usarRevolver)}
+        .size == 1)    
+  }
 }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 

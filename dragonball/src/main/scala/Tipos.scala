@@ -6,7 +6,7 @@ object Tipos {
   type Duelo = (Guerrero,Guerrero)
   type Movimiento = Duelo => Duelo
   
-  type Digerir = Guerrero => Guerrero
+  type Digerir = Duelo => Guerrero
   type Criterio = (Movimiento,Duelo) => Integer
   type PlanDeAtaque = List[Movimiento]
   type ResultadoPelea = (EstadoGuerrero,EstadoGuerrero)

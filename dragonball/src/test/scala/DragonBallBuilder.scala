@@ -26,7 +26,19 @@ object DragonBallBuilder {
   val usarEspadaOxidada = new UsarItem(espadaOxidada)
   val usarRevolver = new UsarItem(revolver)
   val usarSemillaDeErmitanio = new UsarItem(semillaDeErmitanio)
+  val comerseAlOponente = ComerseAlOponente
  
+  val digerirComoCell: Digerir = {duelo:Duelo => 
+    defensor(duelo).especie match{
+      case Androide(_) => 
+        atacante(duelo).copy(listaDeMovimientosConocidos =  atacante(duelo).listaDeMovimientosConocidos ::: defensor(duelo).listaDeMovimientosConocidos)
+      case _ =>  atacante(duelo)
+    }
+  }
+  
+  val digerirComoMajinBu : Digerir = {duelo:Duelo =>
+    atacante(duelo).copy(listaDeMovimientosConocidos = defensor(duelo).listaDeMovimientosConocidos)
+  }
   
   val goku = generarGuerrero(
       Vivo,
@@ -71,6 +83,24 @@ val krillin = generarGuerrero(
       20,
       Humano,
       0)
+      
+val cell =generarGuerrero(
+    Vivo,
+    List(comerseAlOponente),
+    List(),
+    200,
+    25,
+    Monstruo(digerirComoCell),
+    0)
+    
+val majinBu =generarGuerrero(
+    Vivo,
+    List(comerseAlOponente),
+    List(),
+    12,
+    25,
+    Monstruo(digerirComoCell),
+    0)
       
       
  

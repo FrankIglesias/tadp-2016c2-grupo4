@@ -31,13 +31,13 @@ object TodosLosMovimientos{
              atacante(duelo)
             .especie
             .asInstanceOf[Monstruo]
-            .maneraDeDigerir(defensor(duelo)),defensor(duelo).morite())
+            .maneraDeDigerir(atacante(duelo),defensor(duelo)),defensor(duelo).morite())
           case _ => duelo
         }
       }
       
       def kiEsMenor(atacante:Guerrero, defensor:Guerrero) = { 
-        atacante.dameElPoder>defensor.ki 
+        atacante.dameElPoder>defensor.dameElPoder 
         }
     }
     
