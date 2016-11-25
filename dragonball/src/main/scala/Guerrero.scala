@@ -115,18 +115,10 @@ case class Guerrero(
   
   
   def pelearContra(guerrero:Guerrero)(plan:PlanDeAtaque): ResultadoPelea={
-    this.estado match{
-      case Muerto => (Muerto,guerrero.estado)
-      case _ if guerrero.estado.eq(Muerto) => (this.estado,Muerto)
-      case _ if plan.isEmpty => (this.estado,guerrero.estado)
-      case _ => {
-        val movimiento = plan.head
-        val nuevoPlan = plan.tail
-        val nuevoDuelo = this.pelearRound(movimiento)(guerrero)
-        atacante(nuevoDuelo).pelearContra(guerrero)(nuevoPlan)
-      }
-    }
-   }
+    val resultadoInicial : ResultadoPelea =  Pelien(this,guerrero)
+    plan.foldLeft(resultadoInicial)((resultadoAnterior,movimiento) => resultadoAnterior.map(movimiento))
+  }
+  
   
  def utilizarMovimiento(movimiento:Movimiento)(oponente:Guerrero):Duelo={
   this.listaDeMovimientosConocidos.find {m => m.eq(movimiento) }
