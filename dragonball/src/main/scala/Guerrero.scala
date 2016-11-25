@@ -36,6 +36,7 @@ case class Guerrero(
   def quedateInconsiente() ={
     this.especie match {
       case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p))
+      case Fusionado(guerrero) => guerrero.copy(estado = Inconsciente)
       case _ => this.copy(estado = Inconsciente)
     }
   }
@@ -68,6 +69,10 @@ case class Guerrero(
   def morite()={
     especie match {
       case Androide(_) => this.copy(especie = Androide(bateria = 0),estado = Muerto)
+      case Fusionado(guerrero) => guerrero.especie match{
+        case Androide(_) => guerrero.copy(especie = Androide(bateria = 0),estado = Muerto)
+        case _ => guerrero.copy(ki = 0, estado = Muerto)        
+      }
       case _ => this.copy(ki = 0, estado = Muerto)
     }
   }

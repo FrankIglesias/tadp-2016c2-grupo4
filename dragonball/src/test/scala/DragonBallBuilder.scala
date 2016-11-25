@@ -30,7 +30,9 @@ object DragonBallBuilder {
   val comerseAlOponente = ComerseAlOponente
   val convertirseEnMono = new Convertirse(Mono(true))
   val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
- 
+
+  
+  
   val digerirComoCell: Digerir = {duelo:Duelo => 
     defensor(duelo).especie match{
       case Androide(_) => 
@@ -42,6 +44,26 @@ object DragonBallBuilder {
   val digerirComoMajinBu : Digerir = {duelo:Duelo =>
     atacante(duelo).copy(listaDeMovimientosConocidos = defensor(duelo).listaDeMovimientosConocidos)
   }
+  
+  val krillin = generarGuerrero(
+      Inconsciente,
+      List(usarSemillaDeErmitanio),
+      List(semillaDeErmitanio),
+      10,
+      20,
+      Humano,
+      0)
+      
+val fusionarseConKrillin = new Fusion(krillin)
+  
+  val gokuDeChico = generarGuerrero(
+      Vivo,
+      List(dejarseFajar,fusionarseConKrillin),
+      List(fotoDeLaLuna),
+      2,
+      45,
+      Saiyajin(false),
+      0)
   
   val gokuSS = generarGuerrero(
       Vivo,
@@ -97,14 +119,7 @@ val terminator = generarGuerrero(
       1000,
       Androide(60),
       0)
-val krillin = generarGuerrero(
-      Inconsciente,
-      List(usarSemillaDeErmitanio),
-      List(semillaDeErmitanio),
-      10,
-      20,
-      Humano,
-      0)
+
       
 val cell =generarGuerrero(
     Vivo,

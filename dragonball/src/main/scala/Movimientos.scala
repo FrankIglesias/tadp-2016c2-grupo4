@@ -75,18 +75,21 @@ object TodosLosMovimientos{
     
     case class Fusion(otroGuerrero:Guerrero) extends Movimiento {
       def apply(duelo: Duelo)  : Duelo = {
-         atacante(duelo).especie match {
-         case (Humano | Saiyajin(_) | Namekusein) if contieneAEstaEspecie(List(Humano,Saiyajin(true),Saiyajin(false),Namekusein),otroGuerrero.especie) =>
-               (atacante(duelo).copy(
+         (atacante(duelo).especie,otroGuerrero.especie) match{
+           case (especieDelAtacante,especieDelOtro) if contieneUnaDeLasEspeciesNecesarias(especieDelAtacante,especieDelOtro) =>
+             (atacante(duelo).copy(
                especie = Fusionado(atacante(duelo)), 
                ki = atacante(duelo).ki + otroGuerrero.ki, 
-               kiMaximo = atacante(duelo).kiMaximo + defensor(duelo).kiMaximo),defensor(duelo))
-         case _ => duelo
-        }
+               kiMaximo = atacante(duelo).kiMaximo + otroGuerrero.kiMaximo,
+               listaDeMovimientosConocidos = atacante(duelo).listaDeMovimientosConocidos ::: otroGuerrero.listaDeMovimientosConocidos)
+               ,defensor(duelo))
+           case _ => duelo
+         }
       }
       
-      def contieneAEstaEspecie(listaDeEspecies: List[Especie], especie:Especie) = { 
-        listaDeEspecies.contains(especie) 
+      def contieneUnaDeLasEspeciesNecesarias(especie_1:Especie, especie_2:Especie) = { 
+        val listaDeEspecies = List(Humano,Namekusein,Saiyajin(true),Saiyajin(false))
+        listaDeEspecies.contains(especie_1)  && listaDeEspecies.contains(especie_2)
         }
     }
     

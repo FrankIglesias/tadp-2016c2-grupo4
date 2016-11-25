@@ -73,6 +73,12 @@ class MovimientoTest extends FunSuite {
     assert(atacante(resultado).especie == SuperSaiyajin(true,5))
   }
   
+  test("goku se fusiona con krillin"){
+    val resultado = gokuDeChico.utilizarMovimiento(fusionarseConKrillin)(cell)
+    assert(atacante(resultado).especie == Fusionado(gokuDeChico))
+  }
+    
+  
   
 }
   
