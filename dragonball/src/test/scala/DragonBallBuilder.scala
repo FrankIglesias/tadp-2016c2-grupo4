@@ -2,6 +2,7 @@
 import Tipos._
 import TodosLosMovimientos._
 import ObjetoItem._
+import TiposDeAtaque._
 
 object DragonBallBuilder {
   def generarGuerrero(
@@ -31,6 +32,7 @@ object DragonBallBuilder {
   val comerseAlOponente = ComerseAlOponente
   val convertirseEnMono = new Convertirse(Mono(true))
   val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
+  val muchosGolpes = new Atacar(MuchosGolpesNinja)
   
   val magiaQueIntercambia : Movimiento= {duelo:Duelo =>
     val (atacante,oponente) = duelo
@@ -61,6 +63,8 @@ object DragonBallBuilder {
       Humano,
       0)
       
+      
+      
 val fusionarseConKrillin = new Fusion(krillin)
   
   val gokuDeChico = generarGuerrero(
@@ -70,6 +74,14 @@ val fusionarseConKrillin = new Fusion(krillin)
       2,
       45,
       Saiyajin(false),
+      0)
+  val krillinVivo = generarGuerrero(
+      Vivo,
+      List(usarSemillaDeErmitanio,muchosGolpes),
+      List(semillaDeErmitanio),
+      13,
+      20,
+      Humano,
       0)
   
   val gokuSS = generarGuerrero(

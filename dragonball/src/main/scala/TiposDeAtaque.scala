@@ -12,7 +12,7 @@ object TiposDeAtaque {
   
   object MuchosGolpesNinja extends AtaqueFisico(){
     override def apply(duelo:Duelo) = atacante(duelo).especie match {
-      case Humano if defensor(duelo).especie.eq(Androide) => {(
+      case Humano if defensor(duelo).especie.isInstanceOf[Androide] => {(
           atacante(duelo).disminuirElPoder(10),
           defensor(duelo))
       }

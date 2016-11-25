@@ -82,6 +82,11 @@ class MovimientoTest extends FunSuite {
     val resultado = magoMalvado.utilizarMovimiento(intercambiarKi)(goku)
     assert(atacante(resultado).ki == goku.ki && defensor(resultado).ki == magoMalvado.ki && atacante(resultado).listaDeItems.isEmpty)
   }
+  
+  test("krillin ataca con muchos golpes a terminator y se lastima los deditos"){
+    val resultado = krillinVivo.utilizarMovimiento(muchosGolpes)(terminator)
+    assert(atacante(resultado).ki == (krillinVivo.ki - 10))
+  }
     
   
   
