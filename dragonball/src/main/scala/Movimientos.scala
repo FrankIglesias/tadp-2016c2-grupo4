@@ -103,8 +103,8 @@ object TodosLosMovimientos{
       }
       
       def removeEsferasYGeneraDuelo(duelo:Duelo,magia:(Duelo=>Duelo)) = {
-        atacante(duelo).listaDeItems.dropWhile { item => item.eq(EsferaDeDragon)}
-        magia(duelo)
+        val atacanteSinBolas = atacante(duelo).copy(listaDeItems = atacante(duelo).listaDeItems.dropWhile { item => item.eq(EsferaDeDragon)})
+        magia(atacanteSinBolas,defensor(duelo))
       }
     }
     

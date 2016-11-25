@@ -18,6 +18,7 @@ object DragonBallBuilder {
   val revolver = new ArmaDeFuego()
   val semillaDeErmitanio = SemillaDeErmitanio
   val fotoDeLaLuna = FotodeLaLuna
+  val bolasDelDragon = EsferaDeDragon
   
   val cartuchoDeRevolver = new Municion(revolver,6)
   
@@ -30,7 +31,13 @@ object DragonBallBuilder {
   val comerseAlOponente = ComerseAlOponente
   val convertirseEnMono = new Convertirse(Mono(true))
   val convertirseEnSS = new Convertirse(SuperSaiyajin(true,200)) //No importa que nivel le ponga siempre va a aumentar 1 al actual nivel de SS
-
+  
+  val magiaQueIntercambia : Movimiento= {duelo:Duelo =>
+    val (atacante,oponente) = duelo
+    (atacante.copy(ki = oponente.ki, kiMaximo = oponente.ki),oponente.copy(ki = atacante.ki, kiMaximo = atacante.ki))
+  }
+  
+  val intercambiarKi = new Magia(magiaQueIntercambia)
   
   
   val digerirComoCell: Digerir = {duelo:Duelo => 
@@ -137,6 +144,15 @@ val majinBu =generarGuerrero(
     12,
     25,
     Monstruo(digerirComoCell),
+    0)
+   
+val magoMalvado=generarGuerrero(
+    Vivo,
+    List(intercambiarKi),
+    List(bolasDelDragon,bolasDelDragon,bolasDelDragon,bolasDelDragon,bolasDelDragon,bolasDelDragon,bolasDelDragon),
+    12,
+    25,
+    Humano,
     0)
       
       

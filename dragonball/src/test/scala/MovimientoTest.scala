@@ -77,6 +77,11 @@ class MovimientoTest extends FunSuite {
     val resultado = gokuDeChico.utilizarMovimiento(fusionarseConKrillin)(cell)
     assert(atacante(resultado).especie == Fusionado(gokuDeChico))
   }
+  
+  test("un mago malvado hace una magia loca que intercambie el valor del ki con goku"){
+    val resultado = magoMalvado.utilizarMovimiento(intercambiarKi)(goku)
+    assert(atacante(resultado).ki == goku.ki && defensor(resultado).ki == magoMalvado.ki && atacante(resultado).listaDeItems.isEmpty)
+  }
     
   
   
