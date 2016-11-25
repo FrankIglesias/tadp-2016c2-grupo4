@@ -36,6 +36,7 @@ object DragonBallBuilder {
   val muchosGolpes = new Atacar(MuchosGolpesNinja)
   val ondaDe50energia = new Atacar(Onda(50))
   val genkidama = new Atacar(Genkidama)
+  val ataqueDeOndacorta = new Atacar(Onda(2))
   
   val magiaQueIntercambia : Movimiento= {duelo:Duelo =>
     val (atacante,oponente) = duelo
@@ -108,7 +109,7 @@ val fusionarseConKrillin = new Fusion(krillin)
   
   val goku = generarGuerrero(
       Vivo,
-      List(dejarseFajar,cargarki,usarEspadaSencilla,convertirseEnMono),
+      List(dejarseFajar,cargarki,usarEspadaSencilla,convertirseEnMono,ataqueDeOndacorta),
       List(fotoDeLaLuna),
       20,
       1000,

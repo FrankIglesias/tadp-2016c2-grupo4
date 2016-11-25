@@ -97,7 +97,7 @@ case class Guerrero(
   def pelearRound(unMovimiento : Movimiento)(otroGuerrero : Guerrero) : Duelo = 
   {
     val resultadoDeMiAtaque = this.utilizarMovimiento(unMovimiento)(otroGuerrero)
-    defensor(resultadoDeMiAtaque).contraAtacar(atacante(resultadoDeMiAtaque))
+    defensor(resultadoDeMiAtaque).contraAtacar(atacante(resultadoDeMiAtaque)).swap 
   }
   
   def contraAtacar(unGuerrero:Guerrero)={

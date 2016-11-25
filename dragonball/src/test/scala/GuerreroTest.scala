@@ -10,4 +10,8 @@ class GuerreroTest extends FunSuite {
     assert(movimiento.getOrElse(MovimientoNulo).eq(cargarki))
   }
   
+  test("goku pelea un round contra vegetta, utiliza un ataque de onda corto y vegeta responde cargandoseElKi"){
+    val duelo = goku.pelearRound(ataqueDeOndacorta)(vegeta)
+    assert(defensor(duelo).ki == (vegeta.ki) - 4 /*Es lo que saca el ataque de onda corta*/ + 100 /*Es el resultado de cargarse el ki*/)
+  }
 }
