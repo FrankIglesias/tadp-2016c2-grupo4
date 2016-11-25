@@ -1,9 +1,8 @@
-import scala.util.{ Try, Success, Failure }
+
 import Tipos._
 import TodosLosMovimientos._
 import ObjetoItem._
 import scala.math._
-import scala.collection.mutable.MutableList
 
 
 

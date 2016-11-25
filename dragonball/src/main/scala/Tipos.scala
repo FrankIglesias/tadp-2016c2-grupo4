@@ -1,6 +1,4 @@
 
-import scala.util.Try
-import scala.collection.mutable.MutableList
 import TodosLosMovimientos.DejarseFajar
 import ObjetoItem._
 

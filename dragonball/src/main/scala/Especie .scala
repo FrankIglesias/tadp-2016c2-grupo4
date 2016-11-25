@@ -1,4 +1,4 @@
-import scala.util.{ Try, Success, Failure }
+
 import Tipos._
 
 
