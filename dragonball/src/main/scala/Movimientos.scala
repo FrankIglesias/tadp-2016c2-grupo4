@@ -108,4 +108,8 @@ object TodosLosMovimientos{
     case class Atacar(ataque: Ataque) extends Movimiento {
        def apply(duelo:Duelo) = ataque(duelo)
     }
+    
+    case object MovimientoNulo extends Movimiento {
+      def apply(duelo:Duelo)=duelo
+    }
 }

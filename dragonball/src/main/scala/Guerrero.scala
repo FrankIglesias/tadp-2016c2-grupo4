@@ -103,22 +103,16 @@ case class Guerrero(
         .fold((this,unGuerrero))(this.utilizarMovimiento(_)(unGuerrero))
   }
   
-  def planDeAtaqueContra(guerrero:Guerrero,cantidadDeRounds:Int)(criterio:Criterio){
-    var plan : PlanDeAtaque = MutableList()
-    desarrollarPlanDeAtaque(guerrero,cantidadDeRounds,criterio, plan)
+  def planDeAtaqueContra(guerrero:Guerrero,cantidadDeRounds:Int)(criterio:Criterio):PlanDeAtaque = {
+    val planInicial : PlanDeAtaque = List()
+    List.range(0,cantidadDeRounds).foldLeft(planInicial,(this,guerrero))(
+        (semillaAnterior : (PlanDeAtaque,(Guerrero,Guerrero)),_) => {
+          val (planAcumulado,(atacante,defensor)) = semillaAnterior
+          val nuevoMovimiento : Movimiento = atacante.movimentoMasEfectivoContra(defensor)(criterio).getOrElse(MovimientoNulo)
+          (planAcumulado:+ nuevoMovimiento , atacante.pelearRound(nuevoMovimiento)(defensor))
+          })._1
   }
   
-  def desarrollarPlanDeAtaque(guerrero:Guerrero,cantidad:Int,criterio:Criterio, planDeAtaque:PlanDeAtaque):PlanDeAtaque ={
-    cantidad match{
-      case 0 => planDeAtaque
-      case _ => {
-        val movi = ((movimentoMasEfectivoContra(guerrero)(criterio)).getOrElse(this.listaDeMovimientosConocidos.head))
-        val estado = pelearRound(movi)(guerrero)
-        planDeAtaque += movi
-        atacante(estado).desarrollarPlanDeAtaque(defensor(estado),cantidad - 1,criterio,planDeAtaque)      
-      }
-    }
-  }
   
   def pelearContra(guerrero:Guerrero)(plan:PlanDeAtaque): ResultadoPelea={
     this.estado match{

@@ -7,9 +7,10 @@ import ObjetoItem._
 object Tipos {
   type Duelo = (Guerrero,Guerrero)
   type Movimiento = Duelo => Duelo
+  
   type Digerir = Guerrero => Guerrero
   type Criterio = (Movimiento,Duelo) => Integer
-  type PlanDeAtaque = MutableList[Movimiento]
+  type PlanDeAtaque = List[Movimiento]
   type ResultadoPelea = (EstadoGuerrero,EstadoGuerrero)
   
   def atacante(duelo:Duelo) : Guerrero = duelo._1
