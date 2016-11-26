@@ -24,8 +24,8 @@ object ObjetoItem{
    def analizaEfectoAlDefensor(kiDelAtacante:Int, defensor:Guerrero) : Guerrero = {
      defensor.especie match {
        case Saiyajin(true) => defensor.copy(ki = 1, especie = Saiyajin(false))
-       case Mono(_) => defensor.copy(especie = Saiyajin(true),estado = Inconsciente, ki = defensor.dameElPoder - kiDelAtacante/100)
-       case _ => defensor.copy(ki = defensor.dameElPoder - kiDelAtacante/100) 
+       case Mono(_) => defensor.copy(especie = Saiyajin(true),estado = Inconsciente).disminuirElPoder(kiDelAtacante/100)
+       case _ => defensor.disminuirElPoder(kiDelAtacante/100)
      }
    }
  }
@@ -40,8 +40,8 @@ object ObjetoItem{
    
    def matcheaDefensorArmaDeFuego(defensor:Guerrero) :Guerrero ={
      defensor.especie match {
-       case Humano => defensor.copy(ki = defensor.dameElPoder - 20)
-       case Namekusein if defensor.estado.equals(Inconsciente) => defensor.copy(ki = defensor.dameElPoder - 10)
+       case Humano => defensor.disminuirElPoder(20)
+       case Namekusein if defensor.estado.equals(Inconsciente) => defensor.disminuirElPoder(10)
        case _ => defensor
      }
    }
