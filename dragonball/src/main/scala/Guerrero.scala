@@ -32,10 +32,13 @@ case class Guerrero(
   }
 
   def quedateInconsiente() ={
-    this.especie match {
-      case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p),cantidadDeFajadas = 0)
-      case Fusionado(guerrero) => guerrero.copy(estado = Inconsciente,cantidadDeFajadas = 0)
-      case _ => this.copy(estado = Inconsciente,cantidadDeFajadas = 0)
+    this.estado match {
+      case Muerto => this
+      case _ => this.especie match {
+        case SuperSaiyajin(p,_) => this.copy(estado = Inconsciente,especie = Saiyajin(p),cantidadDeFajadas = 0)
+        case Fusionado(guerrero) => guerrero.copy(estado = Inconsciente,cantidadDeFajadas = 0)
+        case _ => this.copy(estado = Inconsciente,cantidadDeFajadas = 0)
+      }
     }
   }
   
