@@ -14,7 +14,7 @@ case class Pelien(duelo:Duelo) extends ResultadoPelea{
       HayUnGanador(atacante(resultado))
     }
     else{
-      Pelien(atacante(duelo),defensor(duelo))
+      Pelien(atacante(resultado),defensor(resultado))
     }
   }
 }
